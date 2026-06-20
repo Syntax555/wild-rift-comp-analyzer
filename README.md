@@ -1,6 +1,6 @@
 # RiftDraft
 
-A static, GitHub Pages-ready Wild Rift team composition analyzer. Users select allied and enemy champions, choose an open position, and receive the available champion with the highest Diamond+ win rate for that role.
+A static, GitHub Pages-ready Wild Rift team composition analyzer. Users select allied and enemy champions, choose an open position, and receive a recommendation that blends Diamond+ role win rate with draft fit.
 
 The interface supports English and Turkish. The champion picker defaults to the selected position, includes an **All** option for full-draft selection, and uses typo-tolerant fuzzy search for champion names.
 
@@ -10,7 +10,7 @@ The site reads a same-origin ranked snapshot from `data/`. A scheduled GitHub Ac
 
 Riot's public developer API does not currently expose Wild Rift match history. GitHub Pages is also a static host, so a private API key must never be embedded in this frontend.
 
-The current recommendation is deliberately narrow: it removes drafted champions, filters by role, and sorts the remaining Diamond+ champions by win rate. The source does not expose matchup or composition-synergy win rates, so the UI does not claim to calculate those.
+The recommendation removes drafted champions, filters by role, then blends Diamond+ win rate with a relative draft-fit score. Draft fit uses Riot's official champion classes and ability descriptions to estimate allied composition gaps and enemy threat profiles. It is a transparent heuristic, not an observed matchup or composition-specific win rate.
 
 ## Run locally
 
@@ -34,4 +34,5 @@ In the repository settings, open **Pages**, choose **Deploy from a branch**, sel
 
 - `data/champions.v1.json`: champion IDs, display names, and avatar paths.
 - `data/champion-pages.index.v1.json`: official Wild Rift champion card art.
+- `data/champion-traits.v1.json`: compact class, crowd-control, sustain, and mobility signals derived from Riot's official Wild Rift champion pages.
 - `data/latest.v1.json`: ranked snapshot. `tiers["1"]` is Diamond+; lane keys are `1` Mid, `2` Solo, `3` Duo, `4` Support, and `5` Jungle. Each row is `[championId, winRate, pickRate, banRate]`.

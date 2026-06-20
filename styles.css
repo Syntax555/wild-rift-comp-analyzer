@@ -172,7 +172,7 @@ h1 em { color: var(--cyan); font-style: normal; }
 .winrate { margin-top: 3px; font: 700 42px/1 "Space Grotesk", sans-serif; letter-spacing: -.05em; color: var(--cyan); }
 .winrate small { font-size: 20px; }
 .position-tag { padding: 7px 10px; border: 1px solid var(--line); border-radius: 3px; color: #b1becd; font-size: 10px; }
-.metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 20px; }
+.metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
 .metric { padding: 13px; border: 1px solid var(--line); border-radius: 4px; background: rgba(15,30,49,.72); }
 .metric span { display: block; margin-bottom: 4px; color: #62748a; text-transform: uppercase; font-size: 8px; font-weight: 700; letter-spacing: .12em; }
 .metric strong { font: 600 15px "Space Grotesk", sans-serif; }
