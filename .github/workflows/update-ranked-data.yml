@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Download current Diamond+ data
+      - name: Download current Diamond+ role and matchup data
         run: node scripts/update-ranked-data.mjs
 
       - name: Commit changed snapshots

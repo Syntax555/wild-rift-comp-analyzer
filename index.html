@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Build a Wild Rift draft and rank Diamond+ champions by win rate and composition fit.">
+  <meta name="description" content="Build a Wild Rift draft and rank Diamond+ champions with observed lane-matchup win rates.">
   <meta name="theme-color" content="#07111f">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <title>RiftDraft — Wild Rift Comp Analyzer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260620c">
+  <link rel="stylesheet" href="./styles.css?v=20260620d">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -43,7 +43,7 @@
     <section class="hero-section">
       <div class="eyebrow"><span></span><b data-i18n="eyebrow">Wild Rift draft intelligence</b></div>
       <h1 id="hero-title" data-i18n-html="heroTitle">Build the draft.<br><em>Find the edge.</em></h1>
-      <p class="hero-copy" data-i18n="heroCopy">Select both teams, choose your open position, and rank Diamond+ champions by win rate and draft fit.</p>
+      <p class="hero-copy" data-i18n="heroCopy">Set each lane, choose your position, and rank Diamond+ champions with observed lane-matchup data.</p>
 
       <div class="data-strip" aria-label="Data filters" data-i18n-aria="dataFilters">
         <div class="filter-item">
@@ -139,21 +139,21 @@
     <section class="method-section" id="method">
       <div>
         <span class="section-number" data-i18n="howItWorks">How it works</span>
-        <h2 data-i18n="methodTitle">A clear, data-first recommendation.</h2>
+        <h2 data-i18n="methodTitle">Observed data, lane by lane.</h2>
       </div>
       <div class="method-grid">
-        <article><span>1</span><h3 data-i18n="methodDraftTitle">Draft context</h3><p data-i18n="methodDraftCopy">Allied gaps and enemy threats are estimated from Riot's official champion classes and ability descriptions.</p></article>
-        <article><span>2</span><h3 data-i18n="methodRoleTitle">Position filter</h3><p data-i18n="methodRoleCopy">Only champions recorded in your chosen role are compared.</p></article>
-        <article><span>3</span><h3 data-i18n="methodWinTitle">Blended ranking</h3><p data-i18n="methodWinCopy">Diamond+ win rate is blended with a draft-fit score, so changing either team can change the recommendation.</p></article>
+        <article><span>1</span><h3 data-i18n="methodDraftTitle">Fixed lane slots</h3><p data-i18n="methodDraftCopy">Every team slot belongs to Solo, Jungle, Mid, Duo, or Support and opens a lane-filtered champion list.</p></article>
+        <article><span>2</span><h3 data-i18n="methodRoleTitle">Observed matchup</h3><p data-i18n="methodRoleCopy">When the enemy laner is selected, candidates are ranked by their published Diamond+ same-lane win rate against that champion.</p></article>
+        <article><span>3</span><h3 data-i18n="methodWinTitle">Role fallback</h3><p data-i18n="methodWinCopy">If no same-lane matchup is selected or published, candidates are ranked by their overall Diamond+ win rate for the position.</p></article>
       </div>
-      <p class="method-disclaimer" data-i18n="methodDisclaimer">Draft fit is a transparent class-and-ability heuristic, not an observed matchup win rate. The ranked source does not publish composition-specific outcomes.</p>
+      <p class="method-disclaimer" data-i18n="methodDisclaimer">Recommendations use published Chinese-server Diamond+ statistics. No source can guarantee a perfect pick, and allied-team synergy is not scored without observed composition data.</p>
     </section>
   </main>
 
   <footer>
     <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true"></span><span>RIFT<span>DRAFT</span></span></div>
-    <p data-i18n="footerCopy">Ranked statistics from Riot/Tencent Wild Rift CN; champion classes and abilities from Riot's official Wild Rift pages, accessed through RankedWR. Not affiliated with Riot Games.</p>
-    <a href="https://lolm.qq.com/act/a20220818raider/index.html" target="_blank" rel="noreferrer"><span data-i18n="viewSource">View source</span> ↗</a>
+    <p data-i18n="footerCopy">Diamond+ Wild Rift CN role statistics via RankedWR and observed lane matchups via RiftGG. Not affiliated with Riot Games.</p>
+    <a href="https://www.riftgg.app/en/champions" target="_blank" rel="noreferrer"><span data-i18n="viewSource">View source</span> ↗</a>
   </footer>
 
   <dialog class="picker-dialog" id="champion-picker" aria-labelledby="picker-title">
@@ -167,14 +167,6 @@
         <input id="champion-search" type="search" placeholder="Search champions…" aria-label="Search champions" data-i18n-placeholder="searchChampions" data-i18n-aria="searchChampions" autocomplete="off">
         <kbd>ESC</kbd>
       </label>
-      <div class="picker-role-filters" id="picker-role-filters" role="group" aria-label="Filter champions by position" data-i18n-aria="filterByPosition">
-        <button class="picker-role-button" type="button" data-picker-role="all" data-i18n="all">All</button>
-        <button class="picker-role-button" type="button" data-picker-role="2"><span>◈</span><b data-role-label="2">Solo</b></button>
-        <button class="picker-role-button" type="button" data-picker-role="5"><span>⌁</span><b data-role-label="5">Jungle</b></button>
-        <button class="picker-role-button" type="button" data-picker-role="1"><span>◇</span><b data-role-label="1">Mid</b></button>
-        <button class="picker-role-button" type="button" data-picker-role="3"><span>➹</span><b data-role-label="3">Duo</b></button>
-        <button class="picker-role-button" type="button" data-picker-role="4"><span>✦</span><b data-role-label="4">Support</b></button>
-      </div>
       <div class="picker-meta"><span id="champion-total">Loading champions…</span><span data-i18n="draftedUnavailable">Already drafted champions are unavailable</span></div>
       <div class="champion-grid" id="champion-grid"></div>
       <div class="picker-empty" id="picker-empty" hidden data-i18n="noSearchResults">No champions match that search.</div>
@@ -189,6 +181,6 @@
     </button>
   </template>
 
-  <script type="module" src="./app.js?v=20260620c"></script>
+  <script type="module" src="./app.js?v=20260620d"></script>
 </body>
 </html>

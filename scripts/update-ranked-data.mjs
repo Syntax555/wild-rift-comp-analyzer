@@ -8,6 +8,8 @@ const files = [
   "champions.v1.json",
   "champion-pages.index.v1.json",
 ];
+const riftGgBase = "https://www.riftgg.app/en/champions/";
+const riftGgLaneToAppRole = { "1": "1", "2": "2", "3": "3", "4": "5", "5": "4" };
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const outputDirectory = resolve(root, "data");
@@ -29,62 +31,82 @@ for (const file of files) {
   console.log(`Updated data/${file}`);
 }
 
-const pageIndexPayload = downloaded.get("champion-pages.index.v1.json") || {};
-const pageIndex = pageIndexPayload.champions || {};
-const pageEntries = Object.entries(pageIndex);
-const profiles = {};
+const championPayload = downloaded.get("champions.v1.json") || {};
+const champions = Object.values(championPayload.champions || {}).filter((champion) => champion.riotSlug);
+const championIdBySlug = new Map(champions.map((champion) => [champion.riotSlug, String(champion.id)]));
+const matchups = {};
+const dataDates = new Set();
 let cursor = 0;
 
-const signalPatterns = {
-  control: /\b(stun|stuns|stunned|root|roots|rooted|knock|knocks|airborne|charm|charms|charmed|fear|fears|feared|taunt|taunts|taunted|sleep|sleeps|silence|silences|suppress|suppresses|immobil|unable to (?:attack|move)|pulls?|entangles?|binds?)\b/i,
-  sustain: /\b(heal|heals|healed|healing|shield|shields|shielded|restore|restores|restored|regenerat|protect|protects|protected)\b/i,
-  mobility: /\b(dash|dashes|leap|leaps|blink|blinks|teleport|teleports|charge|charges|lunges?|jumps?|rolls?)\b/i,
-};
-
-function signalScore(abilities, pattern) {
-  const matchingAbilities = abilities.filter((ability) => pattern.test(ability.description || "")).length;
-  return Number(Math.min(1, matchingAbilities / 2).toFixed(2));
+function extractMatchups(html) {
+  const startToken = 'matchups\\":';
+  const endToken = ',\\"core_items\\":';
+  const start = html.indexOf(startToken);
+  const end = html.indexOf(endToken, start);
+  if (start < 0 || end < 0) throw new Error("RiftGG matchup payload was not found");
+  return JSON.parse(html.slice(start + startToken.length, end).replaceAll('\\"', '"'));
 }
 
-async function downloadProfile([championId, entry]) {
-  const relativePath = String(entry.pagePath || "").replace(/^data\//, "");
-  if (!relativePath) return;
-  const response = await fetch(new URL(relativePath, sourceBase), {
+async function downloadMatchups(champion) {
+  const response = await fetch(`${riftGgBase}${champion.riotSlug}/cn-stats`, {
     headers: { "user-agent": "RiftDraft data updater" },
   });
   if (!response.ok) {
-    console.warn(`Skipped traits for ${championId}: ${response.status} ${response.statusText}`);
-    return;
+    throw new Error(`${response.status} ${response.statusText}`);
   }
-  const page = await response.json();
-  const abilities = Array.isArray(page.abilities) ? page.abilities : [];
-  profiles[championId] = {
-    roles: (page.roles || []).map((role) => String(role).toUpperCase()),
-    control: signalScore(abilities, signalPatterns.control),
-    sustain: signalScore(abilities, signalPatterns.sustain),
-    mobility: signalScore(abilities, signalPatterns.mobility),
-  };
+  const records = extractMatchups(await response.text());
+  const championId = String(champion.id);
+  const championMatchups = {};
+
+  records.filter((record) => Number(record.rankLevel) === 1).forEach((record) => {
+    const role = riftGgLaneToAppRole[String(record.lane)];
+    if (!role) return;
+    const opponents = {};
+    (record.counters || []).forEach((counter) => {
+      const opponentId = championIdBySlug.get(counter.heroSlug);
+      if (!opponentId) return;
+      opponents[opponentId] = {
+        winRate: Number((Number(counter.metrics?.winRate || 0) * 100).toFixed(4)),
+        pickRate: Number((Number(counter.metrics?.appearRate || 0) * 100).toFixed(4)),
+      };
+    });
+    if (Object.keys(opponents).length) championMatchups[role] = opponents;
+    if (record.dataDate) dataDates.add(String(record.dataDate).slice(0, 10).replaceAll("-", ""));
+  });
+
+  if (Object.keys(championMatchups).length) matchups[championId] = championMatchups;
 }
 
 async function worker() {
-  while (cursor < pageEntries.length) {
-    const entry = pageEntries[cursor];
+  while (cursor < champions.length) {
+    const champion = champions[cursor];
     cursor += 1;
     try {
-      await downloadProfile(entry);
+      await downloadMatchups(champion);
     } catch (error) {
-      console.warn(`Skipped traits for ${entry[0]}: ${error.message}`);
+      console.warn(`Skipped RiftGG matchups for ${champion.displayName}: ${error.message}`);
     }
   }
 }
 
-await Promise.all(Array.from({ length: Math.min(10, pageEntries.length) }, () => worker()));
+await Promise.all(Array.from({ length: Math.min(10, champions.length) }, () => worker()));
 
-const traitsPayload = {
+if (Object.keys(matchups).length < Math.floor(champions.length * 0.6)) {
+  throw new Error(`Only ${Object.keys(matchups).length} of ${champions.length} champion matchup pages were available`);
+}
+
+const matchupPayload = {
   version: 1,
-  generatedAt: pageIndexPayload.generatedAt || downloaded.get("latest.v1.json")?.fetchedAt,
-  source: "Official Riot Wild Rift champion classes and ability descriptions via RankedWR",
-  champions: Object.fromEntries(Object.entries(profiles).sort(([left], [right]) => left.localeCompare(right))),
+  generatedAt: new Date().toISOString(),
+  dataDate: [...dataDates].sort().at(-1) || null,
+  rank: "Diamond+",
+  scope: "Observed same-lane matchup win rate and appearance rate; China server",
+  source: {
+    name: "RiftGG Chinese Server Stats",
+    url: "https://www.riftgg.app/en/champions",
+    license: "CC0-1.0",
+  },
+  champions: Object.fromEntries(Object.entries(matchups).sort(([left], [right]) => left.localeCompare(right))),
 };
-await writeFile(resolve(outputDirectory, "champion-traits.v1.json"), `${JSON.stringify(traitsPayload, null, 2)}\n`, "utf8");
-console.log(`Updated data/champion-traits.v1.json (${Object.keys(profiles).length} profiles)`);
+await writeFile(resolve(outputDirectory, "matchups.v1.json"), `${JSON.stringify(matchupPayload)}\n`, "utf8");
+console.log(`Updated data/matchups.v1.json (${Object.keys(matchups).length} champions)`);

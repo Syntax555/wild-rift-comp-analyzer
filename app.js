@@ -1,68 +1,70 @@
 const DATA_BASE = new URL("./data/", import.meta.url);
 const ASSET_BASE = "https://rankedwr.com/";
 const RANK_BUCKET = "1"; // Diamond+ in the Riot/Tencent CN dataset.
+const SLOT_ROLES = ["2", "5", "1", "3", "4"];
+const ROLE_ICONS = { "1": "◇", "2": "◈", "3": "➹", "4": "✦", "5": "⌁" };
 
 const messages = {
   en: {
     primaryNav: "Primary navigation", language: "Language", dataFilters: "Data filters", analyzerRegion: "Team composition analyzer", navAnalyzer: "Analyzer", navMethod: "Method",
     statusConnecting: "Connecting to ranked data", statusLive: "Live ranked snapshot", statusCached: "Cached ranked snapshot",
     eyebrow: "Wild Rift draft intelligence", heroTitle: "Build the draft.<br><em>Find the edge.</em>",
-    heroCopy: "Select both teams, choose your open position, and rank Diamond+ champions by win rate and draft fit.",
+    heroCopy: "Set each lane, choose your position, and rank Diamond+ champions with observed lane-matchup data.",
     region: "Region", chinaServer: "China server", rank: "Rank", snapshot: "Snapshot", latestAvailable: "Latest available",
     buildDraft: "Build your draft", resetDraft: "Reset draft", yourTeam: "Your team", allyHint: "Select known allied champions",
     enemyTeam: "Enemy team", enemyHint: "Select revealed enemy champions", choosePosition: "Choose your position",
     positionHint: "We compare all available Diamond+ picks in this role.", analyze: "Analyze composition",
     resultPlaceholderTitle: "Your recommendation<br>will appear here", resultPlaceholderCopy: "Complete the draft on the left and run the analysis.",
-    howItWorks: "How it works", methodTitle: "A clear, data-first recommendation.", methodDraftTitle: "Draft context",
-    methodDraftCopy: "Allied gaps and enemy threats are estimated from Riot's official champion classes and ability descriptions.", methodRoleTitle: "Position filter",
-    methodRoleCopy: "Only champions recorded in your chosen role are compared.", methodWinTitle: "Blended ranking",
-    methodWinCopy: "Diamond+ win rate is blended with a draft-fit score, so changing either team can change the recommendation.",
-    methodDisclaimer: "Draft fit is a transparent class-and-ability heuristic, not an observed matchup win rate. The ranked source does not publish composition-specific outcomes.",
-    footerCopy: "Ranked statistics from Riot/Tencent Wild Rift CN; champion classes and abilities from Riot's official Wild Rift pages, accessed through RankedWR. Not affiliated with Riot Games.",
+    howItWorks: "How it works", methodTitle: "Observed data, lane by lane.", methodDraftTitle: "Fixed lane slots",
+    methodDraftCopy: "Every team slot belongs to Solo, Jungle, Mid, Duo, or Support and opens a lane-filtered champion list.", methodRoleTitle: "Observed matchup",
+    methodRoleCopy: "When the enemy laner is selected, candidates are ranked by their published Diamond+ same-lane win rate against that champion.", methodWinTitle: "Role fallback",
+    methodWinCopy: "If no same-lane matchup is selected or published, candidates are ranked by their overall Diamond+ win rate for the position.",
+    methodDisclaimer: "Recommendations use published Chinese-server Diamond+ statistics. No source can guarantee a perfect pick, and allied-team synergy is not scored without observed composition data.",
+    footerCopy: "Diamond+ Wild Rift CN role statistics via RankedWR and observed lane matchups via RiftGG. Not affiliated with Riot Games.",
     viewSource: "View source", chooseChampion: "Choose a champion", closePicker: "Close champion picker",
     searchChampions: "Search champions…", filterByPosition: "Filter champions by position", all: "All",
     draftedUnavailable: "Already drafted champions are unavailable", noSearchResults: "No champions match those filters.",
-    addToAlly: "Add to your team", addToEnemy: "Add to enemy team", addChampion: "Add champion",
-    removeChampion: "Remove {name} from {team}", addSlot: "Add champion to {team} slot {slot}", allyTeam: "ally team", enemyTeamLabel: "enemy team",
+    addToAlly: "Add to your team", addToEnemy: "Add to enemy team", addChampion: "Add champion", pickerLane: "{team} · {role}",
+    removeChampion: "Remove {name} from {team}", addSlot: "Add a {role} champion to {team}", allyTeam: "ally team", enemyTeamLabel: "enemy team",
     alreadyDrafted: "{name}, already drafted", chooseName: "Choose {name}", championCount: "{shown} of {total} champions",
     loadingData: "Loading Wild Rift ranked data…", selectToBegin: "Select at least one ally or enemy champion to begin.",
     draftedReady: "{count} champion{plural} drafted · {role} recommendation ready", noPositionData: "No available champion data exists for this position.",
-    topRecommendation: "Top recommendation", highestAvailable: "Best draft fit", diamondWinRate: "Diamond+ win rate",
-    pickRate: "Pick rate", banRate: "Ban rate", draftFit: "Draft fit", fitShort: "fit", whyThisPick: "Why this pick:",
-    whySentence: "{name} keeps a {winRate}% Diamond+ {role} win rate while adding {reasons} for this draft. Draft fit {fit}%. {source}, {date}.",
-    fitFrontline: "frontline", fitControl: "crowd control", fitProtection: "protection and sustain", fitCarry: "carry pressure", fitAccess: "backline access", fitDiversity: "class coverage", fitGeneral: "balanced class coverage",
-    sourceLive: "Live Diamond+ snapshot", sourceCached: "Cached Diamond+ snapshot", nextBest: "Next best available",
+    topRecommendation: "Top recommendation", highestMatchup: "Highest observed matchup win rate", highestRole: "Highest role win rate", diamondWinRate: "Overall Diamond+ win rate",
+    matchupWinRate: "Win rate vs {enemy}", matchupPickRate: "Matchup appearance", pickRate: "Pick rate", banRate: "Ban rate", dataBasis: "Ranking basis", observedMatchup: "Observed matchup", overallRole: "Overall role", whyThisPick: "Why this pick:",
+    whyMatchup: "{name} has the highest published Diamond+ {role} win rate against {enemy}: {matchupRate}%. Its overall role win rate is {winRate}%. RiftGG matchup data, {date}.",
+    whyOverall: "{name} has the highest available Diamond+ {role} win rate: {winRate}%. No published same-lane matchup was applied. RankedWR snapshot, {date}.",
+    nextBest: "Next best available", rateVs: "{rate}% vs {enemy}", roleRate: "{rate}% role win rate",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
     primaryNav: "Ana gezinme", language: "Dil", dataFilters: "Veri filtreleri", analyzerRegion: "Takım kompozisyonu analiz aracı", navAnalyzer: "Analiz", navMethod: "Yöntem",
     statusConnecting: "Dereceli verilere bağlanılıyor", statusLive: "Canlı dereceli veri", statusCached: "Önbellekteki dereceli veri",
     eyebrow: "Wild Rift seçim zekâsı", heroTitle: "Kompozisyonu kur.<br><em>Avantajı yakala.</em>",
-    heroCopy: "İki takımı seç, açık pozisyonunu belirle ve Elmas+ şampiyonları kazanma oranı ile kompozisyon uyumuna göre sırala.",
+    heroCopy: "Her koridoru ayarla, pozisyonunu seç ve Elmas+ şampiyonları gözlemlenmiş koridor eşleşmesi verileriyle sırala.",
     region: "Bölge", chinaServer: "Çin sunucusu", rank: "Lig", snapshot: "Veri tarihi", latestAvailable: "En güncel veri",
     buildDraft: "Takım seçimini oluştur", resetDraft: "Seçimleri sıfırla", yourTeam: "Takımın", allyHint: "Bilinen takım şampiyonlarını seç",
     enemyTeam: "Rakip takım", enemyHint: "Gösterilen rakip şampiyonları seç", choosePosition: "Pozisyonunu seç",
     positionHint: "Bu roldeki tüm uygun Elmas+ seçimleri karşılaştırırız.", analyze: "Kompozisyonu analiz et",
     resultPlaceholderTitle: "Önerin burada<br>görünecek", resultPlaceholderCopy: "Soldaki seçimi tamamla ve analizi çalıştır.",
-    howItWorks: "Nasıl çalışır", methodTitle: "Net ve veri odaklı bir öneri.", methodDraftTitle: "Seçim bağlamı",
-    methodDraftCopy: "Takımındaki eksikler ve rakip tehditleri, Riot'un resmi şampiyon sınıfları ve yetenek açıklamalarından tahmin edilir.", methodRoleTitle: "Pozisyon filtresi",
-    methodRoleCopy: "Yalnızca seçtiğin rolde kaydı bulunan şampiyonlar karşılaştırılır.", methodWinTitle: "Birleşik sıralama",
-    methodWinCopy: "Elmas+ kazanma oranı kompozisyon uyumu puanıyla birleştirilir; iki takımdaki değişiklikler öneriyi değiştirebilir.",
-    methodDisclaimer: "Kompozisyon uyumu, şampiyon sınıfı ve yeteneklerine dayalı şeffaf bir tahmindir; gözlemlenmiş eşleşme kazanma oranı değildir. Dereceli veri kaynağı kompozisyona özel sonuçlar yayımlamaz.",
-    footerCopy: "Riot/Tencent Wild Rift Çin dereceli istatistikleri ile Riot'un resmi Wild Rift şampiyon sınıfları ve yetenekleri RankedWR üzerinden kullanılır. Riot Games ile bağlantılı değildir.",
+    howItWorks: "Nasıl çalışır", methodTitle: "Koridor bazında gözlemlenmiş veri.", methodDraftTitle: "Sabit koridor yuvaları",
+    methodDraftCopy: "Her takım yuvası Baron, Orman, Orta, Ejder veya Destek rolüne aittir ve koridora göre filtrelenmiş listeyi açar.", methodRoleTitle: "Gözlemlenmiş eşleşme",
+    methodRoleCopy: "Rakip koridor oyuncusu seçildiğinde adaylar, o şampiyona karşı yayımlanmış Elmas+ aynı koridor kazanma oranına göre sıralanır.", methodWinTitle: "Rol verisi yedeği",
+    methodWinCopy: "Aynı koridor eşleşmesi seçilmemiş veya yayımlanmamışsa adaylar pozisyondaki genel Elmas+ kazanma oranına göre sıralanır.",
+    methodDisclaimer: "Öneriler yayımlanmış Çin sunucusu Elmas+ istatistiklerini kullanır. Hiçbir kaynak kusursuz seçimi garanti edemez; gözlemlenmiş kompozisyon verisi olmadan takım sinerjisine puan verilmez.",
+    footerCopy: "RankedWR üzerinden Elmas+ Wild Rift Çin rol istatistikleri ve RiftGG üzerinden gözlemlenmiş koridor eşleşmeleri. Riot Games ile bağlantılı değildir.",
     viewSource: "Kaynağı görüntüle", chooseChampion: "Bir şampiyon seç", closePicker: "Şampiyon seçiciyi kapat",
     searchChampions: "Şampiyon ara…", filterByPosition: "Şampiyonları pozisyona göre filtrele", all: "Tümü",
     draftedUnavailable: "Daha önce seçilen şampiyonlar kullanılamaz", noSearchResults: "Bu filtrelerle eşleşen şampiyon yok.",
-    addToAlly: "Takımına ekle", addToEnemy: "Rakip takıma ekle", addChampion: "Şampiyon ekle",
-    removeChampion: "{name} şampiyonunu {team} listesinden çıkar", addSlot: "{team} {slot}. yuvaya şampiyon ekle", allyTeam: "takım", enemyTeamLabel: "rakip takım",
+    addToAlly: "Takımına ekle", addToEnemy: "Rakip takıma ekle", addChampion: "Şampiyon ekle", pickerLane: "{team} · {role}",
+    removeChampion: "{name} şampiyonunu {team} listesinden çıkar", addSlot: "{team} için {role} şampiyonu ekle", allyTeam: "takım", enemyTeamLabel: "rakip takım",
     alreadyDrafted: "{name}, zaten seçildi", chooseName: "{name} seç", championCount: "{total} şampiyondan {shown} tanesi",
     loadingData: "Wild Rift dereceli verileri yükleniyor…", selectToBegin: "Başlamak için en az bir takım veya rakip şampiyonu seç.",
     draftedReady: "{count} şampiyon seçildi · {role} önerisi hazır", noPositionData: "Bu pozisyon için uygun şampiyon verisi yok.",
-    topRecommendation: "En iyi öneri", highestAvailable: "En iyi kompozisyon uyumu", diamondWinRate: "Elmas+ kazanma oranı",
-    pickRate: "Seçilme oranı", banRate: "Yasaklanma oranı", draftFit: "Kompozisyon uyumu", fitShort: "uyum", whyThisPick: "Neden bu seçim:",
-    whySentence: "{name}, %{winRate} Elmas+ {role} kazanma oranını korurken bu kompozisyona {reasons} ekler. Kompozisyon uyumu %{fit}. {source}, {date}.",
-    fitFrontline: "ön saflık", fitControl: "kitle kontrolü", fitProtection: "koruma ve iyileştirme", fitCarry: "taşıyıcı baskısı", fitAccess: "arka saflara erişim", fitDiversity: "sınıf çeşitliliği", fitGeneral: "dengeli sınıf çeşitliliği",
-    sourceLive: "Canlı Elmas+ verisi", sourceCached: "Önbellekteki Elmas+ verisi", nextBest: "Sonraki en iyi seçenekler",
+    topRecommendation: "En iyi öneri", highestMatchup: "En yüksek gözlemlenmiş eşleşme oranı", highestRole: "En yüksek rol kazanma oranı", diamondWinRate: "Genel Elmas+ kazanma oranı",
+    matchupWinRate: "{enemy} karşısı kazanma", matchupPickRate: "Eşleşme görülme oranı", pickRate: "Seçilme oranı", banRate: "Yasaklanma oranı", dataBasis: "Sıralama temeli", observedMatchup: "Gözlemlenmiş eşleşme", overallRole: "Genel rol", whyThisPick: "Neden bu seçim:",
+    whyMatchup: "{name}, {enemy} karşısında yayımlanmış en yüksek Elmas+ {role} kazanma oranına sahip: %{matchupRate}. Genel rol kazanma oranı %{winRate}. RiftGG eşleşme verisi, {date}.",
+    whyOverall: "{name}, mevcut en yüksek Elmas+ {role} kazanma oranına sahip: %{winRate}. Yayımlanmış aynı koridor eşleşmesi uygulanmadı. RankedWR verisi, {date}.",
+    nextBest: "Sonraki en iyi seçenekler", rateVs: "{enemy} karşısı %{rate}", roleRate: "%{rate} rol kazanma oranı",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -118,7 +120,8 @@ const state = {
   champions: [],
   championMap: new Map(),
   stats: {},
-  traits: {},
+  matchups: {},
+  matchupDate: null,
   statDate: "20260619",
   source: "loading",
   ready: false,
@@ -136,7 +139,6 @@ const elements = {
   picker: document.querySelector("#champion-picker"),
   closePicker: document.querySelector("#close-picker"),
   pickerKicker: document.querySelector("#picker-kicker"),
-  pickerRoleFilters: document.querySelector("#picker-role-filters"),
   championSearch: document.querySelector("#champion-search"),
   championGrid: document.querySelector("#champion-grid"),
   championTotal: document.querySelector("#champion-total"),
@@ -306,18 +308,18 @@ function buildFallbackData() {
 
 async function loadData() {
   try {
-    const [latestResponse, championsResponse, pagesResponse, traitsResponse] = await Promise.all([
+    const [latestResponse, championsResponse, pagesResponse, matchupsResponse] = await Promise.all([
       fetch(new URL("latest.v1.json", DATA_BASE), { cache: "no-store" }),
       fetch(new URL("champions.v1.json", DATA_BASE), { cache: "no-store" }),
       fetch(new URL("champion-pages.index.v1.json", DATA_BASE), { cache: "no-store" }),
-      fetch(new URL("champion-traits.v1.json", DATA_BASE), { cache: "no-store" }),
+      fetch(new URL("matchups.v1.json", DATA_BASE), { cache: "no-store" }),
     ]);
     if (![latestResponse, championsResponse, pagesResponse].every((response) => response.ok)) {
       throw new Error("One or more ranked data endpoints were unavailable.");
     }
-    const [latest, championPayload, pagePayload, traitPayload] = await Promise.all([
+    const [latest, championPayload, pagePayload, matchupPayload] = await Promise.all([
       latestResponse.json(), championsResponse.json(), pagesResponse.json(),
-      traitsResponse.ok ? traitsResponse.json() : Promise.resolve({ champions: {} }),
+      matchupsResponse.ok ? matchupsResponse.json() : Promise.resolve({ champions: {} }),
     ]);
 
     const pages = pagePayload.champions || {};
@@ -332,7 +334,8 @@ async function loadData() {
       role,
       rows.map(([championId, winRate, pickRate, banRate]) => ({ championId, winRate, pickRate, banRate })),
     ]));
-    state.traits = traitPayload.champions || {};
+    state.matchups = matchupPayload.champions || {};
+    state.matchupDate = matchupPayload.dataDate || null;
     state.statDate = latest.statDate;
     state.source = "live";
   } catch (error) {
@@ -340,7 +343,8 @@ async function loadData() {
     const fallback = buildFallbackData();
     state.champions = fallback.champions.sort((a, b) => a.name.localeCompare(b.name));
     state.stats = fallback.stats;
-    state.traits = {};
+    state.matchups = {};
+    state.matchupDate = null;
     state.source = "fallback";
   }
 
@@ -368,11 +372,13 @@ function renderSlots(team) {
   const container = elements[`${team}Slots`];
   container.replaceChildren();
   state.teams[team].forEach((championId, index) => {
+    const slotRole = SLOT_ROLES[index];
     const button = document.createElement("button");
     button.type = "button";
     button.className = "champion-slot";
     button.dataset.team = team;
     button.dataset.index = String(index);
+    button.dataset.role = slotRole;
 
     if (championId) {
       const champion = state.championMap.get(championId);
@@ -382,17 +388,17 @@ function renderSlots(team) {
       button.setAttribute("aria-label", t("removeChampion", { name: champion.name, team: teamLabel }));
       button.innerHTML = `
         <img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}">
-        <span class="slot-index">${String(index + 1).padStart(2, "0")}</span>
+        <span class="slot-role"><span aria-hidden="true">${ROLE_ICONS[slotRole]}</span>${escapeHtml(roleName(slotRole))}</span>
         <span class="remove-hint" aria-hidden="true">×</span>
         <span class="selected-name">${escapeHtml(champion.name)}</span>`;
       button.addEventListener("click", () => removeChampion(team, index));
     } else {
       const teamLabel = t(team === "ally" ? "allyTeam" : "enemyTeamLabel");
-      button.setAttribute("aria-label", t("addSlot", { team: teamLabel, slot: index + 1 }));
+      button.setAttribute("aria-label", t("addSlot", { team: teamLabel, role: roleName(slotRole) }));
       button.innerHTML = `
-        <span class="slot-index">${String(index + 1).padStart(2, "0")}</span>
+        <span class="slot-role"><span aria-hidden="true">${ROLE_ICONS[slotRole]}</span>${escapeHtml(roleName(slotRole))}</span>
         <span class="plus-icon">+</span>
-        <span class="slot-label">${t("addChampion")}</span>`;
+        <span class="slot-label">${escapeHtml(roleName(slotRole))}</span>`;
       button.addEventListener("click", () => openPicker(team, index));
     }
     container.append(button);
@@ -410,8 +416,11 @@ function renderAllSlots() {
 function openPicker(team, index) {
   if (!state.ready) return;
   state.pickerTarget = { team, index };
-  state.pickerRole = state.selectedRole;
-  elements.pickerKicker.textContent = team === "ally" ? t("addToAlly") : t("addToEnemy");
+  state.pickerRole = SLOT_ROLES[index];
+  elements.pickerKicker.textContent = t("pickerLane", {
+    team: t(team === "ally" ? "addToAlly" : "addToEnemy"),
+    role: roleName(state.pickerRole),
+  });
   elements.championSearch.value = "";
   renderChampionGrid();
   elements.picker.showModal();
@@ -438,12 +447,6 @@ function renderChampionGrid() {
       : left.champion.name.localeCompare(right.champion.name))
     .map(({ champion }) => champion);
   elements.championGrid.replaceChildren();
-
-  elements.pickerRoleFilters.querySelectorAll(".picker-role-button").forEach((button) => {
-    const active = button.dataset.pickerRole === state.pickerRole;
-    button.classList.toggle("active", active);
-    button.setAttribute("aria-pressed", String(active));
-  });
 
   filtered.forEach((champion) => {
     const button = document.createElement("button");
@@ -501,110 +504,30 @@ function clearResult() {
   elements.resultContent.replaceChildren();
 }
 
-function championFeatures(championId) {
-  const trait = state.traits[String(championId)] || {};
-  const roles = new Set(trait.roles || []);
-  return {
-    roles,
-    frontline: Math.max(roles.has("TANK") ? 1 : 0, roles.has("FIGHTER") ? .55 : 0),
-    control: Math.max(Number(trait.control) || 0, roles.has("TANK") ? .35 : 0, roles.has("SUPPORT") ? .2 : 0),
-    protection: Math.max(Number(trait.sustain) || 0, roles.has("SUPPORT") ? .75 : 0, roles.has("TANK") ? .2 : 0),
-    carry: Math.max(
-      roles.has("MARKSMAN") ? 1 : 0,
-      roles.has("MAGE") ? .85 : 0,
-      roles.has("ASSASSIN") ? .8 : 0,
-      roles.has("FIGHTER") ? .45 : 0,
-    ),
-    access: Math.max(Number(trait.mobility) || 0, roles.has("ASSASSIN") ? 1 : 0, roles.has("FIGHTER") ? .4 : 0),
-  };
+function enemyForRole(role) {
+  const slotIndex = SLOT_ROLES.indexOf(String(role));
+  return slotIndex < 0 ? null : state.teams.enemy[slotIndex];
 }
 
-function draftFeatureMaximum(championIds) {
-  const maximum = { frontline: 0, control: 0, protection: 0, carry: 0, access: 0 };
-  championIds.forEach((championId) => {
-    const features = championFeatures(championId);
-    Object.keys(maximum).forEach((key) => { maximum[key] = Math.max(maximum[key], features[key]); });
-  });
-  return maximum;
-}
-
-function draftFit(championId) {
-  const candidate = championFeatures(championId);
-  const allies = state.teams.ally.filter(Boolean);
-  const enemies = state.teams.enemy.filter(Boolean);
-  const allyCoverage = draftFeatureMaximum(allies);
-  const enemyThreat = draftFeatureMaximum(enemies);
-  const components = { frontline: 0, control: 0, protection: 0, carry: 0, access: 0, diversity: 0 };
-
-  if (allies.length) {
-    components.frontline += (1 - allyCoverage.frontline) * candidate.frontline * 1.3;
-    components.control += (1 - allyCoverage.control) * candidate.control * 1.05;
-    components.protection += (1 - allyCoverage.protection) * candidate.protection * .65;
-    components.carry += (1 - allyCoverage.carry) * candidate.carry * .65;
-    components.access += (1 - allyCoverage.access) * candidate.access * .4;
-
-    const alliedRoles = new Set(allies.flatMap((id) => [...championFeatures(id).roles]));
-    const candidateRoles = [...candidate.roles];
-    if (candidateRoles.length) {
-      components.diversity += candidateRoles.filter((role) => !alliedRoles.has(role)).length / candidateRoles.length * .35;
-    }
-  }
-
-  if (enemies.length) {
-    components.frontline += enemyThreat.access * candidate.frontline * .85;
-    components.control += (enemyThreat.access * .55 + enemyThreat.carry * .35) * candidate.control;
-    components.protection += enemyThreat.access * candidate.protection * .4;
-    components.carry += enemyThreat.frontline * candidate.carry * .6;
-    components.access += enemyThreat.carry * candidate.access * .75;
-  }
-
-  return {
-    raw: Object.values(components).reduce((total, value) => total + value, 0),
-    components,
-  };
-}
-
-function contextualizeRanking(entries) {
-  const hasContext = [...state.teams.ally, ...state.teams.enemy].some(Boolean) && Object.keys(state.traits).length > 0;
-  const contextual = entries.map((entry) => ({ ...entry, ...draftFit(entry.championId) }));
-  const rawValues = contextual.map((entry) => entry.raw);
-  const minimum = Math.min(...rawValues);
-  const maximum = Math.max(...rawValues);
-
-  return contextual.map((entry) => {
-    const fitPercent = hasContext && maximum > minimum
-      ? Math.round(35 + ((entry.raw - minimum) / (maximum - minimum)) * 60)
-      : 50;
-    const draftAdjustment = hasContext ? (fitPercent - 65) / 10 : 0;
-    return { ...entry, fitPercent, draftScore: entry.winRate + draftAdjustment };
-  });
-}
-
-function fitReason(entry) {
-  const labels = {
-    frontline: "fitFrontline",
-    control: "fitControl",
-    protection: "fitProtection",
-    carry: "fitCarry",
-    access: "fitAccess",
-    diversity: "fitDiversity",
-  };
-  const reasons = Object.entries(entry.components || {})
-    .filter(([, value]) => value > .04)
-    .sort((left, right) => right[1] - left[1])
-    .slice(0, 2)
-    .map(([key]) => t(labels[key]));
-  if (!reasons.length) return t("fitGeneral");
-  const conjunction = state.language === "tr" ? " ve " : " and ";
-  return reasons.join(conjunction);
+function observedMatchup(championId, role, enemyId) {
+  return state.matchups[String(championId)]?.[String(role)]?.[String(enemyId)] || null;
 }
 
 function analyzeComposition() {
   const unavailable = selectedIds();
-  const ranking = contextualizeRanking(
-    [...(state.stats[state.selectedRole] || [])]
-      .filter((entry) => !unavailable.has(String(entry.championId))),
-  ).sort((a, b) => b.draftScore - a.draftScore || b.winRate - a.winRate);
+  const enemyId = enemyForRole(state.selectedRole);
+  const available = [...(state.stats[state.selectedRole] || [])]
+    .filter((entry) => !unavailable.has(String(entry.championId)))
+    .map((entry) => ({
+      ...entry,
+      matchup: enemyId ? observedMatchup(entry.championId, state.selectedRole, enemyId) : null,
+    }));
+  const useMatchups = Boolean(enemyId && available.some((entry) => entry.matchup));
+  const ranking = (useMatchups ? available.filter((entry) => entry.matchup) : available)
+    .map((entry) => ({ ...entry, basis: useMatchups ? "matchup" : "role" }))
+    .sort((left, right) => useMatchups
+      ? right.matchup.winRate - left.matchup.winRate || right.winRate - left.winRate
+      : right.winRate - left.winRate);
   const top = ranking.filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3);
   if (!top.length) {
     elements.draftNote.textContent = t("noPositionData");
@@ -618,41 +541,61 @@ function renderResult(entries, shouldScroll = true) {
   const [best, ...alternatives] = entries;
   const champion = state.championMap.get(String(best.championId));
   const role = roleName(state.selectedRole);
-  const sourceLabel = t(state.source === "live" ? "sourceLive" : "sourceCached");
+  const enemyId = enemyForRole(state.selectedRole);
+  const enemy = enemyId ? state.championMap.get(String(enemyId)) : null;
+  const isMatchup = best.basis === "matchup" && enemy;
+  const rankingRate = isMatchup ? best.matchup.winRate : best.winRate;
+  const dataDate = isMatchup ? state.matchupDate : state.statDate;
   const alternativesHtml = alternatives.map((entry, index) => {
     const option = state.championMap.get(String(entry.championId));
+    const rateCopy = isMatchup
+      ? t("rateVs", { rate: entry.matchup.winRate.toFixed(2), enemy: enemy.name })
+      : t("roleRate", { rate: entry.winRate.toFixed(2) });
     return `<div class="alternative">
       <img src="${escapeHtml(option.avatarUrl)}" alt="" data-fallback="${escapeHtml(option.name)}">
       <b>${index + 2}. ${escapeHtml(option.name)}</b>
-      <span>${entry.winRate.toFixed(2)}% · ${entry.fitPercent}% ${t("fitShort")}</span>
+      <span>${escapeHtml(rateCopy)}</span>
     </div>`;
   }).join("");
+
+  const metricsHtml = isMatchup
+    ? `<div class="metric"><span>${t("diamondWinRate")}</span><strong>${best.winRate.toFixed(2)}%</strong></div>
+       <div class="metric"><span>${t("matchupPickRate")}</span><strong>${best.matchup.pickRate.toFixed(2)}%</strong></div>
+       <div class="metric"><span>${t("dataBasis")}</span><strong>${t("observedMatchup")}</strong></div>`
+    : `<div class="metric"><span>${t("pickRate")}</span><strong>${best.pickRate.toFixed(2)}%</strong></div>
+       <div class="metric"><span>${t("banRate")}</span><strong>${best.banRate.toFixed(2)}%</strong></div>
+       <div class="metric"><span>${t("dataBasis")}</span><strong>${t("overallRole")}</strong></div>`;
+  const explanation = isMatchup
+    ? t("whyMatchup", {
+      name: champion.name,
+      role,
+      enemy: enemy.name,
+      matchupRate: best.matchup.winRate.toFixed(2),
+      winRate: best.winRate.toFixed(2),
+      date: formatDate(dataDate),
+    })
+    : t("whyOverall", {
+      name: champion.name,
+      role,
+      winRate: best.winRate.toFixed(2),
+      date: formatDate(dataDate),
+    });
 
   elements.resultContent.innerHTML = `
     <div class="result-hero">
       <img src="${escapeHtml(champion.cardUrl)}" alt="${escapeHtml(champion.name)}" data-fallback="${escapeHtml(champion.name)}">
       <span class="result-badge">${t("topRecommendation")}</span>
-      <div class="result-title"><span>${t("highestAvailable")}</span><h2>${escapeHtml(champion.name)}</h2></div>
+      <div class="result-title"><span>${t(isMatchup ? "highestMatchup" : "highestRole")}</span><h2>${escapeHtml(champion.name)}</h2></div>
     </div>
     <div class="result-body">
       <div class="winrate-callout">
-        <div><span>${t("diamondWinRate")}</span><div class="winrate">${best.winRate.toFixed(2)}<small>%</small></div></div>
+        <div><span>${isMatchup ? t("matchupWinRate", { enemy: escapeHtml(enemy.name) }) : t("diamondWinRate")}</span><div class="winrate">${rankingRate.toFixed(2)}<small>%</small></div></div>
         <div class="position-tag">${escapeHtml(role)}</div>
       </div>
       <div class="metric-grid">
-        <div class="metric"><span>${t("pickRate")}</span><strong>${best.pickRate.toFixed(2)}%</strong></div>
-        <div class="metric"><span>${t("banRate")}</span><strong>${best.banRate.toFixed(2)}%</strong></div>
-        <div class="metric"><span>${t("draftFit")}</span><strong>${best.fitPercent}%</strong></div>
+        ${metricsHtml}
       </div>
-      <p class="why-copy"><strong>${t("whyThisPick")}</strong> ${t("whySentence", {
-        name: escapeHtml(champion.name),
-        winRate: best.winRate.toFixed(2),
-        role: escapeHtml(role),
-        reasons: escapeHtml(fitReason(best)),
-        fit: best.fitPercent,
-        source: sourceLabel,
-        date: formatDate(state.statDate),
-      })}</p>
+      <p class="why-copy"><strong>${t("whyThisPick")}</strong> ${escapeHtml(explanation)}</p>
       <div class="alternatives-label">${t("nextBest")}</div>
       ${alternativesHtml}
     </div>`;
@@ -681,13 +624,6 @@ document.querySelectorAll(".role-button").forEach((button) => {
     });
     updateAnalyzeState();
     clearResult();
-  });
-});
-
-elements.pickerRoleFilters.querySelectorAll(".picker-role-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    state.pickerRole = button.dataset.pickerRole;
-    renderChampionGrid();
   });
 });
 
