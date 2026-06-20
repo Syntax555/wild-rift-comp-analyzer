@@ -34,6 +34,7 @@ for (const file of files) {
 }
 
 const championPayload = downloaded.get("champions.v1.json") || {};
+const latestPayload = downloaded.get("latest.v1.json") || {};
 const champions = Object.values(championPayload.champions || {}).filter((champion) => champion.riotSlug);
 const championIdBySlug = new Map(champions.map((champion) => [champion.riotSlug, String(champion.id)]));
 const championIdByName = new Map(champions.map((champion) => [normalizeName(champion.displayName), String(champion.id)]));
@@ -117,6 +118,22 @@ const matchupPayload = {
 };
 await writeFile(resolve(outputDirectory, "matchups.v1.json"), `${JSON.stringify(matchupPayload)}\n`, "utf8");
 console.log(`Updated data/matchups.v1.json (${Object.keys(matchups).length} champions)`);
+
+const compactMatchupPayload = {
+  version: 1,
+  generatedAt: matchupPayload.generatedAt,
+  dataDate: matchupPayload.dataDate,
+  source: matchupPayload.source,
+  champions: Object.fromEntries(Object.entries(matchups).sort(([left], [right]) => left.localeCompare(right)).map(([championId, roles]) => [
+    championId,
+    Object.fromEntries(Object.entries(roles).map(([role, opponents]) => [
+      role,
+      Object.entries(opponents).map(([opponentId, values]) => [opponentId, values.winRate, values.pickRate]),
+    ])),
+  ])),
+};
+await writeFile(resolve(outputDirectory, "matchups-compact.v1.json"), `${JSON.stringify(compactMatchupPayload)}\n`, "utf8");
+console.log(`Updated data/matchups-compact.v1.json (${Object.keys(matchups).length} champions)`);
 
 try {
   const statsWrResponse = await fetch(statsWrUrl, {
@@ -211,3 +228,39 @@ const signalPayload = {
 };
 await writeFile(resolve(outputDirectory, "champion-signals.v1.json"), `${JSON.stringify(signalPayload)}\n`, "utf8");
 console.log(`Updated data/champion-signals.v1.json (${Object.keys(signals).length} champions)`);
+
+const generatedAt = new Date().toISOString();
+const rankedDiamondPayload = {
+  version: 1,
+  generatedAt,
+  statDate: latestPayload.statDate || null,
+  rank: "Diamond+",
+  source: latestPayload.source || "RankedWR",
+  roles: latestPayload.tiers?.["1"] || {},
+};
+const championsUiPayload = {
+  version: 1,
+  generatedAt,
+  champions: champions
+    .map((champion) => [String(champion.id), champion.displayName, champion.avatar || "", champion.riotSlug || ""])
+    .sort((left, right) => left[1].localeCompare(right[1])),
+};
+const revision = generatedAt.replace(/\D/g, "").slice(0, 14);
+const manifestPayload = {
+  version: 1,
+  revision,
+  generatedAt,
+  files: {
+    ranked: "ranked-diamond.v1.json",
+    champions: "champions-ui.v1.json",
+    matchups: "matchups-compact.v1.json",
+    history: "history.v1.json",
+    signals: "champion-signals.v1.json",
+  },
+};
+await Promise.all([
+  writeFile(resolve(outputDirectory, "ranked-diamond.v1.json"), `${JSON.stringify(rankedDiamondPayload)}\n`, "utf8"),
+  writeFile(resolve(outputDirectory, "champions-ui.v1.json"), `${JSON.stringify(championsUiPayload)}\n`, "utf8"),
+  writeFile(resolve(outputDirectory, "manifest.v1.json"), `${JSON.stringify(manifestPayload)}\n`, "utf8"),
+]);
+console.log(`Updated compact browser snapshots (revision ${revision})`);

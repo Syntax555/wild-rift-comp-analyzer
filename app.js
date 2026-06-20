@@ -1,6 +1,5 @@
 const DATA_BASE = new URL("./data/", import.meta.url);
 const ASSET_BASE = "https://rankedwr.com/";
-const RANK_BUCKET = "1"; // Diamond+ in the Riot/Tencent CN dataset.
 const SLOT_ROLES = ["2", "5", "1", "3", "4"];
 const ROLE_ICONS = { "1": "◇", "2": "◈", "3": "➹", "4": "✦", "5": "⌁" };
 
@@ -34,14 +33,15 @@ const messages = {
     evidenceExplanation: "{name} leads at {score}/100 for {role}. {matchup}. Overall role win rate: {winRate}%. Historical change: {trend}. The team-fit estimates evaluate {enemyCoverage} and {allyCoverage}.",
     directMatchupPhrase: "Observed lane win rate against {enemy}: {rate}%", noMatchupPhrase: "No published direct lane matchup was available",
     trendPoints: "{value} percentage points", trendUnavailable: "unavailable", oneEnemy: "1 selected enemy", manyEnemies: "{count} selected enemies", oneAlly: "1 selected ally", manyAllies: "{count} selected allies", nextBest: "Next best available", evidenceShort: "{score}/100 evidence",
-    confidenceTitle: "Recommendation confidence", confidenceHigh: "High", confidenceMedium: "Medium", confidenceLimited: "Limited",
-    confidenceDetail: "{coverage}% applicable data coverage · current data {freshness}", confidenceNote: "Confidence measures source coverage and freshness, not certainty of winning.",
+    confidenceTitle: "Data coverage", confidenceHigh: "Strong", confidenceMedium: "Partial", confidenceLimited: "Limited",
+    confidenceDetail: "{coverage}% applicable source coverage · current data {freshness}", confidenceNote: "Coverage measures available sources and freshness, not certainty of winning.",
     freshnessToday: "updated today", freshnessOneDay: "1 day old", freshnessDays: "{days} days old", freshnessUnknown: "age unavailable",
     counterMatrix: "Enemy counter matrix", counterMatrixHint: "How this pick answers every selected enemy", synergyMatrix: "Ally synergy matrix", synergyMatrixHint: "How this pick complements every selected ally",
     observedWinShort: "{rate}% observed", responseScoreShort: "{score}/100 response", synergyScoreShort: "{score}/100 synergy",
     reasonFrontline: "Frontline", reasonControl: "CC setup", reasonProtection: "Peel & sustain", reasonFollowup: "Damage follow-up", reasonAccess: "Engage follow-up", reasonGeneral: "Role complement",
     dashboardTitle: "Best picks for every open lane", dashboardCopy: "Each lane shows its top three available champions and updates automatically.", openLaneCount: "{count} open lane{plural}", topThree: "Top 3", bestPick: "Best pick", noOpenLanes: "Your allied lineup is complete.",
     counterSummary: "Enemy response", synergySummary: "Ally synergy", noCounterSignals: "No enemies selected", noSynergySignals: "No allies selected",
+    tapToDraft: "Tap to draft", draftRecommendation: "Draft {name} in {role}", addedRecommendation: "{name} added to {role}", undo: "Undo", laneNavigation: "Recommendation lanes", coverageShort: "{score}% coverage",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
@@ -73,14 +73,15 @@ const messages = {
     evidenceExplanation: "{name}, {role} için {score}/100 ile önde. {matchup}. Genel rol kazanma oranı: %{winRate}. Geçmiş değişim: {trend}. Takım uyumu tahminleri {enemyCoverage} ve {allyCoverage} değerlendirir.",
     directMatchupPhrase: "{enemy} karşısı gözlemlenmiş koridor kazanma oranı: %{rate}", noMatchupPhrase: "Yayımlanmış doğrudan koridor eşleşmesi bulunamadı",
     trendPoints: "{value} yüzde puanı", trendUnavailable: "kullanılamıyor", oneEnemy: "seçilen 1 rakibi", manyEnemies: "seçilen {count} rakibi", oneAlly: "seçilen 1 takım arkadaşını", manyAllies: "seçilen {count} takım arkadaşını", nextBest: "Sonraki en iyi seçenekler", evidenceShort: "{score}/100 kanıt",
-    confidenceTitle: "Öneri güveni", confidenceHigh: "Yüksek", confidenceMedium: "Orta", confidenceLimited: "Sınırlı",
-    confidenceDetail: "%{coverage} uygulanabilir veri kapsamı · güncel veri {freshness}", confidenceNote: "Güven, kaynak kapsamını ve güncelliğini ölçer; kazanma garantisi değildir.",
+    confidenceTitle: "Veri kapsamı", confidenceHigh: "Güçlü", confidenceMedium: "Kısmi", confidenceLimited: "Sınırlı",
+    confidenceDetail: "%{coverage} uygulanabilir kaynak kapsamı · güncel veri {freshness}", confidenceNote: "Kapsam, mevcut kaynakları ve güncelliği ölçer; kazanma kesinliği değildir.",
     freshnessToday: "bugün güncellendi", freshnessOneDay: "1 günlük", freshnessDays: "{days} günlük", freshnessUnknown: "veri yaşı bilinmiyor",
     counterMatrix: "Rakip karşılık matrisi", counterMatrixHint: "Bu seçimin seçilen her rakibe verdiği yanıt", synergyMatrix: "Takım sinerjisi matrisi", synergyMatrixHint: "Bu seçimin her takım arkadaşını nasıl tamamladığı",
     observedWinShort: "%{rate} gözlemlenmiş", responseScoreShort: "{score}/100 yanıt", synergyScoreShort: "{score}/100 sinerji",
     reasonFrontline: "Ön saf", reasonControl: "Kitle kontrolü", reasonProtection: "Koruma ve iyileştirme", reasonFollowup: "Hasar takibi", reasonAccess: "Başlatma takibi", reasonGeneral: "Rol tamamlayıcılığı",
     dashboardTitle: "Her boş koridor için en iyi seçimler", dashboardCopy: "Her koridorda en iyi üç uygun şampiyon gösterilir ve sonuçlar otomatik güncellenir.", openLaneCount: "{count} boş koridor", topThree: "İlk 3", bestPick: "En iyi seçim", noOpenLanes: "Takım kadron tamamlandı.",
     counterSummary: "Rakip yanıtı", synergySummary: "Takım sinerjisi", noCounterSignals: "Rakip seçilmedi", noSynergySignals: "Takım arkadaşı seçilmedi",
+    tapToDraft: "Seçime ekle", draftRecommendation: "{name} şampiyonunu {role} için seç", addedRecommendation: "{name}, {role} için eklendi", undo: "Geri al", laneNavigation: "Öneri koridorları", coverageShort: "%{score} kapsam",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -144,6 +145,8 @@ const state = {
   source: "loading",
   ready: false,
   lastResult: null,
+  activeMobileRole: null,
+  lastAutoPick: null,
 };
 
 const elements = {
@@ -296,7 +299,10 @@ function formatDate(compactDate) {
   return new Intl.DateTimeFormat(state.language === "tr" ? "tr-TR" : "en", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
-function normalizeChampion(raw, page = null) {
+function normalizeChampion(raw) {
+  if (Array.isArray(raw)) {
+    raw = { id: raw[0], displayName: raw[1], avatar: raw[2], riotSlug: raw[3] };
+  }
   const avatarUrl = raw.avatar
     ? new URL(raw.avatar.replace(/^\/+/, ""), ASSET_BASE).href
     : new URL(`data/avatars/${raw.id}.png`, ASSET_BASE).href;
@@ -305,8 +311,17 @@ function normalizeChampion(raw, page = null) {
     name: raw.displayName,
     search: `${raw.displayName} ${raw.riotSlug || ""}`.toLowerCase(),
     avatarUrl,
-    cardUrl: page?.cardImageUrl || avatarUrl,
   };
+}
+
+function expandCompactMatchups(compact = {}) {
+  return Object.fromEntries(Object.entries(compact).map(([championId, roles]) => [
+    championId,
+    Object.fromEntries(Object.entries(roles).map(([role, rows]) => [
+      role,
+      Object.fromEntries(rows.map(([enemyId, winRate, pickRate]) => [String(enemyId), { winRate, pickRate }])),
+    ])),
+  ]));
 }
 
 function buildFallbackData() {
@@ -325,37 +340,43 @@ function buildFallbackData() {
 
 async function loadData() {
   try {
-    const [latestResponse, championsResponse, pagesResponse, matchupsResponse, historyResponse, signalsResponse] = await Promise.all([
-      fetch(new URL("latest.v1.json", DATA_BASE), { cache: "no-store" }),
-      fetch(new URL("champions.v1.json", DATA_BASE), { cache: "no-store" }),
-      fetch(new URL("champion-pages.index.v1.json", DATA_BASE), { cache: "no-store" }),
-      fetch(new URL("matchups.v1.json", DATA_BASE), { cache: "no-store" }),
-      fetch(new URL("history.v1.json", DATA_BASE), { cache: "no-store" }),
-      fetch(new URL("champion-signals.v1.json", DATA_BASE), { cache: "no-store" }),
+    const manifestResponse = await fetch(new URL("manifest.v1.json", DATA_BASE), { cache: "no-store" });
+    if (!manifestResponse.ok) throw new Error("The data manifest was unavailable.");
+    const manifest = await manifestResponse.json();
+    const versionedUrl = (file) => {
+      const url = new URL(file, DATA_BASE);
+      url.searchParams.set("v", manifest.revision);
+      return url;
+    };
+    const [latestResponse, championsResponse, matchupsResponse, historyResponse, signalsResponse] = await Promise.all([
+      fetch(versionedUrl(manifest.files.ranked), { cache: "force-cache" }),
+      fetch(versionedUrl(manifest.files.champions), { cache: "force-cache" }),
+      fetch(versionedUrl(manifest.files.matchups), { cache: "force-cache" }),
+      fetch(versionedUrl(manifest.files.history), { cache: "force-cache" }),
+      fetch(versionedUrl(manifest.files.signals), { cache: "force-cache" }),
     ]);
-    if (![latestResponse, championsResponse, pagesResponse].every((response) => response.ok)) {
+    if (![latestResponse, championsResponse].every((response) => response.ok)) {
       throw new Error("One or more ranked data endpoints were unavailable.");
     }
-    const [latest, championPayload, pagePayload, matchupPayload, historyPayload, signalPayload] = await Promise.all([
-      latestResponse.json(), championsResponse.json(), pagesResponse.json(),
+    const [latest, championPayload, matchupPayload, historyPayload, signalPayload] = await Promise.all([
+      latestResponse.json(), championsResponse.json(),
       matchupsResponse.ok ? matchupsResponse.json() : Promise.resolve({ champions: {} }),
       historyResponse.ok ? historyResponse.json() : Promise.resolve({ champions: {} }),
       signalsResponse.ok ? signalsResponse.json() : Promise.resolve({ champions: {} }),
     ]);
 
-    const pages = pagePayload.champions || {};
-    state.champions = Object.values(championPayload.champions || {})
-      .filter((champion) => champion.displayName)
-      .map((champion) => normalizeChampion(champion, pages[champion.id]))
+    state.champions = (championPayload.champions || [])
+      .filter((champion) => Array.isArray(champion) ? champion[1] : champion.displayName)
+      .map((champion) => normalizeChampion(champion))
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    const tier = latest.tiers?.[RANK_BUCKET];
+    const tier = latest.roles;
     if (!tier) throw new Error("Diamond+ statistics were missing from the response.");
     state.stats = Object.fromEntries(Object.entries(tier).map(([role, rows]) => [
       role,
       rows.map(([championId, winRate, pickRate, banRate]) => ({ championId, winRate, pickRate, banRate })),
     ]));
-    state.matchups = matchupPayload.champions || {};
+    state.matchups = expandCompactMatchups(matchupPayload.champions || {});
     state.matchupDate = matchupPayload.dataDate || null;
     state.history = historyPayload.champions || {};
     state.historyDate = historyPayload.dataDate || null;
@@ -458,6 +479,8 @@ function openPicker(team, index) {
 function closePicker() {
   if (elements.picker.open) elements.picker.close();
   state.pickerTarget = null;
+  elements.championGrid.replaceChildren();
+  elements.pickerEmpty.hidden = true;
 }
 
 function renderChampionGrid() {
@@ -484,7 +507,7 @@ function renderChampionGrid() {
     button.setAttribute("aria-label", drafted.has(champion.id)
       ? t("alreadyDrafted", { name: champion.name })
       : t("chooseName", { name: champion.name }));
-    button.innerHTML = `<img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" data-fallback="${escapeHtml(champion.name)}"><span>${escapeHtml(champion.name)}</span>`;
+    button.innerHTML = `<img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}"><span>${escapeHtml(champion.name)}</span>`;
     button.addEventListener("click", () => selectChampion(champion.id));
     elements.championGrid.append(button);
   });
@@ -498,6 +521,7 @@ function selectChampion(championId) {
   if (!state.pickerTarget) return;
   const { team, index } = state.pickerTarget;
   state.teams[team][index] = championId;
+  state.lastAutoPick = null;
   closePicker();
   renderAllSlots();
   analyzeAllOpenRoles();
@@ -505,6 +529,7 @@ function selectChampion(championId) {
 
 function removeChampion(team, index) {
   state.teams[team][index] = null;
+  state.lastAutoPick = null;
   renderAllSlots();
   analyzeAllOpenRoles();
 }
@@ -571,15 +596,26 @@ function average(values) {
   return values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0;
 }
 
+function boundedScores(values) {
+  if (!values.length) return [];
+  const mean = average(values);
+  const variance = average(values.map((value) => (value - mean) ** 2));
+  const deviation = Math.sqrt(variance);
+  return values.map((value) => deviation < .000001
+    ? 50
+    : Math.round(Math.max(15, Math.min(85, 50 + ((value - mean) / deviation) * 15))));
+}
+
 function normalizeScores(entries, rawKey, scoreKey, active) {
   const values = entries.map((entry) => entry[rawKey]).filter(Number.isFinite);
-  const minimum = Math.min(...values);
-  const maximum = Math.max(...values);
+  const scores = boundedScores(values);
+  let scoreIndex = 0;
   entries.forEach((entry) => {
-    if (!active || !Number.isFinite(entry[rawKey]) || !values.length || maximum === minimum) {
+    if (!active || !Number.isFinite(entry[rawKey]) || !values.length) {
       entry[scoreKey] = 50;
     } else {
-      entry[scoreKey] = Math.round(((entry[rawKey] - minimum) / (maximum - minimum)) * 100);
+      entry[scoreKey] = scores[scoreIndex];
+      scoreIndex += 1;
     }
   });
 }
@@ -589,12 +625,21 @@ function normalizePairDetails(entries, detailKey) {
   championIds.forEach((championId) => {
     const details = entries.map((entry) => entry[detailKey].find((detail) => detail.championId === championId)).filter(Boolean);
     const values = details.map((detail) => detail.raw).filter(Number.isFinite);
-    const minimum = Math.min(...values);
-    const maximum = Math.max(...values);
+    const scores = boundedScores(values);
+    let scoreIndex = 0;
     details.forEach((detail) => {
-      detail.score = !values.length || maximum === minimum ? 50 : Math.round(((detail.raw - minimum) / (maximum - minimum)) * 100);
+      detail.score = !values.length || !Number.isFinite(detail.raw) ? 50 : scores[scoreIndex++];
     });
   });
+}
+
+function reliabilityFactor(appearanceRate, fullWeightAt = 5) {
+  const rate = Math.max(0, Number(appearanceRate) || 0);
+  return Math.max(.2, Math.min(1, Math.sqrt(rate / fullWeightAt)));
+}
+
+function shrinkToward(value, baseline, factor) {
+  return baseline + (value - baseline) * factor;
 }
 
 function dataAgeDays(compactDate) {
@@ -671,19 +716,23 @@ function rankRole(role, additionalUnavailable = new Set()) {
         historical,
         enemyDetails,
         allyDetails,
-        trendRaw: historical ? entry.winRate - historical.winRate : null,
+        roleRaw: shrinkToward(entry.winRate, 50, reliabilityFactor(entry.pickRate)),
+        trendRaw: historical ? (entry.winRate - historical.winRate) * reliabilityFactor(entry.pickRate) : null,
         enemyRaw: enemyDetails.length ? average(enemyDetails.map((detail) => detail.raw)) : null,
         allyRaw: allyDetails.length ? average(allyDetails.map((detail) => detail.raw)) : null,
       };
     });
   const useMatchups = Boolean(enemyId && available.some((entry) => entry.matchup));
-  if (useMatchups) available = available.filter((entry) => entry.matchup);
-  available.forEach((entry) => { entry.matchupRaw = entry.matchup?.winRate ?? null; });
+  available.forEach((entry) => {
+    entry.matchupRaw = entry.matchup
+      ? shrinkToward(entry.matchup.winRate, 50, reliabilityFactor(entry.matchup.pickRate, 3))
+      : null;
+  });
   const useTrend = available.some((entry) => Number.isFinite(entry.trendRaw));
   const useEnemyEstimate = enemyInputs.length > 0;
   const useAllyEstimate = allyInputs.length > 0;
 
-  normalizeScores(available, "winRate", "roleScore", true);
+  normalizeScores(available, "roleRaw", "roleScore", true);
   normalizeScores(available, "matchupRaw", "matchupScore", useMatchups);
   normalizeScores(available, "trendRaw", "trendScore", useTrend);
   normalizeScores(available, "enemyRaw", "enemyScore", useEnemyEstimate);
@@ -731,7 +780,7 @@ function compactEnemySignals(entry) {
     const target = state.championMap.get(String(detail.championId));
     if (!target) return "";
     const value = detail.observed ? `${detail.observed.winRate.toFixed(1)}%` : `${detail.score}/100`;
-    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${value}</em></span>`;
+    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${value}</em></span>`;
   }).join("");
 }
 
@@ -740,7 +789,7 @@ function compactAllySignals(entry) {
   return entry.allyDetails.map((detail) => {
     const target = state.championMap.get(String(detail.championId));
     if (!target) return "";
-    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${t(detail.reasons[0])}</em></span>`;
+    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${t(detail.reasons[0])}</em></span>`;
   }).join("");
 }
 
@@ -750,15 +799,16 @@ function renderLaneRecommendation(group) {
   const picks = group.entries.map((entry, index) => {
     const champion = state.championMap.get(String(entry.championId));
     if (!champion) return "";
-    return `<article class="ranked-pick ${index === 0 ? "best" : ""}">
+    return `<button type="button" class="ranked-pick ${index === 0 ? "best" : ""}" data-pick-role="${group.role}" data-pick-champion="${escapeHtml(entry.championId)}" aria-label="${escapeHtml(t("draftRecommendation", { name: champion.name, role: roleName(group.role) }))}">
       <span class="pick-rank">${index + 1}</span>
-      <img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}">
-      <div class="pick-identity"><small>${index === 0 ? t("bestPick") : `${t("topThree")} · ${index + 1}`}</small><b>${escapeHtml(champion.name)}</b><span>${entry.winRate.toFixed(2)}% WR</span></div>
+      <img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}">
+      <div class="pick-identity"><small>${index === 0 ? t("bestPick") : `${t("topThree")} · ${index + 1}`}</small><b>${escapeHtml(champion.name)}</b><span>${entry.winRate.toFixed(2)}% WR · ${t("tapToDraft")}</span></div>
       <div class="pick-score"><strong>${entry.evidenceScore}</strong><small>/100</small><em>${t(entry.confidence.levelKey)}</em></div>
-    </article>`;
+    </button>`;
   }).join("");
-  return `<section class="lane-recommendation">
-    <header><div><span class="lane-icon">${ROLE_ICONS[group.role]}</span><div><small>${t("topThree")}</small><h3>${escapeHtml(roleName(group.role))}</h3></div></div><strong>${best.confidence.score}%</strong></header>
+  const activeClass = state.activeMobileRole === group.role ? " mobile-active" : "";
+  return `<section class="lane-recommendation${activeClass}" data-lane-role="${group.role}">
+    <header><div><span class="lane-icon">${ROLE_ICONS[group.role]}</span><div><small>${t("topThree")}</small><h3>${escapeHtml(roleName(group.role))}</h3></div></div><strong>${t("coverageShort", { score: best.confidence.score })}</strong></header>
     <div class="ranked-picks">${picks}</div>
     <div class="lane-signal"><span>${t("counterSummary")}</span><div>${compactEnemySignals(best)}</div></div>
     <div class="lane-signal"><span>${t("synergySummary")}</span><div>${compactAllySignals(best)}</div></div>
@@ -766,19 +816,64 @@ function renderLaneRecommendation(group) {
   </section>`;
 }
 
+function autoPickNotice() {
+  if (!state.lastAutoPick) return "";
+  return `<div class="auto-pick-notice" role="status"><span>${escapeHtml(t("addedRecommendation", {
+    name: state.lastAutoPick.name,
+    role: roleName(state.lastAutoPick.role),
+  }))}</span><button type="button" class="undo-pick">${t("undo")}</button></div>`;
+}
+
 function renderAutomaticResults(groups) {
   state.lastResult = groups;
+  if (!groups.some((group) => group.role === state.activeMobileRole)) {
+    state.activeMobileRole = groups[0]?.role || null;
+  }
+  const notice = autoPickNotice();
   if (!groups.length) {
-    elements.resultContent.innerHTML = `<div class="complete-lineup"><span>✓</span><h2>${t("noOpenLanes")}</h2></div>`;
+    elements.resultContent.innerHTML = `${notice}<div class="complete-lineup"><span>✓</span><h2>${t("noOpenLanes")}</h2></div>`;
   } else {
-    elements.resultContent.innerHTML = `<div class="dashboard-header">
+    const tabs = `<div class="mobile-lane-tabs" role="tablist" aria-label="${escapeHtml(t("laneNavigation"))}">${groups.map((group) => `<button type="button" class="lane-tab" role="tab" data-lane-tab="${group.role}" aria-selected="${group.role === state.activeMobileRole}"><span>${ROLE_ICONS[group.role]}</span>${escapeHtml(roleName(group.role))}</button>`).join("")}</div>`;
+    elements.resultContent.innerHTML = `${notice}<div class="dashboard-header">
       <div><span class="section-number">03</span><h2>${t("dashboardTitle")}</h2><p>${t("dashboardCopy")}</p></div>
       <span>${t("openLaneCount", { count: groups.length, plural: state.language === "en" && groups.length !== 1 ? "s" : "" })}</span>
-    </div><div class="lane-dashboard-grid">${groups.map(renderLaneRecommendation).join("")}</div>`;
+    </div>${tabs}<div class="lane-dashboard-grid">${groups.map(renderLaneRecommendation).join("")}</div>`;
   }
   bindImageFallbacks(elements.resultContent);
   elements.resultPlaceholder.hidden = true;
   elements.resultContent.hidden = false;
+}
+
+function activateMobileLane(role) {
+  if (!state.lastResult?.some((group) => group.role === role)) return;
+  state.activeMobileRole = role;
+  elements.resultContent.querySelectorAll("[data-lane-tab]").forEach((button) => {
+    button.setAttribute("aria-selected", String(button.dataset.laneTab === role));
+  });
+  elements.resultContent.querySelectorAll("[data-lane-role]").forEach((section) => {
+    section.classList.toggle("mobile-active", section.dataset.laneRole === role);
+  });
+}
+
+function draftRecommendation(role, championId) {
+  const index = SLOT_ROLES.indexOf(String(role));
+  const champion = state.championMap.get(String(championId));
+  if (index < 0 || !champion || state.teams.ally[index] || selectedIds().has(String(championId))) return;
+  state.teams.ally[index] = String(championId);
+  state.lastAutoPick = { index, role: String(role), championId: String(championId), name: champion.name };
+  state.activeMobileRole = SLOT_ROLES.find((candidateRole, candidateIndex) => !state.teams.ally[candidateIndex]) || null;
+  renderAllSlots();
+  analyzeAllOpenRoles();
+}
+
+function undoAutoPick() {
+  const pick = state.lastAutoPick;
+  if (!pick) return;
+  if (state.teams.ally[pick.index] === pick.championId) state.teams.ally[pick.index] = null;
+  state.lastAutoPick = null;
+  state.activeMobileRole = pick.role;
+  renderAllSlots();
+  analyzeAllOpenRoles();
 }
 
 function analyzeAllOpenRoles() {
@@ -796,6 +891,8 @@ function analyzeAllOpenRoles() {
 function resetDraft() {
   state.teams.ally.fill(null);
   state.teams.enemy.fill(null);
+  state.lastAutoPick = null;
+  state.activeMobileRole = null;
   renderAllSlots();
   analyzeAllOpenRoles();
 }
@@ -807,6 +904,14 @@ document.querySelectorAll(".language-button").forEach((button) => {
 elements.resetButton.addEventListener("click", resetDraft);
 elements.closePicker.addEventListener("click", closePicker);
 elements.championSearch.addEventListener("input", renderChampionGrid);
+elements.resultContent.addEventListener("click", (event) => {
+  const undoButton = event.target.closest(".undo-pick");
+  if (undoButton) return undoAutoPick();
+  const laneTab = event.target.closest("[data-lane-tab]");
+  if (laneTab) return activateMobileLane(laneTab.dataset.laneTab);
+  const pickButton = event.target.closest("[data-pick-champion]");
+  if (pickButton) draftRecommendation(pickButton.dataset.pickRole, pickButton.dataset.pickChampion);
+});
 elements.picker.addEventListener("click", (event) => {
   if (event.target === elements.picker) closePicker();
 });

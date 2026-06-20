@@ -155,10 +155,13 @@ h1 em { color: var(--cyan); font-style: normal; }
 .placeholder-stats span { width: 52px; height: 5px; border-radius: 8px; background: rgba(129,151,177,.1); }
 
 .result-content { position: relative; z-index: 2; min-height: 420px; padding: 34px 40px 42px; }
+.auto-pick-notice { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 16px; padding: 10px 12px; border: 1px solid rgba(65,227,212,.22); border-radius: 5px; background: rgba(65,227,212,.055); color: #9aabba; font-size: 9px; }
+.auto-pick-notice button { padding: 5px 9px; border: 1px solid rgba(65,227,212,.34); border-radius: 3px; background: transparent; color: var(--cyan); cursor: pointer; font: 700 8px "DM Sans", sans-serif; text-transform: uppercase; letter-spacing: .08em; }
 .dashboard-header { display: flex; align-items: end; justify-content: space-between; gap: 30px; margin-bottom: 24px; }
 .dashboard-header h2 { margin: 7px 0 5px; font: 600 27px/1.1 "Space Grotesk", sans-serif; letter-spacing: -.04em; }
 .dashboard-header p { margin: 0; color: #71849a; font-size: 11px; }
 .dashboard-header > span { padding: 7px 10px; border: 1px solid var(--line); border-radius: 3px; color: #8092a7; font-size: 9px; white-space: nowrap; }
+.mobile-lane-tabs { display: none; }
 .lane-dashboard-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
 .lane-recommendation { min-width: 0; padding: 17px; border: 1px solid rgba(126,148,174,.13); border-radius: 6px; background: rgba(10,22,37,.82); }
 .lane-recommendation > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -168,8 +171,9 @@ h1 em { color: var(--cyan); font-style: normal; }
 .lane-recommendation > header > strong { color: var(--cyan); font: 600 10px "Space Grotesk", sans-serif; }
 .lane-icon { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid rgba(65,227,212,.24); border-radius: 50%; color: var(--cyan); }
 .ranked-picks { display: grid; grid-template-columns: minmax(0,1.25fr) minmax(0,1fr) minmax(0,1fr); gap: 7px; }
-.ranked-pick { position: relative; display: grid; min-width: 0; grid-template-columns: 30px minmax(0,1fr); align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(126,148,174,.1); border-radius: 4px; background: rgba(17,34,55,.62); }
+.ranked-pick { position: relative; display: grid; min-width: 0; grid-template-columns: 30px minmax(0,1fr); align-items: center; gap: 8px; padding: 8px; border: 1px solid rgba(126,148,174,.1); border-radius: 4px; background: rgba(17,34,55,.62); color: inherit; cursor: pointer; font: inherit; text-align: left; transition: border-color .18s ease, background .18s ease, transform .18s ease; }
 .ranked-pick.best { border-color: rgba(65,227,212,.27); background: rgba(65,227,212,.055); }
+.ranked-pick:hover, .ranked-pick:focus-visible { border-color: rgba(65,227,212,.55); background: rgba(65,227,212,.09); outline: none; transform: translateY(-1px); }
 .ranked-pick > img { width: 30px; height: 36px; border-radius: 3px; object-fit: cover; }
 .pick-rank { position: absolute; z-index: 1; top: 3px; left: 3px; display: grid; width: 15px; height: 15px; place-items: center; border-radius: 50%; background: #091522; color: var(--cyan); font-size: 7px; font-weight: 800; }
 .pick-identity { min-width: 0; }
@@ -318,7 +322,15 @@ footer > a:hover { color: var(--cyan); }
   .auto-status { padding: 15px; }
   .result-content { display: block; padding: 26px 12px 30px; }
   .dashboard-header { align-items: flex-start; flex-direction: column; gap: 12px; }
+  .mobile-lane-tabs { display: flex; gap: 5px; margin: -2px 0 12px; padding-bottom: 3px; overflow-x: auto; scrollbar-width: none; }
+  .mobile-lane-tabs::-webkit-scrollbar { display: none; }
+  .lane-tab { display: inline-flex; min-width: max-content; align-items: center; gap: 5px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: rgba(12,25,41,.8); color: #74889e; cursor: pointer; font: 700 8px "DM Sans", sans-serif; }
+  .lane-tab span { color: #5f778e; }
+  .lane-tab[aria-selected="true"] { border-color: rgba(65,227,212,.38); background: rgba(65,227,212,.08); color: var(--text); }
+  .lane-tab[aria-selected="true"] span { color: var(--cyan); }
   .lane-dashboard-grid { grid-template-columns: 1fr; }
+  .lane-recommendation { display: none; }
+  .lane-recommendation.mobile-active { display: block; }
   .ranked-picks { grid-template-columns: 1fr 1fr; }
   .ranked-pick.best { grid-column: 1 / -1; }
   .method-section { grid-template-columns: 1fr; gap: 40px; padding: 80px 10px; }
