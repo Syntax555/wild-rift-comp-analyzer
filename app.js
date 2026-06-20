@@ -2,13 +2,77 @@ const DATA_BASE = new URL("./data/", import.meta.url);
 const ASSET_BASE = "https://rankedwr.com/";
 const RANK_BUCKET = "1"; // Diamond+ in the Riot/Tencent CN dataset.
 
-const roleNames = {
-  "1": "Mid",
-  "2": "Solo",
-  "3": "Duo",
-  "4": "Support",
-  "5": "Jungle",
+const messages = {
+  en: {
+    primaryNav: "Primary navigation", language: "Language", dataFilters: "Data filters", analyzerRegion: "Team composition analyzer", navAnalyzer: "Analyzer", navMethod: "Method",
+    statusConnecting: "Connecting to ranked data", statusLive: "Live ranked snapshot", statusCached: "Cached ranked snapshot",
+    eyebrow: "Wild Rift draft intelligence", heroTitle: "Build the draft.<br><em>Find the edge.</em>",
+    heroCopy: "Select both teams, choose your open position, and get the highest-win-rate available champion from Diamond+ ranked play.",
+    region: "Region", chinaServer: "China server", rank: "Rank", snapshot: "Snapshot", latestAvailable: "Latest available",
+    buildDraft: "Build your draft", resetDraft: "Reset draft", yourTeam: "Your team", allyHint: "Select known allied champions",
+    enemyTeam: "Enemy team", enemyHint: "Select revealed enemy champions", choosePosition: "Choose your position",
+    positionHint: "We compare all available Diamond+ picks in this role.", analyze: "Analyze composition",
+    resultPlaceholderTitle: "Your recommendation<br>will appear here", resultPlaceholderCopy: "Complete the draft on the left and run the analysis.",
+    howItWorks: "How it works", methodTitle: "A clear, data-first recommendation.", methodDraftTitle: "Draft context",
+    methodDraftCopy: "Selected champions are removed from the available recommendation pool.", methodRoleTitle: "Position filter",
+    methodRoleCopy: "Only champions recorded in your chosen role are compared.", methodWinTitle: "Win-rate ranking",
+    methodWinCopy: "The available champion with the highest Diamond+ win rate is recommended first.",
+    methodDisclaimer: "This version ranks aggregate position win rates. The source does not publish matchup or team-synergy win rates, so selected compositions are not presented as statistical counter analysis.",
+    footerCopy: "Ranked statistics from Riot/Tencent Wild Rift CN, accessed through the public RankedWR data mirror. Not affiliated with Riot Games.",
+    viewSource: "View source", chooseChampion: "Choose a champion", closePicker: "Close champion picker",
+    searchChampions: "Search champions…", filterByPosition: "Filter champions by position", all: "All",
+    draftedUnavailable: "Already drafted champions are unavailable", noSearchResults: "No champions match those filters.",
+    addToAlly: "Add to your team", addToEnemy: "Add to enemy team", addChampion: "Add champion",
+    removeChampion: "Remove {name} from {team}", addSlot: "Add champion to {team} slot {slot}", allyTeam: "ally team", enemyTeamLabel: "enemy team",
+    alreadyDrafted: "{name}, already drafted", chooseName: "Choose {name}", championCount: "{shown} of {total} champions",
+    loadingData: "Loading Wild Rift ranked data…", selectToBegin: "Select at least one ally or enemy champion to begin.",
+    draftedReady: "{count} champion{plural} drafted · {role} recommendation ready", noPositionData: "No available champion data exists for this position.",
+    topRecommendation: "Top recommendation", highestAvailable: "Highest available win rate", diamondWinRate: "Diamond+ win rate",
+    pickRate: "Pick rate", banRate: "Ban rate", whyThisPick: "Why this pick:",
+    whySentence: "{name} has the highest recorded {role} win rate among champions not already present in this draft. {source}, {date}.",
+    sourceLive: "Live Diamond+ snapshot", sourceCached: "Cached Diamond+ snapshot", nextBest: "Next best available",
+    role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
+  },
+  tr: {
+    primaryNav: "Ana gezinme", language: "Dil", dataFilters: "Veri filtreleri", analyzerRegion: "Takım kompozisyonu analiz aracı", navAnalyzer: "Analiz", navMethod: "Yöntem",
+    statusConnecting: "Dereceli verilere bağlanılıyor", statusLive: "Canlı dereceli veri", statusCached: "Önbellekteki dereceli veri",
+    eyebrow: "Wild Rift seçim zekâsı", heroTitle: "Kompozisyonu kur.<br><em>Avantajı yakala.</em>",
+    heroCopy: "İki takımı seç, açık pozisyonunu belirle ve Elmas+ dereceli oyunlardaki en yüksek kazanma oranına sahip şampiyonu bul.",
+    region: "Bölge", chinaServer: "Çin sunucusu", rank: "Lig", snapshot: "Veri tarihi", latestAvailable: "En güncel veri",
+    buildDraft: "Takım seçimini oluştur", resetDraft: "Seçimleri sıfırla", yourTeam: "Takımın", allyHint: "Bilinen takım şampiyonlarını seç",
+    enemyTeam: "Rakip takım", enemyHint: "Gösterilen rakip şampiyonları seç", choosePosition: "Pozisyonunu seç",
+    positionHint: "Bu roldeki tüm uygun Elmas+ seçimleri karşılaştırırız.", analyze: "Kompozisyonu analiz et",
+    resultPlaceholderTitle: "Önerin burada<br>görünecek", resultPlaceholderCopy: "Soldaki seçimi tamamla ve analizi çalıştır.",
+    howItWorks: "Nasıl çalışır", methodTitle: "Net ve veri odaklı bir öneri.", methodDraftTitle: "Seçim bağlamı",
+    methodDraftCopy: "Seçilen şampiyonlar uygun öneri havuzundan çıkarılır.", methodRoleTitle: "Pozisyon filtresi",
+    methodRoleCopy: "Yalnızca seçtiğin rolde kaydı bulunan şampiyonlar karşılaştırılır.", methodWinTitle: "Kazanma oranı sıralaması",
+    methodWinCopy: "Uygun şampiyonlar içinde en yüksek Elmas+ kazanma oranına sahip olan önce önerilir.",
+    methodDisclaimer: "Bu sürüm genel pozisyon kazanma oranlarını sıralar. Kaynak, eşleşme veya takım sinerjisi kazanma oranları yayımlamadığı için seçimler istatistiksel karşı seçim analizi olarak sunulmaz.",
+    footerCopy: "Riot/Tencent Wild Rift Çin dereceli istatistikleri, açık RankedWR veri aynası üzerinden kullanılır. Riot Games ile bağlantılı değildir.",
+    viewSource: "Kaynağı görüntüle", chooseChampion: "Bir şampiyon seç", closePicker: "Şampiyon seçiciyi kapat",
+    searchChampions: "Şampiyon ara…", filterByPosition: "Şampiyonları pozisyona göre filtrele", all: "Tümü",
+    draftedUnavailable: "Daha önce seçilen şampiyonlar kullanılamaz", noSearchResults: "Bu filtrelerle eşleşen şampiyon yok.",
+    addToAlly: "Takımına ekle", addToEnemy: "Rakip takıma ekle", addChampion: "Şampiyon ekle",
+    removeChampion: "{name} şampiyonunu {team} listesinden çıkar", addSlot: "{team} {slot}. yuvaya şampiyon ekle", allyTeam: "takım", enemyTeamLabel: "rakip takım",
+    alreadyDrafted: "{name}, zaten seçildi", chooseName: "{name} seç", championCount: "{total} şampiyondan {shown} tanesi",
+    loadingData: "Wild Rift dereceli verileri yükleniyor…", selectToBegin: "Başlamak için en az bir takım veya rakip şampiyonu seç.",
+    draftedReady: "{count} şampiyon seçildi · {role} önerisi hazır", noPositionData: "Bu pozisyon için uygun şampiyon verisi yok.",
+    topRecommendation: "En iyi öneri", highestAvailable: "En yüksek uygun kazanma oranı", diamondWinRate: "Elmas+ kazanma oranı",
+    pickRate: "Seçilme oranı", banRate: "Yasaklanma oranı", whyThisPick: "Neden bu seçim:",
+    whySentence: "{name}, bu seçimde bulunmayan şampiyonlar arasında en yüksek {role} kazanma oranına sahip. {source}, {date}.",
+    sourceLive: "Canlı Elmas+ verisi", sourceCached: "Önbellekteki Elmas+ verisi", nextBest: "Sonraki en iyi seçenekler",
+    role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
+  },
 };
+
+function t(key, values = {}) {
+  const template = messages[state?.language || "en"]?.[key] || messages.en[key] || key;
+  return Object.entries(values).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, value), template);
+}
+
+function roleName(role) {
+  return t(`role${role}`);
+}
 
 const fallbackRows = {
   "1": [
@@ -46,13 +110,16 @@ const fallbackRows = {
 const state = {
   teams: { ally: Array(5).fill(null), enemy: Array(5).fill(null) },
   selectedRole: "1",
+  pickerRole: "1",
   pickerTarget: null,
+  language: localStorage.getItem("riftdraft-language") || (navigator.language.toLowerCase().startsWith("tr") ? "tr" : "en"),
   champions: [],
   championMap: new Map(),
   stats: {},
   statDate: "20260619",
   source: "loading",
   ready: false,
+  lastResult: null,
 };
 
 const elements = {
@@ -66,6 +133,7 @@ const elements = {
   picker: document.querySelector("#champion-picker"),
   closePicker: document.querySelector("#close-picker"),
   pickerKicker: document.querySelector("#picker-kicker"),
+  pickerRoleFilters: document.querySelector("#picker-role-filters"),
   championSearch: document.querySelector("#champion-search"),
   championGrid: document.querySelector("#champion-grid"),
   championTotal: document.querySelector("#champion-total"),
@@ -99,10 +167,111 @@ function bindImageFallbacks(container = document) {
   });
 }
 
+function applyTranslations() {
+  document.documentElement.lang = state.language;
+  document.title = state.language === "tr" ? "RiftDraft — Wild Rift Kompozisyon Analizi" : "RiftDraft — Wild Rift Comp Analyzer";
+
+  document.querySelectorAll("[data-i18n]").forEach((element) => {
+    element.textContent = t(element.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-html]").forEach((element) => {
+    element.innerHTML = t(element.dataset.i18nHtml);
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
+    element.setAttribute("aria-label", t(element.dataset.i18nAria));
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+    element.setAttribute("placeholder", t(element.dataset.i18nPlaceholder));
+  });
+  document.querySelectorAll("[data-role-label]").forEach((element) => {
+    element.textContent = roleName(element.dataset.roleLabel);
+  });
+  document.querySelectorAll(".language-button").forEach((button) => {
+    const active = button.dataset.language === state.language;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+
+  if (state.pickerTarget) {
+    elements.pickerKicker.textContent = state.pickerTarget.team === "ally" ? t("addToAlly") : t("addToEnemy");
+  }
+  updateDataStatus();
+  renderAllSlots();
+  if (state.lastResult) renderResult(state.lastResult, false);
+  if (elements.picker.open) renderChampionGrid();
+}
+
+function setLanguage(language) {
+  if (!messages[language] || language === state.language) return;
+  state.language = language;
+  localStorage.setItem("riftdraft-language", language);
+  applyTranslations();
+}
+
+function normalizeSearch(value) {
+  return String(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "");
+}
+
+function editDistance(left, right) {
+  const rows = Array.from({ length: left.length + 1 }, (_, index) => [index]);
+  for (let column = 0; column <= right.length; column += 1) rows[0][column] = column;
+  for (let row = 1; row <= left.length; row += 1) {
+    for (let column = 1; column <= right.length; column += 1) {
+      const substitution = left[row - 1] === right[column - 1] ? 0 : 1;
+      rows[row][column] = Math.min(
+        rows[row - 1][column] + 1,
+        rows[row][column - 1] + 1,
+        rows[row - 1][column - 1] + substitution,
+      );
+      if (
+        row > 1 && column > 1
+        && left[row - 1] === right[column - 2]
+        && left[row - 2] === right[column - 1]
+      ) {
+        rows[row][column] = Math.min(rows[row][column], rows[row - 2][column - 2] + 1);
+      }
+    }
+  }
+  return rows[left.length][right.length];
+}
+
+function fuzzyScore(query, champion) {
+  const normalizedQuery = normalizeSearch(query);
+  if (!normalizedQuery) return 0;
+  const candidates = [champion.name, ...champion.search.split(/\s+/)].map(normalizeSearch).filter(Boolean);
+  let best = -1;
+
+  candidates.forEach((candidate) => {
+    if (candidate === normalizedQuery) best = Math.max(best, 1000);
+    else if (candidate.startsWith(normalizedQuery)) best = Math.max(best, 850 - (candidate.length - normalizedQuery.length));
+    else if (candidate.includes(normalizedQuery)) best = Math.max(best, 700 - candidate.indexOf(normalizedQuery));
+    else {
+      let queryIndex = 0;
+      let gaps = 0;
+      for (let index = 0; index < candidate.length && queryIndex < normalizedQuery.length; index += 1) {
+        if (candidate[index] === normalizedQuery[queryIndex]) queryIndex += 1;
+        else if (queryIndex > 0) gaps += 1;
+      }
+      if (queryIndex === normalizedQuery.length) best = Math.max(best, 500 - gaps);
+
+      const allowedDistance = normalizedQuery.length <= 4 ? 1 : Math.max(2, Math.floor(normalizedQuery.length * .3));
+      if (Math.abs(candidate.length - normalizedQuery.length) <= allowedDistance) {
+        const distance = editDistance(normalizedQuery, candidate);
+        if (distance <= allowedDistance) best = Math.max(best, 400 - distance * 30);
+      }
+    }
+  });
+  return best;
+}
+
 function formatDate(compactDate) {
-  if (!/^\d{8}$/.test(compactDate || "")) return "Latest available";
+  if (!/^\d{8}$/.test(compactDate || "")) return t("latestAvailable");
   const date = new Date(`${compactDate.slice(0, 4)}-${compactDate.slice(4, 6)}-${compactDate.slice(6, 8)}T12:00:00Z`);
-  return new Intl.DateTimeFormat(undefined, { day: "numeric", month: "short", year: "numeric" }).format(date);
+  return new Intl.DateTimeFormat(state.language === "tr" ? "tr-TR" : "en", { day: "numeric", month: "short", year: "numeric" }).format(date);
 }
 
 function normalizeChampion(raw, page = null) {
@@ -178,10 +347,10 @@ async function loadData() {
 function updateDataStatus() {
   elements.snapshotLabel.textContent = formatDate(state.statDate);
   elements.headerStatus.classList.remove("live", "fallback");
-  elements.headerStatus.classList.add(state.source);
-  elements.headerStatus.querySelector("span:last-child").textContent = state.source === "live"
-    ? "Live ranked snapshot"
-    : "Cached ranked snapshot";
+  if (state.source === "live" || state.source === "fallback") elements.headerStatus.classList.add(state.source);
+  elements.headerStatus.querySelector("span:last-child").textContent = state.source === "loading"
+    ? t("statusConnecting")
+    : t(state.source === "live" ? "statusLive" : "statusCached");
 }
 
 function selectedIds() {
@@ -202,7 +371,8 @@ function renderSlots(team) {
       const champion = state.championMap.get(championId);
       if (!champion) return;
       button.classList.add("filled");
-      button.setAttribute("aria-label", `Remove ${champion.name} from ${team} team`);
+      const teamLabel = t(team === "ally" ? "allyTeam" : "enemyTeamLabel");
+      button.setAttribute("aria-label", t("removeChampion", { name: champion.name, team: teamLabel }));
       button.innerHTML = `
         <img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}">
         <span class="slot-index">${String(index + 1).padStart(2, "0")}</span>
@@ -210,11 +380,12 @@ function renderSlots(team) {
         <span class="selected-name">${escapeHtml(champion.name)}</span>`;
       button.addEventListener("click", () => removeChampion(team, index));
     } else {
-      button.setAttribute("aria-label", `Add champion to ${team} slot ${index + 1}`);
+      const teamLabel = t(team === "ally" ? "allyTeam" : "enemyTeamLabel");
+      button.setAttribute("aria-label", t("addSlot", { team: teamLabel, slot: index + 1 }));
       button.innerHTML = `
         <span class="slot-index">${String(index + 1).padStart(2, "0")}</span>
         <span class="plus-icon">+</span>
-        <span class="slot-label">Add champion</span>`;
+        <span class="slot-label">${t("addChampion")}</span>`;
       button.addEventListener("click", () => openPicker(team, index));
     }
     container.append(button);
@@ -232,7 +403,8 @@ function renderAllSlots() {
 function openPicker(team, index) {
   if (!state.ready) return;
   state.pickerTarget = { team, index };
-  elements.pickerKicker.textContent = team === "ally" ? "Add to your team" : "Add to enemy team";
+  state.pickerRole = state.selectedRole;
+  elements.pickerKicker.textContent = team === "ally" ? t("addToAlly") : t("addToEnemy");
   elements.championSearch.value = "";
   renderChampionGrid();
   elements.picker.showModal();
@@ -245,24 +417,42 @@ function closePicker() {
 }
 
 function renderChampionGrid() {
-  const query = elements.championSearch.value.trim().toLowerCase();
+  const query = elements.championSearch.value.trim();
   const drafted = selectedIds();
-  const filtered = state.champions.filter((champion) => champion.search.includes(query));
+  const eligibleIds = state.pickerRole === "all"
+    ? null
+    : new Set((state.stats[state.pickerRole] || []).map((entry) => String(entry.championId)));
+  const filtered = state.champions
+    .filter((champion) => !eligibleIds || eligibleIds.has(champion.id))
+    .map((champion) => ({ champion, score: fuzzyScore(query, champion) }))
+    .filter(({ score }) => score >= 0)
+    .sort((left, right) => query
+      ? right.score - left.score || left.champion.name.localeCompare(right.champion.name)
+      : left.champion.name.localeCompare(right.champion.name))
+    .map(({ champion }) => champion);
   elements.championGrid.replaceChildren();
+
+  elements.pickerRoleFilters.querySelectorAll(".picker-role-button").forEach((button) => {
+    const active = button.dataset.pickerRole === state.pickerRole;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
 
   filtered.forEach((champion) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "picker-champion";
     button.disabled = drafted.has(champion.id);
-    button.setAttribute("aria-label", drafted.has(champion.id) ? `${champion.name}, already drafted` : `Choose ${champion.name}`);
+    button.setAttribute("aria-label", drafted.has(champion.id)
+      ? t("alreadyDrafted", { name: champion.name })
+      : t("chooseName", { name: champion.name }));
     button.innerHTML = `<img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" data-fallback="${escapeHtml(champion.name)}"><span>${escapeHtml(champion.name)}</span>`;
     button.addEventListener("click", () => selectChampion(champion.id));
     elements.championGrid.append(button);
   });
 
   bindImageFallbacks(elements.championGrid);
-  elements.championTotal.textContent = `${filtered.length} of ${state.champions.length} champions`;
+  elements.championTotal.textContent = t("championCount", { shown: filtered.length, total: state.champions.length });
   elements.pickerEmpty.hidden = filtered.length > 0;
 }
 
@@ -285,15 +475,20 @@ function updateAnalyzeState() {
   const count = selectedIds().size;
   elements.analyzeButton.disabled = !state.ready || count === 0;
   if (!state.ready) {
-    elements.draftNote.textContent = "Loading Wild Rift ranked data…";
+    elements.draftNote.textContent = t("loadingData");
   } else if (count === 0) {
-    elements.draftNote.textContent = "Select at least one ally or enemy champion to begin.";
+    elements.draftNote.textContent = t("selectToBegin");
   } else {
-    elements.draftNote.textContent = `${count} champion${count === 1 ? "" : "s"} drafted · ${roleNames[state.selectedRole]} recommendation ready`;
+    elements.draftNote.textContent = t("draftedReady", {
+      count,
+      plural: state.language === "en" && count !== 1 ? "s" : "",
+      role: roleName(state.selectedRole),
+    });
   }
 }
 
 function clearResult() {
+  state.lastResult = null;
   elements.resultPlaceholder.hidden = false;
   elements.resultContent.hidden = true;
   elements.resultContent.replaceChildren();
@@ -306,17 +501,18 @@ function analyzeComposition() {
     .sort((a, b) => b.winRate - a.winRate);
   const top = ranking.filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3);
   if (!top.length) {
-    elements.draftNote.textContent = "No available champion data exists for this position.";
+    elements.draftNote.textContent = t("noPositionData");
     return;
   }
   renderResult(top);
 }
 
-function renderResult(entries) {
+function renderResult(entries, shouldScroll = true) {
+  state.lastResult = entries;
   const [best, ...alternatives] = entries;
   const champion = state.championMap.get(String(best.championId));
-  const role = roleNames[state.selectedRole];
-  const sourceLabel = state.source === "live" ? "Live Diamond+ snapshot" : "Cached Diamond+ snapshot";
+  const role = roleName(state.selectedRole);
+  const sourceLabel = t(state.source === "live" ? "sourceLive" : "sourceCached");
   const alternativesHtml = alternatives.map((entry, index) => {
     const option = state.championMap.get(String(entry.championId));
     return `<div class="alternative">
@@ -329,26 +525,26 @@ function renderResult(entries) {
   elements.resultContent.innerHTML = `
     <div class="result-hero">
       <img src="${escapeHtml(champion.cardUrl)}" alt="${escapeHtml(champion.name)}" data-fallback="${escapeHtml(champion.name)}">
-      <span class="result-badge">Top recommendation</span>
-      <div class="result-title"><span>Highest available win rate</span><h2>${escapeHtml(champion.name)}</h2></div>
+      <span class="result-badge">${t("topRecommendation")}</span>
+      <div class="result-title"><span>${t("highestAvailable")}</span><h2>${escapeHtml(champion.name)}</h2></div>
     </div>
     <div class="result-body">
       <div class="winrate-callout">
-        <div><span>Diamond+ win rate</span><div class="winrate">${best.winRate.toFixed(2)}<small>%</small></div></div>
+        <div><span>${t("diamondWinRate")}</span><div class="winrate">${best.winRate.toFixed(2)}<small>%</small></div></div>
         <div class="position-tag">${escapeHtml(role)}</div>
       </div>
       <div class="metric-grid">
-        <div class="metric"><span>Pick rate</span><strong>${best.pickRate.toFixed(2)}%</strong></div>
-        <div class="metric"><span>Ban rate</span><strong>${best.banRate.toFixed(2)}%</strong></div>
+        <div class="metric"><span>${t("pickRate")}</span><strong>${best.pickRate.toFixed(2)}%</strong></div>
+        <div class="metric"><span>${t("banRate")}</span><strong>${best.banRate.toFixed(2)}%</strong></div>
       </div>
-      <p class="why-copy"><strong>Why this pick:</strong> ${escapeHtml(champion.name)} has the highest recorded ${escapeHtml(role)} win rate among champions not already present in this draft. ${sourceLabel}, ${formatDate(state.statDate)}.</p>
-      <div class="alternatives-label">Next best available</div>
+      <p class="why-copy"><strong>${t("whyThisPick")}</strong> ${t("whySentence", { name: escapeHtml(champion.name), role: escapeHtml(role), source: sourceLabel, date: formatDate(state.statDate) })}</p>
+      <div class="alternatives-label">${t("nextBest")}</div>
       ${alternativesHtml}
     </div>`;
   bindImageFallbacks(elements.resultContent);
   elements.resultPlaceholder.hidden = true;
   elements.resultContent.hidden = false;
-  if (window.matchMedia("(max-width: 1050px)").matches) {
+  if (shouldScroll && window.matchMedia("(max-width: 1050px)").matches) {
     elements.resultContent.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
@@ -373,6 +569,17 @@ document.querySelectorAll(".role-button").forEach((button) => {
   });
 });
 
+elements.pickerRoleFilters.querySelectorAll(".picker-role-button").forEach((button) => {
+  button.addEventListener("click", () => {
+    state.pickerRole = button.dataset.pickerRole;
+    renderChampionGrid();
+  });
+});
+
+document.querySelectorAll(".language-button").forEach((button) => {
+  button.addEventListener("click", () => setLanguage(button.dataset.language));
+});
+
 elements.analyzeButton.addEventListener("click", analyzeComposition);
 elements.resetButton.addEventListener("click", resetDraft);
 elements.closePicker.addEventListener("click", closePicker);
@@ -381,5 +588,5 @@ elements.picker.addEventListener("click", (event) => {
   if (event.target === elements.picker) closePicker();
 });
 
-renderAllSlots();
+applyTranslations();
 loadData();

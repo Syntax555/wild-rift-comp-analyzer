@@ -2,6 +2,8 @@
 
 A static, GitHub Pages-ready Wild Rift team composition analyzer. Users select allied and enemy champions, choose an open position, and receive the available champion with the highest Diamond+ win rate for that role.
 
+The interface supports English and Turkish. The champion picker defaults to the selected position, includes an **All** option for full-draft selection, and uses typo-tolerant fuzzy search for champion names.
+
 ## Data
 
 The site reads a same-origin ranked snapshot from `data/`. A scheduled GitHub Action refreshes it daily from the public JSON files published by [RankedWR](https://rankedwr.com/), which mirrors Riot/Tencent's [official Wild Rift CN statistics](https://lolm.qq.com/act/a20220818raider/index.html). A small JavaScript fallback keeps the analyzer usable if the checked-in snapshot is unavailable.
