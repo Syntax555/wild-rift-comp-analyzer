@@ -4,7 +4,7 @@ A static, GitHub Pages-ready Wild Rift team composition analyzer. Users select a
 
 ## Data
 
-The browser fetches the current Diamond+ snapshot and champion metadata from the public JSON files published by [RankedWR](https://rankedwr.com/). RankedWR mirrors Riot/Tencent's [official Wild Rift CN statistics](https://lolm.qq.com/act/a20220818raider/index.html). A small bundled snapshot keeps the analyzer usable if that endpoint is temporarily unavailable.
+The site reads a same-origin ranked snapshot from `data/`. A scheduled GitHub Action refreshes it daily from the public JSON files published by [RankedWR](https://rankedwr.com/), which mirrors Riot/Tencent's [official Wild Rift CN statistics](https://lolm.qq.com/act/a20220818raider/index.html). A small JavaScript fallback keeps the analyzer usable if the checked-in snapshot is unavailable.
 
 Riot's public developer API does not currently expose Wild Rift match history. GitHub Pages is also a static host, so a private API key must never be embedded in this frontend.
 
@@ -23,6 +23,10 @@ Open `http://localhost:4173`.
 ## Deploy to GitHub Pages
 
 In the repository settings, open **Pages**, choose **Deploy from a branch**, select the default branch and `/ (root)`, then save. No build step is required.
+
+## Data refresh
+
+`.github/workflows/update-ranked-data.yml` runs every day and can also be started manually from GitHub Actions. It executes `scripts/update-ranked-data.mjs`, commits changed snapshots, and requests a Pages rebuild.
 
 ## API contract
 

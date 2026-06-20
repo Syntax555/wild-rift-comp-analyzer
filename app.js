@@ -1,4 +1,5 @@
-const API_BASE = "https://rankedwr.com/";
+const DATA_BASE = new URL("./data/", import.meta.url);
+const ASSET_BASE = "https://rankedwr.com/";
 const RANK_BUCKET = "1"; // Diamond+ in the Riot/Tencent CN dataset.
 
 const roleNames = {
@@ -106,8 +107,8 @@ function formatDate(compactDate) {
 
 function normalizeChampion(raw, page = null) {
   const avatarUrl = raw.avatar
-    ? new URL(raw.avatar.replace(/^\/+/, ""), API_BASE).href
-    : new URL(`data/avatars/${raw.id}.png`, API_BASE).href;
+    ? new URL(raw.avatar.replace(/^\/+/, ""), ASSET_BASE).href
+    : new URL(`data/avatars/${raw.id}.png`, ASSET_BASE).href;
   return {
     id: String(raw.id),
     name: raw.displayName,
@@ -134,9 +135,9 @@ function buildFallbackData() {
 async function loadData() {
   try {
     const [latestResponse, championsResponse, pagesResponse] = await Promise.all([
-      fetch(new URL("data/latest.v1.json", API_BASE), { cache: "no-store" }),
-      fetch(new URL("data/champions.v1.json", API_BASE), { cache: "no-store" }),
-      fetch(new URL("data/champion-pages.index.v1.json", API_BASE), { cache: "no-store" }),
+      fetch(new URL("latest.v1.json", DATA_BASE), { cache: "no-store" }),
+      fetch(new URL("champions.v1.json", DATA_BASE), { cache: "no-store" }),
+      fetch(new URL("champion-pages.index.v1.json", DATA_BASE), { cache: "no-store" }),
     ]);
     if (![latestResponse, championsResponse, pagesResponse].every((response) => response.ok)) {
       throw new Error("One or more ranked data endpoints were unavailable.");
