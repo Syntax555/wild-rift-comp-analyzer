@@ -4,6 +4,8 @@ A static, GitHub Pages-ready Wild Rift draft analyzer. Users fill fixed lane slo
 
 The interface supports English and Turkish. Each Solo, Jungle, Mid, Duo, and Support slot opens a lane-filtered champion picker with typo-tolerant fuzzy search.
 
+Each result includes source-coverage confidence, a per-enemy response matrix, per-ally synergy reasons, and one unique recommendation for every empty allied lane. The responsive interface uses touch-sized, horizontally scrollable lane selectors and a bottom-sheet champion picker on mobile.
+
 ## Data
 
 The site reads same-origin snapshots from `data/`. A scheduled GitHub Action refreshes overall role statistics from [RankedWR](https://rankedwr.com/), observed Diamond+ same-lane matchups from [RiftGG](https://www.riftgg.app/en/champions), and a historical comparison snapshot from the [statsWR public API](https://statswr-api.onrender.com/api-docs). RiftGG declares its champion statistics dataset CC0.

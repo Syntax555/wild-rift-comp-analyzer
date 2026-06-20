@@ -35,6 +35,13 @@ const messages = {
     evidenceExplanation: "{name} leads at {score}/100 for {role}. {matchup}. Overall role win rate: {winRate}%. Historical change: {trend}. The team-fit estimates evaluate {enemyCoverage} and {allyCoverage}.",
     directMatchupPhrase: "Observed lane win rate against {enemy}: {rate}%", noMatchupPhrase: "No published direct lane matchup was available",
     trendPoints: "{value} percentage points", trendUnavailable: "unavailable", oneEnemy: "1 selected enemy", manyEnemies: "{count} selected enemies", oneAlly: "1 selected ally", manyAllies: "{count} selected allies", nextBest: "Next best available", evidenceShort: "{score}/100 evidence",
+    confidenceTitle: "Recommendation confidence", confidenceHigh: "High", confidenceMedium: "Medium", confidenceLimited: "Limited",
+    confidenceDetail: "{coverage}% applicable data coverage · current data {freshness}", confidenceNote: "Confidence measures source coverage and freshness, not certainty of winning.",
+    freshnessToday: "updated today", freshnessOneDay: "1 day old", freshnessDays: "{days} days old", freshnessUnknown: "age unavailable",
+    counterMatrix: "Enemy counter matrix", counterMatrixHint: "How this pick answers every selected enemy", synergyMatrix: "Ally synergy matrix", synergyMatrixHint: "How this pick complements every selected ally",
+    observedWinShort: "{rate}% observed", responseScoreShort: "{score}/100 response", synergyScoreShort: "{score}/100 synergy",
+    reasonFrontline: "Frontline", reasonControl: "CC setup", reasonProtection: "Peel & sustain", reasonFollowup: "Damage follow-up", reasonAccess: "Engage follow-up", reasonGeneral: "Role complement",
+    openLaneRecommendations: "Recommended lineup for empty lanes", openLaneHint: "One unique suggestion for each open allied position", confidenceShort: "{level} confidence",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
@@ -67,6 +74,13 @@ const messages = {
     evidenceExplanation: "{name}, {role} için {score}/100 ile önde. {matchup}. Genel rol kazanma oranı: %{winRate}. Geçmiş değişim: {trend}. Takım uyumu tahminleri {enemyCoverage} ve {allyCoverage} değerlendirir.",
     directMatchupPhrase: "{enemy} karşısı gözlemlenmiş koridor kazanma oranı: %{rate}", noMatchupPhrase: "Yayımlanmış doğrudan koridor eşleşmesi bulunamadı",
     trendPoints: "{value} yüzde puanı", trendUnavailable: "kullanılamıyor", oneEnemy: "seçilen 1 rakibi", manyEnemies: "seçilen {count} rakibi", oneAlly: "seçilen 1 takım arkadaşını", manyAllies: "seçilen {count} takım arkadaşını", nextBest: "Sonraki en iyi seçenekler", evidenceShort: "{score}/100 kanıt",
+    confidenceTitle: "Öneri güveni", confidenceHigh: "Yüksek", confidenceMedium: "Orta", confidenceLimited: "Sınırlı",
+    confidenceDetail: "%{coverage} uygulanabilir veri kapsamı · güncel veri {freshness}", confidenceNote: "Güven, kaynak kapsamını ve güncelliğini ölçer; kazanma garantisi değildir.",
+    freshnessToday: "bugün güncellendi", freshnessOneDay: "1 günlük", freshnessDays: "{days} günlük", freshnessUnknown: "veri yaşı bilinmiyor",
+    counterMatrix: "Rakip karşılık matrisi", counterMatrixHint: "Bu seçimin seçilen her rakibe verdiği yanıt", synergyMatrix: "Takım sinerjisi matrisi", synergyMatrixHint: "Bu seçimin her takım arkadaşını nasıl tamamladığı",
+    observedWinShort: "%{rate} gözlemlenmiş", responseScoreShort: "{score}/100 yanıt", synergyScoreShort: "{score}/100 sinerji",
+    reasonFrontline: "Ön saf", reasonControl: "Kitle kontrolü", reasonProtection: "Koruma ve iyileştirme", reasonFollowup: "Hasar takibi", reasonAccess: "Başlatma takibi", reasonGeneral: "Rol tamamlayıcılığı",
+    openLaneRecommendations: "Boş koridorlar için önerilen kadro", openLaneHint: "Her boş takım pozisyonu için benzersiz bir öneri", confidenceShort: "{level} güven",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -551,6 +565,18 @@ function allyPairFit(candidate, ally) {
   ) / 5;
 }
 
+function allyPairReasons(candidate, ally) {
+  const reasons = [
+    ["reasonFrontline", candidate.frontline * ally.carry],
+    ["reasonControl", candidate.control * (ally.carry * .7 + ally.access * .3)],
+    ["reasonProtection", candidate.protection * ally.carry],
+    ["reasonFollowup", candidate.carry * (ally.frontline * .7 + ally.control * .3)],
+    ["reasonAccess", candidate.access * ally.control],
+  ].sort((left, right) => right[1] - left[1]);
+  const useful = reasons.filter(([, value]) => value >= .08).slice(0, 2).map(([key]) => key);
+  return useful.length ? useful : ["reasonGeneral"];
+}
+
 function enemyPairResponse(candidate, enemy) {
   return (
     candidate.frontline * enemy.access
@@ -578,39 +604,112 @@ function normalizeScores(entries, rawKey, scoreKey, active) {
   });
 }
 
-function analyzeComposition() {
-  const unavailable = selectedIds();
-  const enemyId = enemyForRole(state.selectedRole);
+function normalizePairDetails(entries, detailKey) {
+  const championIds = [...new Set(entries.flatMap((entry) => entry[detailKey].map((detail) => detail.championId)))];
+  championIds.forEach((championId) => {
+    const details = entries.map((entry) => entry[detailKey].find((detail) => detail.championId === championId)).filter(Boolean);
+    const values = details.map((detail) => detail.raw).filter(Number.isFinite);
+    const minimum = Math.min(...values);
+    const maximum = Math.max(...values);
+    details.forEach((detail) => {
+      detail.score = !values.length || maximum === minimum ? 50 : Math.round(((detail.raw - minimum) / (maximum - minimum)) * 100);
+    });
+  });
+}
+
+function dataAgeDays(compactDate) {
+  if (!/^\d{8}$/.test(compactDate || "")) return null;
+  const date = new Date(`${compactDate.slice(0, 4)}-${compactDate.slice(4, 6)}-${compactDate.slice(6, 8)}T12:00:00Z`);
+  return Math.max(0, Math.floor((Date.now() - date.getTime()) / 86400000));
+}
+
+function freshnessScore(compactDates) {
+  const ages = compactDates.map(dataAgeDays).filter(Number.isFinite);
+  if (!ages.length) return .5;
+  const age = Math.max(...ages);
+  if (age <= 7) return 1;
+  if (age <= 30) return .9;
+  if (age <= 90) return .75;
+  if (age <= 180) return .6;
+  return .45;
+}
+
+function confidenceFor(entry, context) {
+  let expected = 2;
+  let available = 1 + (entry.historical ? 1 : 0);
+  if (context.hasLaneEnemy) {
+    expected += 1;
+    if (entry.matchup) available += 1;
+  }
+  if (context.enemyCount) {
+    expected += 1;
+    available += context.enemyProfileCount / context.enemyCount;
+  }
+  if (context.allyCount) {
+    expected += 1;
+    available += context.allyProfileCount / context.allyCount;
+  }
+  const coverage = Math.round((available / expected) * 100);
+  const dates = [state.statDate];
+  if (entry.matchup) dates.push(state.matchupDate);
+  const freshness = freshnessScore(dates);
+  const score = Math.round(coverage * .85 + freshness * 100 * .15);
+  return {
+    score,
+    coverage,
+    ageDays: dataAgeDays(state.statDate),
+    levelKey: score >= 85 ? "confidenceHigh" : score >= 65 ? "confidenceMedium" : "confidenceLimited",
+  };
+}
+
+function rankRole(role, additionalUnavailable = new Set()) {
+  const unavailable = new Set([...selectedIds(), ...additionalUnavailable]);
+  const enemyId = enemyForRole(role);
   const allies = state.teams.ally.filter(Boolean);
   const enemies = state.teams.enemy.filter(Boolean);
-  const allyProfiles = allies.map(championProfile).filter((profile) => profile.available);
-  const enemyProfiles = enemies.map(championProfile).filter((profile) => profile.available);
-  let available = [...(state.stats[state.selectedRole] || [])]
+  const allyInputs = allies.map((championId) => ({ championId, profile: championProfile(championId) })).filter(({ profile }) => profile.available);
+  const enemyInputs = enemies.map((championId) => ({ championId, profile: championProfile(championId) })).filter(({ profile }) => profile.available);
+  let available = [...(state.stats[role] || [])]
     .filter((entry) => !unavailable.has(String(entry.championId)))
     .map((entry) => {
       const candidate = championProfile(entry.championId);
-      const historical = state.history[String(entry.championId)]?.[state.selectedRole] || null;
+      const historical = state.history[String(entry.championId)]?.[role] || null;
+      const enemyDetails = enemyInputs.map(({ championId, profile }) => ({
+        championId,
+        raw: enemyPairResponse(candidate, profile),
+        observed: String(championId) === String(enemyId) ? observedMatchup(entry.championId, role, enemyId) : null,
+      }));
+      const allyDetails = allyInputs.map(({ championId, profile }) => ({
+        championId,
+        raw: allyPairFit(candidate, profile),
+        reasons: allyPairReasons(candidate, profile),
+      }));
       return {
         ...entry,
-        matchup: enemyId ? observedMatchup(entry.championId, state.selectedRole, enemyId) : null,
+        role,
+        matchup: enemyId ? observedMatchup(entry.championId, role, enemyId) : null,
         historical,
+        enemyDetails,
+        allyDetails,
         trendRaw: historical ? entry.winRate - historical.winRate : null,
-        enemyRaw: enemyProfiles.length ? average(enemyProfiles.map((enemy) => enemyPairResponse(candidate, enemy))) : null,
-        allyRaw: allyProfiles.length ? average(allyProfiles.map((ally) => allyPairFit(candidate, ally))) : null,
+        enemyRaw: enemyDetails.length ? average(enemyDetails.map((detail) => detail.raw)) : null,
+        allyRaw: allyDetails.length ? average(allyDetails.map((detail) => detail.raw)) : null,
       };
     });
   const useMatchups = Boolean(enemyId && available.some((entry) => entry.matchup));
   if (useMatchups) available = available.filter((entry) => entry.matchup);
   available.forEach((entry) => { entry.matchupRaw = entry.matchup?.winRate ?? null; });
   const useTrend = available.some((entry) => Number.isFinite(entry.trendRaw));
-  const useEnemyEstimate = enemyProfiles.length > 0;
-  const useAllyEstimate = allyProfiles.length > 0;
+  const useEnemyEstimate = enemyInputs.length > 0;
+  const useAllyEstimate = allyInputs.length > 0;
 
   normalizeScores(available, "winRate", "roleScore", true);
   normalizeScores(available, "matchupRaw", "matchupScore", useMatchups);
   normalizeScores(available, "trendRaw", "trendScore", useTrend);
   normalizeScores(available, "enemyRaw", "enemyScore", useEnemyEstimate);
   normalizeScores(available, "allyRaw", "allyScore", useAllyEstimate);
+  normalizePairDetails(available, "enemyDetails");
+  normalizePairDetails(available, "allyDetails");
 
   const weights = [
     ["roleScore", 30, true],
@@ -620,22 +719,61 @@ function analyzeComposition() {
     ["trendScore", 10, useTrend],
   ].filter(([, , active]) => active);
   const totalWeight = weights.reduce((total, [, weight]) => total + weight, 0);
-  const ranking = available.map((entry) => ({
-    ...entry,
-    evidenceScore: Math.round(weights.reduce((total, [key, weight]) => total + entry[key] * weight, 0) / totalWeight),
-    evidence: { useMatchups, useTrend, useEnemyEstimate, useAllyEstimate },
-    coverage: { enemies: enemyProfiles.length, allies: allyProfiles.length },
-  })).sort((left, right) => right.evidenceScore - left.evidenceScore || right.winRate - left.winRate);
+  const context = {
+    hasLaneEnemy: Boolean(enemyId),
+    enemyCount: enemies.length,
+    allyCount: allies.length,
+    enemyProfileCount: enemyInputs.length,
+    allyProfileCount: allyInputs.length,
+  };
+  return available.map((entry) => {
+    const ranked = {
+      ...entry,
+      evidenceScore: Math.round(weights.reduce((total, [key, weight]) => total + entry[key] * weight, 0) / totalWeight),
+      evidence: { useMatchups, useTrend, useEnemyEstimate, useAllyEstimate },
+      coverage: { enemies: enemyInputs.length, allies: allyInputs.length },
+    };
+    ranked.confidence = confidenceFor(ranked, context);
+    return ranked;
+  }).sort((left, right) => right.evidenceScore - left.evidenceScore || right.winRate - left.winRate);
+}
+
+function buildOpenRoleRecommendations(primaryRanking) {
+  const emptyRoles = SLOT_ROLES.filter((role, index) => !state.teams.ally[index]);
+  const orderedRoles = [state.selectedRole, ...emptyRoles.filter((role) => role !== state.selectedRole)].filter((role) => emptyRoles.includes(role));
+  const reserved = new Set();
+  const recommendations = [];
+  orderedRoles.forEach((role) => {
+    const ranking = role === state.selectedRole && !reserved.size ? primaryRanking : rankRole(role, reserved);
+    const best = ranking.find((entry) => !reserved.has(String(entry.championId)) && state.championMap.has(String(entry.championId)));
+    if (!best) return;
+    reserved.add(String(best.championId));
+    recommendations.push(best);
+  });
+  return recommendations.sort((left, right) => SLOT_ROLES.indexOf(left.role) - SLOT_ROLES.indexOf(right.role));
+}
+
+function analyzeComposition() {
+  const ranking = rankRole(state.selectedRole);
   const top = ranking.filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3);
   if (!top.length) {
     elements.draftNote.textContent = t("noPositionData");
     return;
   }
-  renderResult(top);
+  renderResult({ entries: top, lineup: buildOpenRoleRecommendations(ranking) });
 }
 
-function renderResult(entries, shouldScroll = true) {
-  state.lastResult = entries;
+function freshnessText(ageDays) {
+  if (!Number.isFinite(ageDays)) return t("freshnessUnknown");
+  if (ageDays === 0) return t("freshnessToday");
+  if (ageDays === 1) return t("freshnessOneDay");
+  return t("freshnessDays", { days: ageDays });
+}
+
+function renderResult(result, shouldScroll = true) {
+  const entries = Array.isArray(result) ? result : result.entries;
+  const lineup = Array.isArray(result?.lineup) ? result.lineup : [];
+  state.lastResult = { entries, lineup };
   const [best, ...alternatives] = entries;
   const champion = state.championMap.get(String(best.championId));
   const role = roleName(state.selectedRole);
@@ -656,6 +794,56 @@ function renderResult(entries, shouldScroll = true) {
       <span>${t("evidenceShort", { score: entry.evidenceScore })}</span>
     </div>`;
   }).join("");
+
+  const confidenceLevel = t(best.confidence.levelKey);
+  const confidenceHtml = `<div class="confidence-card confidence-${best.confidence.levelKey.replace("confidence", "").toLowerCase()}">
+    <div><span>${t("confidenceTitle")}</span><strong>${confidenceLevel} · ${best.confidence.score}/100</strong></div>
+    <p>${t("confidenceDetail", { coverage: best.confidence.coverage, freshness: freshnessText(best.confidence.ageDays) })}</p>
+    <small>${t("confidenceNote")}</small>
+  </div>`;
+
+  const counterMatrixHtml = best.enemyDetails.length ? `<section class="fit-section">
+    <div class="detail-heading"><div><h3>${t("counterMatrix")}</h3><p>${t("counterMatrixHint")}</p></div><span>${best.enemyDetails.length}/5</span></div>
+    <div class="fit-grid">${best.enemyDetails.map((detail) => {
+      const target = state.championMap.get(String(detail.championId));
+      if (!target) return "";
+      const value = detail.observed
+        ? t("observedWinShort", { rate: detail.observed.winRate.toFixed(2) })
+        : t("responseScoreShort", { score: detail.score });
+      return `<article class="fit-card">
+        <img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}">
+        <div><b>${escapeHtml(target.name)}</b><small>${t(detail.observed ? "observedLabel" : "estimatedLabel")}</small></div>
+        <strong>${value}</strong>
+      </article>`;
+    }).join("")}</div>
+  </section>` : "";
+
+  const synergyMatrixHtml = best.allyDetails.length ? `<section class="fit-section">
+    <div class="detail-heading"><div><h3>${t("synergyMatrix")}</h3><p>${t("synergyMatrixHint")}</p></div><span>${best.allyDetails.length}/5</span></div>
+    <div class="fit-grid">${best.allyDetails.map((detail) => {
+      const target = state.championMap.get(String(detail.championId));
+      if (!target) return "";
+      const reasons = detail.reasons.map((reason) => `<em>${t(reason)}</em>`).join("");
+      return `<article class="fit-card synergy-card">
+        <img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}">
+        <div><b>${escapeHtml(target.name)}</b><span class="reason-tags">${reasons}</span></div>
+        <strong>${t("synergyScoreShort", { score: detail.score })}</strong>
+      </article>`;
+    }).join("")}</div>
+  </section>` : "";
+
+  const lineupHtml = lineup.length ? `<section class="lineup-section">
+    <div class="detail-heading"><div><h3>${t("openLaneRecommendations")}</h3><p>${t("openLaneHint")}</p></div><span>${lineup.length}/5</span></div>
+    <div class="lineup-grid">${lineup.map((entry) => {
+      const option = state.championMap.get(String(entry.championId));
+      if (!option) return "";
+      return `<article class="lineup-card">
+        <img src="${escapeHtml(option.avatarUrl)}" alt="" data-fallback="${escapeHtml(option.name)}">
+        <div><small>${escapeHtml(roleName(entry.role))}</small><b>${escapeHtml(option.name)}</b></div>
+        <span>${entry.evidenceScore}/100<br><small>${t("confidenceShort", { level: t(entry.confidence.levelKey) })}</small></span>
+      </article>`;
+    }).join("")}</div>
+  </section>` : "";
 
   const breakdown = [
     ["observedLane", best.matchupScore, best.evidence.useMatchups, "observedLabel"],
@@ -690,15 +878,19 @@ function renderResult(entries, shouldScroll = true) {
         <div><span>${t("evidenceScore")}</span><div class="winrate">${best.evidenceScore}<small>/100</small></div></div>
         <div class="position-tag">${escapeHtml(role)}</div>
       </div>
+      ${confidenceHtml}
       <div class="metric-grid">
         <div class="metric"><span>${isMatchup ? t("matchupWinRate", { enemy: escapeHtml(enemy.name) }) : t("noDirectMatchup")}</span><strong>${isMatchup ? `${best.matchup.winRate.toFixed(2)}%` : "—"}</strong></div>
         <div class="metric"><span>${t("diamondWinRate")}</span><strong>${best.winRate.toFixed(2)}%</strong></div>
         <div class="metric"><span>${t("historyChange", { date: formatDate(state.historyDate) })}</span><strong>${escapeHtml(trendText)}</strong></div>
       </div>
       <div class="evidence-breakdown">${breakdown}</div>
+      ${counterMatrixHtml}
+      ${synergyMatrixHtml}
       <p class="why-copy"><strong>${t("whyThisPick")}</strong> ${escapeHtml(explanation)}</p>
       <div class="alternatives-label">${t("nextBest")}</div>
       ${alternativesHtml}
+      ${lineupHtml}
     </div>`;
   bindImageFallbacks(elements.resultContent);
   elements.resultPlaceholder.hidden = true;
