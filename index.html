@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Build a Wild Rift draft and find the highest-win-rate Diamond+ champion for any position.">
+  <meta name="theme-color" content="#07111f">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <title>RiftDraft — Wild Rift Comp Analyzer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="RiftDraft home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 36 36" role="img"><path d="M18 3 31 10.5v15L18 33 5 25.5v-15L18 3Zm0 5.4-8.4 4.8v9.6l8.4 4.8 8.4-4.8v-9.6L18 8.4Zm-2.2 4.1h4.4v7.1l4.1 2.4-2.2 3.8-6.3-3.7v-9.6Z"/></svg>
+      </span>
+      <span>RIFT<span>DRAFT</span></span>
+    </a>
+    <nav aria-label="Primary navigation">
+      <a class="nav-link active" href="#analyzer">Analyzer</a>
+      <a class="nav-link" href="#method">Method</a>
+    </nav>
+    <div class="header-status" id="header-status">
+      <span class="status-dot"></span>
+      <span>Connecting to ranked data</span>
+    </div>
+  </header>
+
+  <main id="analyzer">
+    <section class="hero-section">
+      <div class="eyebrow"><span></span> Wild Rift draft intelligence</div>
+      <h1>Build the draft.<br><em>Find the edge.</em></h1>
+      <p class="hero-copy">Select both teams, choose your open position, and get the highest-win-rate available champion from Diamond+ ranked play.</p>
+
+      <div class="data-strip" aria-label="Data filters">
+        <div class="filter-item">
+          <span class="filter-label">Region</span>
+          <span class="filter-value"><span class="flag">CN</span> China server</span>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-item">
+          <span class="filter-label">Rank</span>
+          <span class="filter-value rank-value">Diamond+</span>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-item">
+          <span class="filter-label">Snapshot</span>
+          <span class="filter-value" id="snapshot-label">Loading…</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace" aria-label="Team composition analyzer">
+      <div class="draft-panel">
+        <div class="panel-heading">
+          <div>
+            <span class="section-number">01</span>
+            <h2>Build your draft</h2>
+          </div>
+          <button class="text-button" id="reset-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8.1 8.1 0 1 1-2.4-5.7L20 7.7M20 3v4.7h-4.7"/></svg>
+            Reset draft
+          </button>
+        </div>
+
+        <div class="teams-grid">
+          <section class="team-block ally-team" aria-labelledby="ally-title">
+            <div class="team-heading">
+              <div><span class="team-orb"></span><h3 id="ally-title">Your team</h3></div>
+              <span class="slot-count" id="ally-count">0 / 5</span>
+            </div>
+            <p class="team-hint">Select known allied champions</p>
+            <div class="champion-slots" id="ally-slots"></div>
+          </section>
+
+          <div class="versus" aria-hidden="true"><span></span><b>VS</b><span></span></div>
+
+          <section class="team-block enemy-team" aria-labelledby="enemy-title">
+            <div class="team-heading">
+              <div><span class="team-orb"></span><h3 id="enemy-title">Enemy team</h3></div>
+              <span class="slot-count" id="enemy-count">0 / 5</span>
+            </div>
+            <p class="team-hint">Select revealed enemy champions</p>
+            <div class="champion-slots" id="enemy-slots"></div>
+          </section>
+        </div>
+
+        <div class="role-section">
+          <div class="role-copy">
+            <span class="section-number">02</span>
+            <div><h2>Choose your position</h2><p>We compare all available Diamond+ picks in this role.</p></div>
+          </div>
+          <div class="role-options" id="role-options" role="radiogroup" aria-label="Position">
+            <button class="role-button" type="button" data-role="2" role="radio" aria-checked="false"><span class="role-icon">◈</span><span>Solo</span></button>
+            <button class="role-button" type="button" data-role="5" role="radio" aria-checked="false"><span class="role-icon">⌁</span><span>Jungle</span></button>
+            <button class="role-button active" type="button" data-role="1" role="radio" aria-checked="true"><span class="role-icon">◇</span><span>Mid</span></button>
+            <button class="role-button" type="button" data-role="3" role="radio" aria-checked="false"><span class="role-icon">➹</span><span>Duo</span></button>
+            <button class="role-button" type="button" data-role="4" role="radio" aria-checked="false"><span class="role-icon">✦</span><span>Support</span></button>
+          </div>
+        </div>
+
+        <button class="analyze-button" id="analyze-button" type="button" disabled>
+          <span>Analyze composition</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 14 0m-5-5 5 5-5 5"/></svg>
+        </button>
+        <p class="draft-note" id="draft-note">Select at least one ally or enemy champion to begin.</p>
+      </div>
+
+      <aside class="result-panel" id="result-panel" aria-live="polite">
+        <div class="result-placeholder" id="result-placeholder">
+          <div class="radar-visual" aria-hidden="true">
+            <div class="radar-ring ring-one"></div>
+            <div class="radar-ring ring-two"></div>
+            <div class="radar-ring ring-three"></div>
+            <span class="radar-center"></span>
+          </div>
+          <span class="section-number">03</span>
+          <h2>Your recommendation<br>will appear here</h2>
+          <p>Complete the draft on the left and run the analysis.</p>
+          <div class="placeholder-stats"><span></span><span></span><span></span></div>
+        </div>
+        <div class="result-content" id="result-content" hidden></div>
+      </aside>
+    </section>
+
+    <section class="method-section" id="method">
+      <div>
+        <span class="section-number">How it works</span>
+        <h2>A clear, data-first recommendation.</h2>
+      </div>
+      <div class="method-grid">
+        <article><span>1</span><h3>Draft context</h3><p>Selected champions are removed from the available recommendation pool.</p></article>
+        <article><span>2</span><h3>Position filter</h3><p>Only champions recorded in your chosen role are compared.</p></article>
+        <article><span>3</span><h3>Win-rate ranking</h3><p>The available champion with the highest Diamond+ win rate is recommended first.</p></article>
+      </div>
+      <p class="method-disclaimer">This version ranks aggregate position win rates. The source does not publish matchup or team-synergy win rates, so selected compositions are not presented as statistical counter analysis.</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true"></span><span>RIFT<span>DRAFT</span></span></div>
+    <p>Ranked statistics from Riot/Tencent Wild Rift CN, accessed through the public RankedWR data mirror. Not affiliated with Riot Games.</p>
+    <a href="https://lolm.qq.com/act/a20220818raider/index.html" target="_blank" rel="noreferrer">View source ↗</a>
+  </footer>
+
+  <dialog class="picker-dialog" id="champion-picker" aria-labelledby="picker-title">
+    <div class="picker-shell">
+      <div class="picker-header">
+        <div><span class="picker-kicker" id="picker-kicker">Add champion</span><h2 id="picker-title">Choose a champion</h2></div>
+        <button class="icon-button" id="close-picker" type="button" aria-label="Close champion picker">×</button>
+      </div>
+      <label class="search-field">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+        <input id="champion-search" type="search" placeholder="Search champions…" aria-label="Search champions" autocomplete="off">
+        <kbd>ESC</kbd>
+      </label>
+      <div class="picker-meta"><span id="champion-total">Loading champions…</span><span>Already drafted champions are unavailable</span></div>
+      <div class="champion-grid" id="champion-grid"></div>
+      <div class="picker-empty" id="picker-empty" hidden>No champions match that search.</div>
+    </div>
+  </dialog>
+
+  <template id="slot-template">
+    <button class="champion-slot" type="button">
+      <span class="slot-index"></span>
+      <span class="plus-icon">+</span>
+      <span class="slot-label">Add champion</span>
+    </button>
+  </template>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
