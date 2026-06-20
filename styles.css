@@ -180,6 +180,13 @@ h1 em { color: var(--cyan); font-style: normal; }
 .metric { padding: 13px; border: 1px solid var(--line); border-radius: 4px; background: rgba(15,30,49,.72); }
 .metric span { display: block; margin-bottom: 4px; color: #62748a; text-transform: uppercase; font-size: 8px; font-weight: 700; letter-spacing: .12em; }
 .metric strong { font: 600 15px "Space Grotesk", sans-serif; }
+.evidence-breakdown { display: grid; gap: 9px; margin-top: 18px; padding: 15px; border: 1px solid var(--line); border-radius: 4px; background: rgba(9,21,36,.72); }
+.evidence-row > div:first-child { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 8px; }
+.evidence-row span { color: #aab8c8; font-size: 9px; font-weight: 600; }
+.evidence-row small { padding: 2px 5px; border: 1px solid rgba(65,227,212,.16); border-radius: 2px; color: #71869c; text-transform: uppercase; font-size: 6px; font-weight: 800; letter-spacing: .08em; }
+.evidence-row strong { color: var(--cyan); font: 600 10px "Space Grotesk", sans-serif; }
+.evidence-track { height: 3px; margin-top: 5px; overflow: hidden; border-radius: 9px; background: rgba(126,148,174,.12); }
+.evidence-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #238f91, var(--cyan)); }
 .why-copy { margin: 20px 0; padding: 15px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); color: #8b9caf; font-size: 11px; line-height: 1.65; }
 .why-copy strong { color: var(--text); }
 .alternatives-label { margin-bottom: 9px; color: #607289; text-transform: uppercase; font-size: 8px; font-weight: 700; letter-spacing: .14em; }

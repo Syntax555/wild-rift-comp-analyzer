@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Build a Wild Rift draft and rank Diamond+ champions with observed lane-matchup win rates.">
+  <meta name="description" content="Build a Wild Rift draft with observed matchup evidence, current role strength, historical comparison, and transparent team-fit estimates.">
   <meta name="theme-color" content="#07111f">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <title>RiftDraft — Wild Rift Comp Analyzer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260620d">
+  <link rel="stylesheet" href="./styles.css?v=20260620e">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
@@ -43,7 +43,7 @@
     <section class="hero-section">
       <div class="eyebrow"><span></span><b data-i18n="eyebrow">Wild Rift draft intelligence</b></div>
       <h1 id="hero-title" data-i18n-html="heroTitle">Build the draft.<br><em>Find the edge.</em></h1>
-      <p class="hero-copy" data-i18n="heroCopy">Set each lane, choose your position, and rank Diamond+ champions with observed lane-matchup data.</p>
+      <p class="hero-copy" data-i18n="heroCopy">Combine observed matchups, current meta strength, historical comparison, and transparent whole-draft estimates.</p>
 
       <div class="data-strip" aria-label="Data filters" data-i18n-aria="dataFilters">
         <div class="filter-item">
@@ -139,20 +139,20 @@
     <section class="method-section" id="method">
       <div>
         <span class="section-number" data-i18n="howItWorks">How it works</span>
-        <h2 data-i18n="methodTitle">Observed data, lane by lane.</h2>
+        <h2 data-i18n="methodTitle">Every signal stays visible.</h2>
       </div>
       <div class="method-grid">
-        <article><span>1</span><h3 data-i18n="methodDraftTitle">Fixed lane slots</h3><p data-i18n="methodDraftCopy">Every team slot belongs to Solo, Jungle, Mid, Duo, or Support and opens a lane-filtered champion list.</p></article>
-        <article><span>2</span><h3 data-i18n="methodRoleTitle">Observed matchup</h3><p data-i18n="methodRoleCopy">When the enemy laner is selected, candidates are ranked by their published Diamond+ same-lane win rate against that champion.</p></article>
-        <article><span>3</span><h3 data-i18n="methodWinTitle">Role fallback</h3><p data-i18n="methodWinCopy">If no same-lane matchup is selected or published, candidates are ranked by their overall Diamond+ win rate for the position.</p></article>
+        <article><span>1</span><h3 data-i18n="methodDraftTitle">Observed evidence</h3><p data-i18n="methodDraftCopy">RiftGG lane matchups, RankedWR Diamond+ role strength, and statsWR historical comparison remain separate evidence components.</p></article>
+        <article><span>2</span><h3 data-i18n="methodRoleTitle">Whole-draft fit</h3><p data-i18n="methodRoleCopy">Every selected enemy and ally contributes to labeled enemy-response and ally-synergy estimates using official champion classes and ability signals.</p></article>
+        <article><span>3</span><h3 data-i18n="methodWinTitle">Transparent ranking</h3><p data-i18n="methodWinCopy">Available components are combined into an evidence score; the full breakdown and data coverage are shown for every recommendation.</p></article>
       </div>
-      <p class="method-disclaimer" data-i18n="methodDisclaimer">Recommendations use published Chinese-server Diamond+ statistics. No source can guarantee a perfect pick, and allied-team synergy is not scored without observed composition data.</p>
+      <p class="method-disclaimer" data-i18n="methodDisclaimer">Lane matchup, role strength, and historical change are published statistics. Enemy response and ally synergy are estimates from official champion classes and ability descriptions—not observed composition win rates or a win probability.</p>
     </section>
   </main>
 
   <footer>
     <div class="brand footer-brand"><span class="brand-mark" aria-hidden="true"></span><span>RIFT<span>DRAFT</span></span></div>
-    <p data-i18n="footerCopy">Diamond+ Wild Rift CN role statistics via RankedWR and observed lane matchups via RiftGG. Not affiliated with Riot Games.</p>
+    <p data-i18n="footerCopy">Diamond+ role data via RankedWR, observed lane matchups via RiftGG, and historical comparison via statsWR. Team-fit estimates use official Riot champion information. Not affiliated with Riot Games.</p>
     <a href="https://www.riftgg.app/en/champions" target="_blank" rel="noreferrer"><span data-i18n="viewSource">View source</span> ↗</a>
   </footer>
 
@@ -181,6 +181,6 @@
     </button>
   </template>
 
-  <script type="module" src="./app.js?v=20260620d"></script>
+  <script type="module" src="./app.js?v=20260620e"></script>
 </body>
 </html>

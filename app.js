@@ -9,18 +9,18 @@ const messages = {
     primaryNav: "Primary navigation", language: "Language", dataFilters: "Data filters", analyzerRegion: "Team composition analyzer", navAnalyzer: "Analyzer", navMethod: "Method",
     statusConnecting: "Connecting to ranked data", statusLive: "Live ranked snapshot", statusCached: "Cached ranked snapshot",
     eyebrow: "Wild Rift draft intelligence", heroTitle: "Build the draft.<br><em>Find the edge.</em>",
-    heroCopy: "Set each lane, choose your position, and rank Diamond+ champions with observed lane-matchup data.",
+    heroCopy: "Combine observed matchups, current meta strength, historical comparison, and transparent whole-draft estimates.",
     region: "Region", chinaServer: "China server", rank: "Rank", snapshot: "Snapshot", latestAvailable: "Latest available",
     buildDraft: "Build your draft", resetDraft: "Reset draft", yourTeam: "Your team", allyHint: "Select known allied champions",
     enemyTeam: "Enemy team", enemyHint: "Select revealed enemy champions", choosePosition: "Choose your position",
     positionHint: "We compare all available Diamond+ picks in this role.", analyze: "Analyze composition",
     resultPlaceholderTitle: "Your recommendation<br>will appear here", resultPlaceholderCopy: "Complete the draft on the left and run the analysis.",
-    howItWorks: "How it works", methodTitle: "Observed data, lane by lane.", methodDraftTitle: "Fixed lane slots",
-    methodDraftCopy: "Every team slot belongs to Solo, Jungle, Mid, Duo, or Support and opens a lane-filtered champion list.", methodRoleTitle: "Observed matchup",
-    methodRoleCopy: "When the enemy laner is selected, candidates are ranked by their published Diamond+ same-lane win rate against that champion.", methodWinTitle: "Role fallback",
-    methodWinCopy: "If no same-lane matchup is selected or published, candidates are ranked by their overall Diamond+ win rate for the position.",
-    methodDisclaimer: "Recommendations use published Chinese-server Diamond+ statistics. No source can guarantee a perfect pick, and allied-team synergy is not scored without observed composition data.",
-    footerCopy: "Diamond+ Wild Rift CN role statistics via RankedWR and observed lane matchups via RiftGG. Not affiliated with Riot Games.",
+    howItWorks: "How it works", methodTitle: "Every signal stays visible.", methodDraftTitle: "Observed evidence",
+    methodDraftCopy: "RiftGG lane matchups, RankedWR Diamond+ role strength, and statsWR historical comparison remain separate evidence components.", methodRoleTitle: "Whole-draft fit",
+    methodRoleCopy: "Every selected enemy and ally contributes to labeled enemy-response and ally-synergy estimates using official champion classes and ability signals.", methodWinTitle: "Transparent ranking",
+    methodWinCopy: "Available components are combined into an evidence score; the full breakdown and data coverage are shown for every recommendation.",
+    methodDisclaimer: "Lane matchup, role strength, and historical change are published statistics. Enemy response and ally synergy are estimates from official champion classes and ability descriptions—not observed composition win rates or a win probability.",
+    footerCopy: "Diamond+ role data via RankedWR, observed lane matchups via RiftGG, and historical comparison via statsWR. Team-fit estimates use official Riot champion information. Not affiliated with Riot Games.",
     viewSource: "View source", chooseChampion: "Choose a champion", closePicker: "Close champion picker",
     searchChampions: "Search champions…", filterByPosition: "Filter champions by position", all: "All",
     draftedUnavailable: "Already drafted champions are unavailable", noSearchResults: "No champions match those filters.",
@@ -29,29 +29,30 @@ const messages = {
     alreadyDrafted: "{name}, already drafted", chooseName: "Choose {name}", championCount: "{shown} of {total} champions",
     loadingData: "Loading Wild Rift ranked data…", selectToBegin: "Select at least one ally or enemy champion to begin.",
     draftedReady: "{count} champion{plural} drafted · {role} recommendation ready", noPositionData: "No available champion data exists for this position.",
-    topRecommendation: "Top recommendation", highestMatchup: "Highest observed matchup win rate", highestRole: "Highest role win rate", diamondWinRate: "Overall Diamond+ win rate",
-    matchupWinRate: "Win rate vs {enemy}", matchupPickRate: "Matchup appearance", pickRate: "Pick rate", banRate: "Ban rate", dataBasis: "Ranking basis", observedMatchup: "Observed matchup", overallRole: "Overall role", whyThisPick: "Why this pick:",
-    whyMatchup: "{name} has the highest published Diamond+ {role} win rate against {enemy}: {matchupRate}%. Its overall role win rate is {winRate}%. RiftGG matchup data, {date}.",
-    whyOverall: "{name} has the highest available Diamond+ {role} win rate: {winRate}%. No published same-lane matchup was applied. RankedWR snapshot, {date}.",
-    nextBest: "Next best available", rateVs: "{rate}% vs {enemy}", roleRate: "{rate}% role win rate",
+    topRecommendation: "Top recommendation", highestEvidence: "Highest combined evidence", evidenceScore: "Evidence score", diamondWinRate: "Overall Diamond+ win rate",
+    matchupWinRate: "Observed vs {enemy}", noDirectMatchup: "No direct matchup", pickRate: "Pick rate", banRate: "Ban rate", historyChange: "Change since {date}", whyThisPick: "Why this pick:",
+    observedLane: "Lane matchup", roleStrength: "Role strength", enemyResponse: "All-enemy response", allySynergy: "Ally synergy", historicalTrend: "Historical comparison", observedLabel: "Observed", estimatedLabel: "Estimate",
+    evidenceExplanation: "{name} leads at {score}/100 for {role}. {matchup}. Overall role win rate: {winRate}%. Historical change: {trend}. The team-fit estimates evaluate {enemyCoverage} and {allyCoverage}.",
+    directMatchupPhrase: "Observed lane win rate against {enemy}: {rate}%", noMatchupPhrase: "No published direct lane matchup was available",
+    trendPoints: "{value} percentage points", trendUnavailable: "unavailable", oneEnemy: "1 selected enemy", manyEnemies: "{count} selected enemies", oneAlly: "1 selected ally", manyAllies: "{count} selected allies", nextBest: "Next best available", evidenceShort: "{score}/100 evidence",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
     primaryNav: "Ana gezinme", language: "Dil", dataFilters: "Veri filtreleri", analyzerRegion: "Takım kompozisyonu analiz aracı", navAnalyzer: "Analiz", navMethod: "Yöntem",
     statusConnecting: "Dereceli verilere bağlanılıyor", statusLive: "Canlı dereceli veri", statusCached: "Önbellekteki dereceli veri",
     eyebrow: "Wild Rift seçim zekâsı", heroTitle: "Kompozisyonu kur.<br><em>Avantajı yakala.</em>",
-    heroCopy: "Her koridoru ayarla, pozisyonunu seç ve Elmas+ şampiyonları gözlemlenmiş koridor eşleşmesi verileriyle sırala.",
+    heroCopy: "Gözlemlenmiş eşleşmeleri, güncel meta gücünü, geçmiş karşılaştırmayı ve şeffaf tüm seçim tahminlerini birleştir.",
     region: "Bölge", chinaServer: "Çin sunucusu", rank: "Lig", snapshot: "Veri tarihi", latestAvailable: "En güncel veri",
     buildDraft: "Takım seçimini oluştur", resetDraft: "Seçimleri sıfırla", yourTeam: "Takımın", allyHint: "Bilinen takım şampiyonlarını seç",
     enemyTeam: "Rakip takım", enemyHint: "Gösterilen rakip şampiyonları seç", choosePosition: "Pozisyonunu seç",
     positionHint: "Bu roldeki tüm uygun Elmas+ seçimleri karşılaştırırız.", analyze: "Kompozisyonu analiz et",
     resultPlaceholderTitle: "Önerin burada<br>görünecek", resultPlaceholderCopy: "Soldaki seçimi tamamla ve analizi çalıştır.",
-    howItWorks: "Nasıl çalışır", methodTitle: "Koridor bazında gözlemlenmiş veri.", methodDraftTitle: "Sabit koridor yuvaları",
-    methodDraftCopy: "Her takım yuvası Baron, Orman, Orta, Ejder veya Destek rolüne aittir ve koridora göre filtrelenmiş listeyi açar.", methodRoleTitle: "Gözlemlenmiş eşleşme",
-    methodRoleCopy: "Rakip koridor oyuncusu seçildiğinde adaylar, o şampiyona karşı yayımlanmış Elmas+ aynı koridor kazanma oranına göre sıralanır.", methodWinTitle: "Rol verisi yedeği",
-    methodWinCopy: "Aynı koridor eşleşmesi seçilmemiş veya yayımlanmamışsa adaylar pozisyondaki genel Elmas+ kazanma oranına göre sıralanır.",
-    methodDisclaimer: "Öneriler yayımlanmış Çin sunucusu Elmas+ istatistiklerini kullanır. Hiçbir kaynak kusursuz seçimi garanti edemez; gözlemlenmiş kompozisyon verisi olmadan takım sinerjisine puan verilmez.",
-    footerCopy: "RankedWR üzerinden Elmas+ Wild Rift Çin rol istatistikleri ve RiftGG üzerinden gözlemlenmiş koridor eşleşmeleri. Riot Games ile bağlantılı değildir.",
+    howItWorks: "Nasıl çalışır", methodTitle: "Her sinyal görünür kalır.", methodDraftTitle: "Gözlemlenmiş kanıt",
+    methodDraftCopy: "RiftGG koridor eşleşmeleri, RankedWR Elmas+ rol gücü ve statsWR geçmiş karşılaştırması ayrı kanıt bileşenleri olarak kalır.", methodRoleTitle: "Tüm seçim uyumu",
+    methodRoleCopy: "Seçilen her rakip ve takım arkadaşı, resmi şampiyon sınıfları ve yetenek sinyalleriyle etiketlenmiş rakip yanıtı ve takım sinerjisi tahminlerine katkı sağlar.", methodWinTitle: "Şeffaf sıralama",
+    methodWinCopy: "Mevcut bileşenler bir kanıt puanında birleştirilir; tam dağılım ve veri kapsamı her öneride gösterilir.",
+    methodDisclaimer: "Koridor eşleşmesi, rol gücü ve geçmiş değişim yayımlanmış istatistiklerdir. Rakip yanıtı ve takım sinerjisi resmi şampiyon sınıfları ile yetenek açıklamalarından üretilen tahminlerdir; gözlemlenmiş kompozisyon kazanma oranı veya kazanma olasılığı değildir.",
+    footerCopy: "RankedWR üzerinden Elmas+ rol verisi, RiftGG üzerinden gözlemlenmiş koridor eşleşmeleri ve statsWR üzerinden geçmiş karşılaştırma. Takım uyumu tahminleri resmi Riot şampiyon bilgilerini kullanır. Riot Games ile bağlantılı değildir.",
     viewSource: "Kaynağı görüntüle", chooseChampion: "Bir şampiyon seç", closePicker: "Şampiyon seçiciyi kapat",
     searchChampions: "Şampiyon ara…", filterByPosition: "Şampiyonları pozisyona göre filtrele", all: "Tümü",
     draftedUnavailable: "Daha önce seçilen şampiyonlar kullanılamaz", noSearchResults: "Bu filtrelerle eşleşen şampiyon yok.",
@@ -60,11 +61,12 @@ const messages = {
     alreadyDrafted: "{name}, zaten seçildi", chooseName: "{name} seç", championCount: "{total} şampiyondan {shown} tanesi",
     loadingData: "Wild Rift dereceli verileri yükleniyor…", selectToBegin: "Başlamak için en az bir takım veya rakip şampiyonu seç.",
     draftedReady: "{count} şampiyon seçildi · {role} önerisi hazır", noPositionData: "Bu pozisyon için uygun şampiyon verisi yok.",
-    topRecommendation: "En iyi öneri", highestMatchup: "En yüksek gözlemlenmiş eşleşme oranı", highestRole: "En yüksek rol kazanma oranı", diamondWinRate: "Genel Elmas+ kazanma oranı",
-    matchupWinRate: "{enemy} karşısı kazanma", matchupPickRate: "Eşleşme görülme oranı", pickRate: "Seçilme oranı", banRate: "Yasaklanma oranı", dataBasis: "Sıralama temeli", observedMatchup: "Gözlemlenmiş eşleşme", overallRole: "Genel rol", whyThisPick: "Neden bu seçim:",
-    whyMatchup: "{name}, {enemy} karşısında yayımlanmış en yüksek Elmas+ {role} kazanma oranına sahip: %{matchupRate}. Genel rol kazanma oranı %{winRate}. RiftGG eşleşme verisi, {date}.",
-    whyOverall: "{name}, mevcut en yüksek Elmas+ {role} kazanma oranına sahip: %{winRate}. Yayımlanmış aynı koridor eşleşmesi uygulanmadı. RankedWR verisi, {date}.",
-    nextBest: "Sonraki en iyi seçenekler", rateVs: "{enemy} karşısı %{rate}", roleRate: "%{rate} rol kazanma oranı",
+    topRecommendation: "En iyi öneri", highestEvidence: "En yüksek birleşik kanıt", evidenceScore: "Kanıt puanı", diamondWinRate: "Genel Elmas+ kazanma oranı",
+    matchupWinRate: "{enemy} karşısı gözlemlenmiş", noDirectMatchup: "Doğrudan eşleşme yok", pickRate: "Seçilme oranı", banRate: "Yasaklanma oranı", historyChange: "{date} tarihinden beri değişim", whyThisPick: "Neden bu seçim:",
+    observedLane: "Koridor eşleşmesi", roleStrength: "Rol gücü", enemyResponse: "Tüm rakiplere yanıt", allySynergy: "Takım sinerjisi", historicalTrend: "Geçmiş karşılaştırma", observedLabel: "Gözlemlenmiş", estimatedLabel: "Tahmin",
+    evidenceExplanation: "{name}, {role} için {score}/100 ile önde. {matchup}. Genel rol kazanma oranı: %{winRate}. Geçmiş değişim: {trend}. Takım uyumu tahminleri {enemyCoverage} ve {allyCoverage} değerlendirir.",
+    directMatchupPhrase: "{enemy} karşısı gözlemlenmiş koridor kazanma oranı: %{rate}", noMatchupPhrase: "Yayımlanmış doğrudan koridor eşleşmesi bulunamadı",
+    trendPoints: "{value} yüzde puanı", trendUnavailable: "kullanılamıyor", oneEnemy: "seçilen 1 rakibi", manyEnemies: "seçilen {count} rakibi", oneAlly: "seçilen 1 takım arkadaşını", manyAllies: "seçilen {count} takım arkadaşını", nextBest: "Sonraki en iyi seçenekler", evidenceShort: "{score}/100 kanıt",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -122,6 +124,9 @@ const state = {
   stats: {},
   matchups: {},
   matchupDate: null,
+  history: {},
+  historyDate: null,
+  signals: {},
   statDate: "20260619",
   source: "loading",
   ready: false,
@@ -308,18 +313,22 @@ function buildFallbackData() {
 
 async function loadData() {
   try {
-    const [latestResponse, championsResponse, pagesResponse, matchupsResponse] = await Promise.all([
+    const [latestResponse, championsResponse, pagesResponse, matchupsResponse, historyResponse, signalsResponse] = await Promise.all([
       fetch(new URL("latest.v1.json", DATA_BASE), { cache: "no-store" }),
       fetch(new URL("champions.v1.json", DATA_BASE), { cache: "no-store" }),
       fetch(new URL("champion-pages.index.v1.json", DATA_BASE), { cache: "no-store" }),
       fetch(new URL("matchups.v1.json", DATA_BASE), { cache: "no-store" }),
+      fetch(new URL("history.v1.json", DATA_BASE), { cache: "no-store" }),
+      fetch(new URL("champion-signals.v1.json", DATA_BASE), { cache: "no-store" }),
     ]);
     if (![latestResponse, championsResponse, pagesResponse].every((response) => response.ok)) {
       throw new Error("One or more ranked data endpoints were unavailable.");
     }
-    const [latest, championPayload, pagePayload, matchupPayload] = await Promise.all([
+    const [latest, championPayload, pagePayload, matchupPayload, historyPayload, signalPayload] = await Promise.all([
       latestResponse.json(), championsResponse.json(), pagesResponse.json(),
       matchupsResponse.ok ? matchupsResponse.json() : Promise.resolve({ champions: {} }),
+      historyResponse.ok ? historyResponse.json() : Promise.resolve({ champions: {} }),
+      signalsResponse.ok ? signalsResponse.json() : Promise.resolve({ champions: {} }),
     ]);
 
     const pages = pagePayload.champions || {};
@@ -336,6 +345,9 @@ async function loadData() {
     ]));
     state.matchups = matchupPayload.champions || {};
     state.matchupDate = matchupPayload.dataDate || null;
+    state.history = historyPayload.champions || {};
+    state.historyDate = historyPayload.dataDate || null;
+    state.signals = signalPayload.champions || {};
     state.statDate = latest.statDate;
     state.source = "live";
   } catch (error) {
@@ -345,6 +357,9 @@ async function loadData() {
     state.stats = fallback.stats;
     state.matchups = {};
     state.matchupDate = null;
+    state.history = {};
+    state.historyDate = null;
+    state.signals = {};
     state.source = "fallback";
   }
 
@@ -513,21 +528,104 @@ function observedMatchup(championId, role, enemyId) {
   return state.matchups[String(championId)]?.[String(role)]?.[String(enemyId)] || null;
 }
 
+function championProfile(championId) {
+  const signal = state.signals[String(championId)] || {};
+  const roles = new Set(signal.roles || []);
+  return {
+    frontline: Math.max(roles.has("TANK") ? 1 : 0, roles.has("FIGHTER") ? .6 : 0, roles.has("SUPPORT") ? .2 : 0),
+    control: Math.max(Number(signal.control) || 0, roles.has("TANK") ? .4 : 0, roles.has("SUPPORT") ? .25 : 0, roles.has("MAGE") ? .15 : 0),
+    protection: Math.max(Number(signal.sustain) || 0, roles.has("SUPPORT") ? .75 : 0, roles.has("TANK") ? .2 : 0),
+    carry: Math.max(roles.has("MARKSMAN") ? 1 : 0, roles.has("MAGE") ? .85 : 0, roles.has("ASSASSIN") ? .8 : 0, roles.has("FIGHTER") ? .55 : 0),
+    access: Math.max(Number(signal.mobility) || 0, roles.has("ASSASSIN") ? 1 : 0, roles.has("FIGHTER") ? .45 : 0),
+    available: Boolean(signal.roles?.length),
+  };
+}
+
+function allyPairFit(candidate, ally) {
+  return (
+    candidate.frontline * ally.carry
+    + candidate.control * (ally.carry * .7 + ally.access * .3)
+    + candidate.protection * ally.carry
+    + candidate.carry * (ally.frontline * .7 + ally.control * .3)
+    + candidate.access * ally.control
+  ) / 5;
+}
+
+function enemyPairResponse(candidate, enemy) {
+  return (
+    candidate.frontline * enemy.access
+    + candidate.control * (enemy.access * .65 + enemy.carry * .35)
+    + candidate.protection * enemy.access
+    + candidate.carry * enemy.frontline
+    + candidate.access * enemy.carry
+  ) / 5;
+}
+
+function average(values) {
+  return values.length ? values.reduce((total, value) => total + value, 0) / values.length : 0;
+}
+
+function normalizeScores(entries, rawKey, scoreKey, active) {
+  const values = entries.map((entry) => entry[rawKey]).filter(Number.isFinite);
+  const minimum = Math.min(...values);
+  const maximum = Math.max(...values);
+  entries.forEach((entry) => {
+    if (!active || !Number.isFinite(entry[rawKey]) || !values.length || maximum === minimum) {
+      entry[scoreKey] = 50;
+    } else {
+      entry[scoreKey] = Math.round(((entry[rawKey] - minimum) / (maximum - minimum)) * 100);
+    }
+  });
+}
+
 function analyzeComposition() {
   const unavailable = selectedIds();
   const enemyId = enemyForRole(state.selectedRole);
-  const available = [...(state.stats[state.selectedRole] || [])]
+  const allies = state.teams.ally.filter(Boolean);
+  const enemies = state.teams.enemy.filter(Boolean);
+  const allyProfiles = allies.map(championProfile).filter((profile) => profile.available);
+  const enemyProfiles = enemies.map(championProfile).filter((profile) => profile.available);
+  let available = [...(state.stats[state.selectedRole] || [])]
     .filter((entry) => !unavailable.has(String(entry.championId)))
-    .map((entry) => ({
-      ...entry,
-      matchup: enemyId ? observedMatchup(entry.championId, state.selectedRole, enemyId) : null,
-    }));
+    .map((entry) => {
+      const candidate = championProfile(entry.championId);
+      const historical = state.history[String(entry.championId)]?.[state.selectedRole] || null;
+      return {
+        ...entry,
+        matchup: enemyId ? observedMatchup(entry.championId, state.selectedRole, enemyId) : null,
+        historical,
+        trendRaw: historical ? entry.winRate - historical.winRate : null,
+        enemyRaw: enemyProfiles.length ? average(enemyProfiles.map((enemy) => enemyPairResponse(candidate, enemy))) : null,
+        allyRaw: allyProfiles.length ? average(allyProfiles.map((ally) => allyPairFit(candidate, ally))) : null,
+      };
+    });
   const useMatchups = Boolean(enemyId && available.some((entry) => entry.matchup));
-  const ranking = (useMatchups ? available.filter((entry) => entry.matchup) : available)
-    .map((entry) => ({ ...entry, basis: useMatchups ? "matchup" : "role" }))
-    .sort((left, right) => useMatchups
-      ? right.matchup.winRate - left.matchup.winRate || right.winRate - left.winRate
-      : right.winRate - left.winRate);
+  if (useMatchups) available = available.filter((entry) => entry.matchup);
+  available.forEach((entry) => { entry.matchupRaw = entry.matchup?.winRate ?? null; });
+  const useTrend = available.some((entry) => Number.isFinite(entry.trendRaw));
+  const useEnemyEstimate = enemyProfiles.length > 0;
+  const useAllyEstimate = allyProfiles.length > 0;
+
+  normalizeScores(available, "winRate", "roleScore", true);
+  normalizeScores(available, "matchupRaw", "matchupScore", useMatchups);
+  normalizeScores(available, "trendRaw", "trendScore", useTrend);
+  normalizeScores(available, "enemyRaw", "enemyScore", useEnemyEstimate);
+  normalizeScores(available, "allyRaw", "allyScore", useAllyEstimate);
+
+  const weights = [
+    ["roleScore", 30, true],
+    ["matchupScore", 30, useMatchups],
+    ["enemyScore", 15, useEnemyEstimate],
+    ["allyScore", 15, useAllyEstimate],
+    ["trendScore", 10, useTrend],
+  ].filter(([, , active]) => active);
+  const totalWeight = weights.reduce((total, [, weight]) => total + weight, 0);
+  const ranking = available.map((entry) => ({
+    ...entry,
+    evidenceScore: Math.round(weights.reduce((total, [key, weight]) => total + entry[key] * weight, 0) / totalWeight),
+    evidence: { useMatchups, useTrend, useEnemyEstimate, useAllyEstimate },
+    coverage: { enemies: enemyProfiles.length, allies: allyProfiles.length },
+  })).sort((left, right) => right.evidenceScore - left.evidenceScore || right.winRate - left.winRate);
   const top = ranking.filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3);
   if (!top.length) {
     elements.draftNote.textContent = t("noPositionData");
@@ -543,58 +641,61 @@ function renderResult(entries, shouldScroll = true) {
   const role = roleName(state.selectedRole);
   const enemyId = enemyForRole(state.selectedRole);
   const enemy = enemyId ? state.championMap.get(String(enemyId)) : null;
-  const isMatchup = best.basis === "matchup" && enemy;
-  const rankingRate = isMatchup ? best.matchup.winRate : best.winRate;
-  const dataDate = isMatchup ? state.matchupDate : state.statDate;
+  const isMatchup = best.evidence.useMatchups && best.matchup && enemy;
+  const trendText = Number.isFinite(best.trendRaw)
+    ? t("trendPoints", { value: `${best.trendRaw >= 0 ? "+" : ""}${best.trendRaw.toFixed(2)}` })
+    : t("trendUnavailable");
+  const matchupText = isMatchup
+    ? t("directMatchupPhrase", { enemy: enemy.name, rate: best.matchup.winRate.toFixed(2) })
+    : t("noMatchupPhrase");
   const alternativesHtml = alternatives.map((entry, index) => {
     const option = state.championMap.get(String(entry.championId));
-    const rateCopy = isMatchup
-      ? t("rateVs", { rate: entry.matchup.winRate.toFixed(2), enemy: enemy.name })
-      : t("roleRate", { rate: entry.winRate.toFixed(2) });
     return `<div class="alternative">
       <img src="${escapeHtml(option.avatarUrl)}" alt="" data-fallback="${escapeHtml(option.name)}">
       <b>${index + 2}. ${escapeHtml(option.name)}</b>
-      <span>${escapeHtml(rateCopy)}</span>
+      <span>${t("evidenceShort", { score: entry.evidenceScore })}</span>
     </div>`;
   }).join("");
 
-  const metricsHtml = isMatchup
-    ? `<div class="metric"><span>${t("diamondWinRate")}</span><strong>${best.winRate.toFixed(2)}%</strong></div>
-       <div class="metric"><span>${t("matchupPickRate")}</span><strong>${best.matchup.pickRate.toFixed(2)}%</strong></div>
-       <div class="metric"><span>${t("dataBasis")}</span><strong>${t("observedMatchup")}</strong></div>`
-    : `<div class="metric"><span>${t("pickRate")}</span><strong>${best.pickRate.toFixed(2)}%</strong></div>
-       <div class="metric"><span>${t("banRate")}</span><strong>${best.banRate.toFixed(2)}%</strong></div>
-       <div class="metric"><span>${t("dataBasis")}</span><strong>${t("overallRole")}</strong></div>`;
-  const explanation = isMatchup
-    ? t("whyMatchup", {
-      name: champion.name,
-      role,
-      enemy: enemy.name,
-      matchupRate: best.matchup.winRate.toFixed(2),
-      winRate: best.winRate.toFixed(2),
-      date: formatDate(dataDate),
-    })
-    : t("whyOverall", {
-      name: champion.name,
-      role,
-      winRate: best.winRate.toFixed(2),
-      date: formatDate(dataDate),
-    });
+  const breakdown = [
+    ["observedLane", best.matchupScore, best.evidence.useMatchups, "observedLabel"],
+    ["roleStrength", best.roleScore, true, "observedLabel"],
+    ["enemyResponse", best.enemyScore, best.evidence.useEnemyEstimate, "estimatedLabel"],
+    ["allySynergy", best.allyScore, best.evidence.useAllyEstimate, "estimatedLabel"],
+    ["historicalTrend", best.trendScore, best.evidence.useTrend, "observedLabel"],
+  ].filter(([, , active]) => active).map(([label, score, , type]) => `
+    <div class="evidence-row">
+      <div><span>${t(label)}</span><small>${t(type)}</small><strong>${score}</strong></div>
+      <div class="evidence-track"><i style="width:${score}%"></i></div>
+    </div>`).join("");
+  const explanation = t("evidenceExplanation", {
+    name: champion.name,
+    score: best.evidenceScore,
+    role,
+    matchup: matchupText,
+    winRate: best.winRate.toFixed(2),
+    trend: trendText,
+    enemyCoverage: t(best.coverage.enemies === 1 ? "oneEnemy" : "manyEnemies", { count: best.coverage.enemies }),
+    allyCoverage: t(best.coverage.allies === 1 ? "oneAlly" : "manyAllies", { count: best.coverage.allies }),
+  });
 
   elements.resultContent.innerHTML = `
     <div class="result-hero">
       <img src="${escapeHtml(champion.cardUrl)}" alt="${escapeHtml(champion.name)}" data-fallback="${escapeHtml(champion.name)}">
       <span class="result-badge">${t("topRecommendation")}</span>
-      <div class="result-title"><span>${t(isMatchup ? "highestMatchup" : "highestRole")}</span><h2>${escapeHtml(champion.name)}</h2></div>
+      <div class="result-title"><span>${t("highestEvidence")}</span><h2>${escapeHtml(champion.name)}</h2></div>
     </div>
     <div class="result-body">
       <div class="winrate-callout">
-        <div><span>${isMatchup ? t("matchupWinRate", { enemy: escapeHtml(enemy.name) }) : t("diamondWinRate")}</span><div class="winrate">${rankingRate.toFixed(2)}<small>%</small></div></div>
+        <div><span>${t("evidenceScore")}</span><div class="winrate">${best.evidenceScore}<small>/100</small></div></div>
         <div class="position-tag">${escapeHtml(role)}</div>
       </div>
       <div class="metric-grid">
-        ${metricsHtml}
+        <div class="metric"><span>${isMatchup ? t("matchupWinRate", { enemy: escapeHtml(enemy.name) }) : t("noDirectMatchup")}</span><strong>${isMatchup ? `${best.matchup.winRate.toFixed(2)}%` : "—"}</strong></div>
+        <div class="metric"><span>${t("diamondWinRate")}</span><strong>${best.winRate.toFixed(2)}%</strong></div>
+        <div class="metric"><span>${t("historyChange", { date: formatDate(state.historyDate) })}</span><strong>${escapeHtml(trendText)}</strong></div>
       </div>
+      <div class="evidence-breakdown">${breakdown}</div>
       <p class="why-copy"><strong>${t("whyThisPick")}</strong> ${escapeHtml(explanation)}</p>
       <div class="alternatives-label">${t("nextBest")}</div>
       ${alternativesHtml}
