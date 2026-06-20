@@ -1,4 +1,4 @@
-const API_BASE = "https://www.rankedwr.com/";
+const API_BASE = "https://rankedwr.com/";
 const RANK_BUCKET = "1"; // Diamond+ in the Riot/Tencent CN dataset.
 
 const roleNames = {

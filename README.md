@@ -4,7 +4,7 @@ A static, GitHub Pages-ready Wild Rift team composition analyzer. Users select a
 
 ## Data
 
-The browser fetches the current Diamond+ snapshot and champion metadata from the public JSON files published by [RankedWR](https://www.rankedwr.com/). RankedWR mirrors Riot/Tencent's [official Wild Rift CN statistics](https://lolm.qq.com/act/a20220818raider/index.html). A small bundled snapshot keeps the analyzer usable if that endpoint is temporarily unavailable.
+The browser fetches the current Diamond+ snapshot and champion metadata from the public JSON files published by [RankedWR](https://rankedwr.com/). RankedWR mirrors Riot/Tencent's [official Wild Rift CN statistics](https://lolm.qq.com/act/a20220818raider/index.html). A small bundled snapshot keeps the analyzer usable if that endpoint is temporarily unavailable.
 
 Riot's public developer API does not currently expose Wild Rift match history. GitHub Pages is also a static host, so a private API key must never be embedded in this frontend.
 
