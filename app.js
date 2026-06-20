@@ -9,12 +9,11 @@ const messages = {
     primaryNav: "Primary navigation", language: "Language", dataFilters: "Data filters", analyzerRegion: "Team composition analyzer", navAnalyzer: "Analyzer", navMethod: "Method",
     statusConnecting: "Connecting to ranked data", statusLive: "Live ranked snapshot", statusCached: "Cached ranked snapshot",
     eyebrow: "Wild Rift draft intelligence", heroTitle: "Build the draft.<br><em>Find the edge.</em>",
-    heroCopy: "Combine observed matchups, current meta strength, historical comparison, and transparent whole-draft estimates.",
+    heroCopy: "Set either team and instantly see the top three available picks for every open allied lane.",
     region: "Region", chinaServer: "China server", rank: "Rank", snapshot: "Snapshot", latestAvailable: "Latest available",
     buildDraft: "Build your draft", resetDraft: "Reset draft", yourTeam: "Your team", allyHint: "Select known allied champions",
-    enemyTeam: "Enemy team", enemyHint: "Select revealed enemy champions", choosePosition: "Choose your position",
-    positionHint: "We compare all available Diamond+ picks in this role.", analyze: "Analyze composition",
-    resultPlaceholderTitle: "Your recommendation<br>will appear here", resultPlaceholderCopy: "Complete the draft on the left and run the analysis.",
+    enemyTeam: "Enemy team", enemyHint: "Select revealed enemy champions", autoRankTitle: "Automatic team recommendations",
+    autoRankHint: "Top picks for every open allied lane update immediately as the draft changes.", resultPlaceholderTitle: "Building live<br>recommendations", resultPlaceholderCopy: "Loading the latest lane rankings and draft signals.",
     howItWorks: "How it works", methodTitle: "Every signal stays visible.", methodDraftTitle: "Observed evidence",
     methodDraftCopy: "RiftGG lane matchups, RankedWR Diamond+ role strength, and statsWR historical comparison remain separate evidence components.", methodRoleTitle: "Whole-draft fit",
     methodRoleCopy: "Every selected enemy and ally contributes to labeled enemy-response and ally-synergy estimates using official champion classes and ability signals.", methodWinTitle: "Transparent ranking",
@@ -41,19 +40,19 @@ const messages = {
     counterMatrix: "Enemy counter matrix", counterMatrixHint: "How this pick answers every selected enemy", synergyMatrix: "Ally synergy matrix", synergyMatrixHint: "How this pick complements every selected ally",
     observedWinShort: "{rate}% observed", responseScoreShort: "{score}/100 response", synergyScoreShort: "{score}/100 synergy",
     reasonFrontline: "Frontline", reasonControl: "CC setup", reasonProtection: "Peel & sustain", reasonFollowup: "Damage follow-up", reasonAccess: "Engage follow-up", reasonGeneral: "Role complement",
-    openLaneRecommendations: "Recommended lineup for empty lanes", openLaneHint: "One unique suggestion for each open allied position", confidenceShort: "{level} confidence",
+    dashboardTitle: "Best picks for every open lane", dashboardCopy: "Each lane shows its top three available champions and updates automatically.", openLaneCount: "{count} open lane{plural}", topThree: "Top 3", bestPick: "Best pick", noOpenLanes: "Your allied lineup is complete.",
+    counterSummary: "Enemy response", synergySummary: "Ally synergy", noCounterSignals: "No enemies selected", noSynergySignals: "No allies selected",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
     primaryNav: "Ana gezinme", language: "Dil", dataFilters: "Veri filtreleri", analyzerRegion: "Takım kompozisyonu analiz aracı", navAnalyzer: "Analiz", navMethod: "Yöntem",
     statusConnecting: "Dereceli verilere bağlanılıyor", statusLive: "Canlı dereceli veri", statusCached: "Önbellekteki dereceli veri",
     eyebrow: "Wild Rift seçim zekâsı", heroTitle: "Kompozisyonu kur.<br><em>Avantajı yakala.</em>",
-    heroCopy: "Gözlemlenmiş eşleşmeleri, güncel meta gücünü, geçmiş karşılaştırmayı ve şeffaf tüm seçim tahminlerini birleştir.",
+    heroCopy: "İki takımı seç ve her boş takım koridoru için en iyi üç uygun seçimi anında gör.",
     region: "Bölge", chinaServer: "Çin sunucusu", rank: "Lig", snapshot: "Veri tarihi", latestAvailable: "En güncel veri",
     buildDraft: "Takım seçimini oluştur", resetDraft: "Seçimleri sıfırla", yourTeam: "Takımın", allyHint: "Bilinen takım şampiyonlarını seç",
-    enemyTeam: "Rakip takım", enemyHint: "Gösterilen rakip şampiyonları seç", choosePosition: "Pozisyonunu seç",
-    positionHint: "Bu roldeki tüm uygun Elmas+ seçimleri karşılaştırırız.", analyze: "Kompozisyonu analiz et",
-    resultPlaceholderTitle: "Önerin burada<br>görünecek", resultPlaceholderCopy: "Soldaki seçimi tamamla ve analizi çalıştır.",
+    enemyTeam: "Rakip takım", enemyHint: "Gösterilen rakip şampiyonları seç", autoRankTitle: "Otomatik takım önerileri",
+    autoRankHint: "Her boş takım koridoru için en iyi seçimler, kompozisyon değiştikçe anında güncellenir.", resultPlaceholderTitle: "Canlı öneriler<br>hazırlanıyor", resultPlaceholderCopy: "En güncel koridor sıralamaları ve seçim sinyalleri yükleniyor.",
     howItWorks: "Nasıl çalışır", methodTitle: "Her sinyal görünür kalır.", methodDraftTitle: "Gözlemlenmiş kanıt",
     methodDraftCopy: "RiftGG koridor eşleşmeleri, RankedWR Elmas+ rol gücü ve statsWR geçmiş karşılaştırması ayrı kanıt bileşenleri olarak kalır.", methodRoleTitle: "Tüm seçim uyumu",
     methodRoleCopy: "Seçilen her rakip ve takım arkadaşı, resmi şampiyon sınıfları ve yetenek sinyalleriyle etiketlenmiş rakip yanıtı ve takım sinerjisi tahminlerine katkı sağlar.", methodWinTitle: "Şeffaf sıralama",
@@ -80,7 +79,8 @@ const messages = {
     counterMatrix: "Rakip karşılık matrisi", counterMatrixHint: "Bu seçimin seçilen her rakibe verdiği yanıt", synergyMatrix: "Takım sinerjisi matrisi", synergyMatrixHint: "Bu seçimin her takım arkadaşını nasıl tamamladığı",
     observedWinShort: "%{rate} gözlemlenmiş", responseScoreShort: "{score}/100 yanıt", synergyScoreShort: "{score}/100 sinerji",
     reasonFrontline: "Ön saf", reasonControl: "Kitle kontrolü", reasonProtection: "Koruma ve iyileştirme", reasonFollowup: "Hasar takibi", reasonAccess: "Başlatma takibi", reasonGeneral: "Rol tamamlayıcılığı",
-    openLaneRecommendations: "Boş koridorlar için önerilen kadro", openLaneHint: "Her boş takım pozisyonu için benzersiz bir öneri", confidenceShort: "{level} güven",
+    dashboardTitle: "Her boş koridor için en iyi seçimler", dashboardCopy: "Her koridorda en iyi üç uygun şampiyon gösterilir ve sonuçlar otomatik güncellenir.", openLaneCount: "{count} boş koridor", topThree: "İlk 3", bestPick: "En iyi seçim", noOpenLanes: "Takım kadron tamamlandı.",
+    counterSummary: "Rakip yanıtı", synergySummary: "Takım sinerjisi", noCounterSignals: "Rakip seçilmedi", noSynergySignals: "Takım arkadaşı seçilmedi",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -129,7 +129,6 @@ const fallbackRows = {
 
 const state = {
   teams: { ally: Array(5).fill(null), enemy: Array(5).fill(null) },
-  selectedRole: "1",
   pickerRole: "1",
   pickerTarget: null,
   language: localStorage.getItem("riftdraft-language") || (navigator.language.toLowerCase().startsWith("tr") ? "tr" : "en"),
@@ -152,7 +151,6 @@ const elements = {
   enemySlots: document.querySelector("#enemy-slots"),
   allyCount: document.querySelector("#ally-count"),
   enemyCount: document.querySelector("#enemy-count"),
-  analyzeButton: document.querySelector("#analyze-button"),
   draftNote: document.querySelector("#draft-note"),
   resetButton: document.querySelector("#reset-button"),
   picker: document.querySelector("#champion-picker"),
@@ -221,7 +219,7 @@ function applyTranslations() {
   }
   updateDataStatus();
   renderAllSlots();
-  if (state.lastResult) renderResult(state.lastResult, false);
+  if (state.ready) analyzeAllOpenRoles();
   if (elements.picker.open) renderChampionGrid();
 }
 
@@ -380,7 +378,8 @@ async function loadData() {
   state.championMap = new Map(state.champions.map((champion) => [champion.id, champion]));
   state.ready = true;
   updateDataStatus();
-  updateAnalyzeState();
+  updateRecommendationState();
+  analyzeAllOpenRoles();
   if (elements.picker.open) renderChampionGrid();
 }
 
@@ -439,7 +438,7 @@ function renderSlots(team) {
 function renderAllSlots() {
   renderSlots("ally");
   renderSlots("enemy");
-  updateAnalyzeState();
+  updateRecommendationState();
 }
 
 function openPicker(team, index) {
@@ -501,36 +500,17 @@ function selectChampion(championId) {
   state.teams[team][index] = championId;
   closePicker();
   renderAllSlots();
-  clearResult();
+  analyzeAllOpenRoles();
 }
 
 function removeChampion(team, index) {
   state.teams[team][index] = null;
   renderAllSlots();
-  clearResult();
+  analyzeAllOpenRoles();
 }
 
-function updateAnalyzeState() {
-  const count = selectedIds().size;
-  elements.analyzeButton.disabled = !state.ready || count === 0;
-  if (!state.ready) {
-    elements.draftNote.textContent = t("loadingData");
-  } else if (count === 0) {
-    elements.draftNote.textContent = t("selectToBegin");
-  } else {
-    elements.draftNote.textContent = t("draftedReady", {
-      count,
-      plural: state.language === "en" && count !== 1 ? "s" : "",
-      role: roleName(state.selectedRole),
-    });
-  }
-}
-
-function clearResult() {
-  state.lastResult = null;
-  elements.resultPlaceholder.hidden = false;
-  elements.resultContent.hidden = true;
-  elements.resultContent.replaceChildren();
+function updateRecommendationState() {
+  elements.draftNote.textContent = t(state.ready ? "autoRankHint" : "loadingData");
 }
 
 function enemyForRole(role) {
@@ -738,31 +718,6 @@ function rankRole(role, additionalUnavailable = new Set()) {
   }).sort((left, right) => right.evidenceScore - left.evidenceScore || right.winRate - left.winRate);
 }
 
-function buildOpenRoleRecommendations(primaryRanking) {
-  const emptyRoles = SLOT_ROLES.filter((role, index) => !state.teams.ally[index]);
-  const orderedRoles = [state.selectedRole, ...emptyRoles.filter((role) => role !== state.selectedRole)].filter((role) => emptyRoles.includes(role));
-  const reserved = new Set();
-  const recommendations = [];
-  orderedRoles.forEach((role) => {
-    const ranking = role === state.selectedRole && !reserved.size ? primaryRanking : rankRole(role, reserved);
-    const best = ranking.find((entry) => !reserved.has(String(entry.championId)) && state.championMap.has(String(entry.championId)));
-    if (!best) return;
-    reserved.add(String(best.championId));
-    recommendations.push(best);
-  });
-  return recommendations.sort((left, right) => SLOT_ROLES.indexOf(left.role) - SLOT_ROLES.indexOf(right.role));
-}
-
-function analyzeComposition() {
-  const ranking = rankRole(state.selectedRole);
-  const top = ranking.filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3);
-  if (!top.length) {
-    elements.draftNote.textContent = t("noPositionData");
-    return;
-  }
-  renderResult({ entries: top, lineup: buildOpenRoleRecommendations(ranking) });
-}
-
 function freshnessText(ageDays) {
   if (!Number.isFinite(ageDays)) return t("freshnessUnknown");
   if (ageDays === 0) return t("freshnessToday");
@@ -770,161 +725,85 @@ function freshnessText(ageDays) {
   return t("freshnessDays", { days: ageDays });
 }
 
-function renderResult(result, shouldScroll = true) {
-  const entries = Array.isArray(result) ? result : result.entries;
-  const lineup = Array.isArray(result?.lineup) ? result.lineup : [];
-  state.lastResult = { entries, lineup };
-  const [best, ...alternatives] = entries;
-  const champion = state.championMap.get(String(best.championId));
-  const role = roleName(state.selectedRole);
-  const enemyId = enemyForRole(state.selectedRole);
-  const enemy = enemyId ? state.championMap.get(String(enemyId)) : null;
-  const isMatchup = best.evidence.useMatchups && best.matchup && enemy;
-  const trendText = Number.isFinite(best.trendRaw)
-    ? t("trendPoints", { value: `${best.trendRaw >= 0 ? "+" : ""}${best.trendRaw.toFixed(2)}` })
-    : t("trendUnavailable");
-  const matchupText = isMatchup
-    ? t("directMatchupPhrase", { enemy: enemy.name, rate: best.matchup.winRate.toFixed(2) })
-    : t("noMatchupPhrase");
-  const alternativesHtml = alternatives.map((entry, index) => {
-    const option = state.championMap.get(String(entry.championId));
-    return `<div class="alternative">
-      <img src="${escapeHtml(option.avatarUrl)}" alt="" data-fallback="${escapeHtml(option.name)}">
-      <b>${index + 2}. ${escapeHtml(option.name)}</b>
-      <span>${t("evidenceShort", { score: entry.evidenceScore })}</span>
-    </div>`;
+function compactEnemySignals(entry) {
+  if (!entry.enemyDetails.length) return `<span class="signal-empty">${t("noCounterSignals")}</span>`;
+  return entry.enemyDetails.map((detail) => {
+    const target = state.championMap.get(String(detail.championId));
+    if (!target) return "";
+    const value = detail.observed ? `${detail.observed.winRate.toFixed(1)}%` : `${detail.score}/100`;
+    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${value}</em></span>`;
   }).join("");
+}
 
-  const confidenceLevel = t(best.confidence.levelKey);
-  const confidenceHtml = `<div class="confidence-card confidence-${best.confidence.levelKey.replace("confidence", "").toLowerCase()}">
-    <div><span>${t("confidenceTitle")}</span><strong>${confidenceLevel} · ${best.confidence.score}/100</strong></div>
-    <p>${t("confidenceDetail", { coverage: best.confidence.coverage, freshness: freshnessText(best.confidence.ageDays) })}</p>
-    <small>${t("confidenceNote")}</small>
-  </div>`;
+function compactAllySignals(entry) {
+  if (!entry.allyDetails.length) return `<span class="signal-empty">${t("noSynergySignals")}</span>`;
+  return entry.allyDetails.map((detail) => {
+    const target = state.championMap.get(String(detail.championId));
+    if (!target) return "";
+    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${t(detail.reasons[0])}</em></span>`;
+  }).join("");
+}
 
-  const counterMatrixHtml = best.enemyDetails.length ? `<section class="fit-section">
-    <div class="detail-heading"><div><h3>${t("counterMatrix")}</h3><p>${t("counterMatrixHint")}</p></div><span>${best.enemyDetails.length}/5</span></div>
-    <div class="fit-grid">${best.enemyDetails.map((detail) => {
-      const target = state.championMap.get(String(detail.championId));
-      if (!target) return "";
-      const value = detail.observed
-        ? t("observedWinShort", { rate: detail.observed.winRate.toFixed(2) })
-        : t("responseScoreShort", { score: detail.score });
-      return `<article class="fit-card">
-        <img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}">
-        <div><b>${escapeHtml(target.name)}</b><small>${t(detail.observed ? "observedLabel" : "estimatedLabel")}</small></div>
-        <strong>${value}</strong>
-      </article>`;
-    }).join("")}</div>
-  </section>` : "";
+function renderLaneRecommendation(group) {
+  const [best] = group.entries;
+  if (!best) return "";
+  const picks = group.entries.map((entry, index) => {
+    const champion = state.championMap.get(String(entry.championId));
+    if (!champion) return "";
+    return `<article class="ranked-pick ${index === 0 ? "best" : ""}">
+      <span class="pick-rank">${index + 1}</span>
+      <img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}">
+      <div class="pick-identity"><small>${index === 0 ? t("bestPick") : `${t("topThree")} · ${index + 1}`}</small><b>${escapeHtml(champion.name)}</b><span>${entry.winRate.toFixed(2)}% WR</span></div>
+      <div class="pick-score"><strong>${entry.evidenceScore}</strong><small>/100</small><em>${t(entry.confidence.levelKey)}</em></div>
+    </article>`;
+  }).join("");
+  return `<section class="lane-recommendation">
+    <header><div><span class="lane-icon">${ROLE_ICONS[group.role]}</span><div><small>${t("topThree")}</small><h3>${escapeHtml(roleName(group.role))}</h3></div></div><strong>${best.confidence.score}%</strong></header>
+    <div class="ranked-picks">${picks}</div>
+    <div class="lane-signal"><span>${t("counterSummary")}</span><div>${compactEnemySignals(best)}</div></div>
+    <div class="lane-signal"><span>${t("synergySummary")}</span><div>${compactAllySignals(best)}</div></div>
+    <div class="lane-confidence"><span>${t("confidenceTitle")}: <b>${t(best.confidence.levelKey)}</b></span><span>${t("confidenceDetail", { coverage: best.confidence.coverage, freshness: freshnessText(best.confidence.ageDays) })}</span></div>
+  </section>`;
+}
 
-  const synergyMatrixHtml = best.allyDetails.length ? `<section class="fit-section">
-    <div class="detail-heading"><div><h3>${t("synergyMatrix")}</h3><p>${t("synergyMatrixHint")}</p></div><span>${best.allyDetails.length}/5</span></div>
-    <div class="fit-grid">${best.allyDetails.map((detail) => {
-      const target = state.championMap.get(String(detail.championId));
-      if (!target) return "";
-      const reasons = detail.reasons.map((reason) => `<em>${t(reason)}</em>`).join("");
-      return `<article class="fit-card synergy-card">
-        <img src="${escapeHtml(target.avatarUrl)}" alt="" data-fallback="${escapeHtml(target.name)}">
-        <div><b>${escapeHtml(target.name)}</b><span class="reason-tags">${reasons}</span></div>
-        <strong>${t("synergyScoreShort", { score: detail.score })}</strong>
-      </article>`;
-    }).join("")}</div>
-  </section>` : "";
-
-  const lineupHtml = lineup.length ? `<section class="lineup-section">
-    <div class="detail-heading"><div><h3>${t("openLaneRecommendations")}</h3><p>${t("openLaneHint")}</p></div><span>${lineup.length}/5</span></div>
-    <div class="lineup-grid">${lineup.map((entry) => {
-      const option = state.championMap.get(String(entry.championId));
-      if (!option) return "";
-      return `<article class="lineup-card">
-        <img src="${escapeHtml(option.avatarUrl)}" alt="" data-fallback="${escapeHtml(option.name)}">
-        <div><small>${escapeHtml(roleName(entry.role))}</small><b>${escapeHtml(option.name)}</b></div>
-        <span>${entry.evidenceScore}/100<br><small>${t("confidenceShort", { level: t(entry.confidence.levelKey) })}</small></span>
-      </article>`;
-    }).join("")}</div>
-  </section>` : "";
-
-  const breakdown = [
-    ["observedLane", best.matchupScore, best.evidence.useMatchups, "observedLabel"],
-    ["roleStrength", best.roleScore, true, "observedLabel"],
-    ["enemyResponse", best.enemyScore, best.evidence.useEnemyEstimate, "estimatedLabel"],
-    ["allySynergy", best.allyScore, best.evidence.useAllyEstimate, "estimatedLabel"],
-    ["historicalTrend", best.trendScore, best.evidence.useTrend, "observedLabel"],
-  ].filter(([, , active]) => active).map(([label, score, , type]) => `
-    <div class="evidence-row">
-      <div><span>${t(label)}</span><small>${t(type)}</small><strong>${score}</strong></div>
-      <div class="evidence-track"><i style="width:${score}%"></i></div>
-    </div>`).join("");
-  const explanation = t("evidenceExplanation", {
-    name: champion.name,
-    score: best.evidenceScore,
-    role,
-    matchup: matchupText,
-    winRate: best.winRate.toFixed(2),
-    trend: trendText,
-    enemyCoverage: t(best.coverage.enemies === 1 ? "oneEnemy" : "manyEnemies", { count: best.coverage.enemies }),
-    allyCoverage: t(best.coverage.allies === 1 ? "oneAlly" : "manyAllies", { count: best.coverage.allies }),
-  });
-
-  elements.resultContent.innerHTML = `
-    <div class="result-hero">
-      <img src="${escapeHtml(champion.cardUrl)}" alt="${escapeHtml(champion.name)}" data-fallback="${escapeHtml(champion.name)}">
-      <span class="result-badge">${t("topRecommendation")}</span>
-      <div class="result-title"><span>${t("highestEvidence")}</span><h2>${escapeHtml(champion.name)}</h2></div>
-    </div>
-    <div class="result-body">
-      <div class="winrate-callout">
-        <div><span>${t("evidenceScore")}</span><div class="winrate">${best.evidenceScore}<small>/100</small></div></div>
-        <div class="position-tag">${escapeHtml(role)}</div>
-      </div>
-      ${confidenceHtml}
-      <div class="metric-grid">
-        <div class="metric"><span>${isMatchup ? t("matchupWinRate", { enemy: escapeHtml(enemy.name) }) : t("noDirectMatchup")}</span><strong>${isMatchup ? `${best.matchup.winRate.toFixed(2)}%` : "—"}</strong></div>
-        <div class="metric"><span>${t("diamondWinRate")}</span><strong>${best.winRate.toFixed(2)}%</strong></div>
-        <div class="metric"><span>${t("historyChange", { date: formatDate(state.historyDate) })}</span><strong>${escapeHtml(trendText)}</strong></div>
-      </div>
-      <div class="evidence-breakdown">${breakdown}</div>
-      ${counterMatrixHtml}
-      ${synergyMatrixHtml}
-      <p class="why-copy"><strong>${t("whyThisPick")}</strong> ${escapeHtml(explanation)}</p>
-      <div class="alternatives-label">${t("nextBest")}</div>
-      ${alternativesHtml}
-      ${lineupHtml}
-    </div>`;
+function renderAutomaticResults(groups) {
+  state.lastResult = groups;
+  if (!groups.length) {
+    elements.resultContent.innerHTML = `<div class="complete-lineup"><span>✓</span><h2>${t("noOpenLanes")}</h2></div>`;
+  } else {
+    elements.resultContent.innerHTML = `<div class="dashboard-header">
+      <div><span class="section-number">03</span><h2>${t("dashboardTitle")}</h2><p>${t("dashboardCopy")}</p></div>
+      <span>${t("openLaneCount", { count: groups.length, plural: state.language === "en" && groups.length !== 1 ? "s" : "" })}</span>
+    </div><div class="lane-dashboard-grid">${groups.map(renderLaneRecommendation).join("")}</div>`;
+  }
   bindImageFallbacks(elements.resultContent);
   elements.resultPlaceholder.hidden = true;
   elements.resultContent.hidden = false;
-  if (shouldScroll && window.matchMedia("(max-width: 1050px)").matches) {
-    elements.resultContent.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
+}
+
+function analyzeAllOpenRoles() {
+  if (!state.ready) return;
+  const groups = SLOT_ROLES
+    .filter((role, index) => !state.teams.ally[index])
+    .map((role) => ({
+      role,
+      entries: rankRole(role).filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3),
+    }))
+    .filter((group) => group.entries.length);
+  renderAutomaticResults(groups);
 }
 
 function resetDraft() {
   state.teams.ally.fill(null);
   state.teams.enemy.fill(null);
   renderAllSlots();
-  clearResult();
+  analyzeAllOpenRoles();
 }
-
-document.querySelectorAll(".role-button").forEach((button) => {
-  button.addEventListener("click", () => {
-    state.selectedRole = button.dataset.role;
-    document.querySelectorAll(".role-button").forEach((roleButton) => {
-      const active = roleButton === button;
-      roleButton.classList.toggle("active", active);
-      roleButton.setAttribute("aria-checked", String(active));
-    });
-    updateAnalyzeState();
-    clearResult();
-  });
-});
 
 document.querySelectorAll(".language-button").forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.language));
 });
 
-elements.analyzeButton.addEventListener("click", analyzeComposition);
 elements.resetButton.addEventListener("click", resetDraft);
 elements.closePicker.addEventListener("click", closePicker);
 elements.championSearch.addEventListener("input", renderChampionGrid);

@@ -4,7 +4,7 @@ A static, GitHub Pages-ready Wild Rift draft analyzer. Users fill fixed lane slo
 
 The interface supports English and Turkish. Each Solo, Jungle, Mid, Duo, and Support slot opens a lane-filtered champion picker with typo-tolerant fuzzy search.
 
-Each result includes source-coverage confidence, a per-enemy response matrix, per-ally synergy reasons, and one unique recommendation for every empty allied lane. The responsive interface uses touch-sized, horizontally scrollable lane selectors and a bottom-sheet champion picker on mobile.
+Recommendations update automatically whenever either draft changes. Every empty allied lane shows its top three available champions with source-coverage confidence, per-enemy response signals, and per-ally synergy reasons. The responsive interface uses touch-sized, horizontally scrollable lane selectors and a bottom-sheet champion picker on mobile.
 
 ## Data
 
