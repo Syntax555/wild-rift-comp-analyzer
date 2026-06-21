@@ -13,11 +13,12 @@ const messages = {
     buildDraft: "Build your draft", resetDraft: "Reset draft", yourTeam: "Your team", allyHint: "Select known allied champions",
     enemyTeam: "Enemy team", enemyHint: "Select revealed enemy champions", autoRankTitle: "Automatic team recommendations",
     autoRankHint: "Top picks for every open allied lane update immediately as the draft changes.", resultPlaceholderTitle: "Building live<br>recommendations", resultPlaceholderCopy: "Loading the latest lane rankings and draft signals.",
+    pickTiming: "Pick timing", timingAuto: "Auto", timingEarly: "Early", timingMiddle: "Mid", timingLast: "Last", timingModeSummary: "Timing · {mode}", timingModeAuto: "{mode} (auto)",
     howItWorks: "How it works", methodTitle: "Every signal stays visible.", methodDraftTitle: "Observed evidence",
-    methodDraftCopy: "RiftGG lane matchups, RankedWR Diamond+ role strength, and statsWR historical comparison remain separate evidence components.", methodRoleTitle: "Whole-draft fit",
-    methodRoleCopy: "Every selected enemy and ally contributes to labeled enemy-response and ally-synergy estimates using official champion classes and ability signals.", methodWinTitle: "Transparent ranking",
-    methodWinCopy: "Available components are combined into an evidence score; the full breakdown and data coverage are shown for every recommendation.",
-    methodDisclaimer: "Lane matchup, role strength, and historical change are published statistics. Enemy response and ally synergy are estimates from official champion classes and ability descriptions—not observed composition win rates or a win probability.",
+    methodDraftCopy: "Observed lane matchups, calibrated Diamond+ role strength, blind-pick safety, and historical change remain separate evidence components.", methodRoleTitle: "Joint draft search",
+    methodRoleCopy: "Every recommendation is scored inside complete, duplicate-free lineup projections across all remaining lanes.", methodWinTitle: "Walk-forward calibration",
+    methodWinCopy: "Daily snapshots are archived and tested only against later snapshots; until enough dates exist, calibration is explicitly marked as collecting.",
+    methodDisclaimer: "Lane matchup, blind safety, role strength, and historical change use published statistics. Enemy response uses observed pairings when available and a labeled class-based fallback otherwise; ally synergy remains an estimate. Joint-plan scores are not composition win rates or win probabilities.",
     footerCopy: "Diamond+ role data via RankedWR, observed lane matchups via RiftGG, and historical comparison via statsWR. Team-fit estimates use official Riot champion information. Not affiliated with Riot Games.",
     viewSource: "View source", chooseChampion: "Choose a champion", closePicker: "Close champion picker",
     searchChampions: "Search champions…", filterByPosition: "Filter champions by position", all: "All",
@@ -42,6 +43,7 @@ const messages = {
     dashboardTitle: "Best picks for every open lane", dashboardCopy: "Each lane shows its top three available champions and updates automatically.", openLaneCount: "{count} open lane{plural}", topThree: "Top 3", bestPick: "Best pick", noOpenLanes: "Your allied lineup is complete.",
     counterSummary: "Enemy response", synergySummary: "Ally synergy", noCounterSignals: "No enemies selected", noSynergySignals: "No allies selected",
     tapToDraft: "Tap to draft", draftRecommendation: "Draft {name} in {role}", addedRecommendation: "{name} added to {role}", undo: "Undo", laneNavigation: "Recommendation lanes", coverageShort: "{score}% coverage",
+    jointProjection: "{score}/100 joint plan", optimizerSummary: "Joint search · {count} projected lineups", calibrationCollecting: "Calibration collecting ({count} snapshot)", calibrationCollectingMany: "Calibration collecting ({count} snapshots)", calibrationReady: "Calibrated on {count} later observations", observedProxy: "Observed", estimatedProxy: "Estimated",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
@@ -53,11 +55,12 @@ const messages = {
     buildDraft: "Takım seçimini oluştur", resetDraft: "Seçimleri sıfırla", yourTeam: "Takımın", allyHint: "Bilinen takım şampiyonlarını seç",
     enemyTeam: "Rakip takım", enemyHint: "Gösterilen rakip şampiyonları seç", autoRankTitle: "Otomatik takım önerileri",
     autoRankHint: "Her boş takım koridoru için en iyi seçimler, kompozisyon değiştikçe anında güncellenir.", resultPlaceholderTitle: "Canlı öneriler<br>hazırlanıyor", resultPlaceholderCopy: "En güncel koridor sıralamaları ve seçim sinyalleri yükleniyor.",
+    pickTiming: "Seçim zamanı", timingAuto: "Otomatik", timingEarly: "Erken", timingMiddle: "Orta", timingLast: "Son", timingModeSummary: "Zaman · {mode}", timingModeAuto: "{mode} (otomatik)",
     howItWorks: "Nasıl çalışır", methodTitle: "Her sinyal görünür kalır.", methodDraftTitle: "Gözlemlenmiş kanıt",
-    methodDraftCopy: "RiftGG koridor eşleşmeleri, RankedWR Elmas+ rol gücü ve statsWR geçmiş karşılaştırması ayrı kanıt bileşenleri olarak kalır.", methodRoleTitle: "Tüm seçim uyumu",
-    methodRoleCopy: "Seçilen her rakip ve takım arkadaşı, resmi şampiyon sınıfları ve yetenek sinyalleriyle etiketlenmiş rakip yanıtı ve takım sinerjisi tahminlerine katkı sağlar.", methodWinTitle: "Şeffaf sıralama",
-    methodWinCopy: "Mevcut bileşenler bir kanıt puanında birleştirilir; tam dağılım ve veri kapsamı her öneride gösterilir.",
-    methodDisclaimer: "Koridor eşleşmesi, rol gücü ve geçmiş değişim yayımlanmış istatistiklerdir. Rakip yanıtı ve takım sinerjisi resmi şampiyon sınıfları ile yetenek açıklamalarından üretilen tahminlerdir; gözlemlenmiş kompozisyon kazanma oranı veya kazanma olasılığı değildir.",
+    methodDraftCopy: "Gözlemlenmiş koridor eşleşmeleri, kalibre edilmiş Elmas+ rol gücü, kör seçim güvenliği ve geçmiş değişim ayrı kanıt bileşenleri olarak kalır.", methodRoleTitle: "Ortak seçim araması",
+    methodRoleCopy: "Her öneri, kalan tüm koridorlarda eksiksiz ve tekrarsız takım projeksiyonları içinde puanlanır.", methodWinTitle: "İleri tarihli kalibrasyon",
+    methodWinCopy: "Günlük veriler arşivlenir ve yalnızca sonraki verilerle test edilir; yeterli tarih oluşana kadar kalibrasyon veri topluyor olarak gösterilir.",
+    methodDisclaimer: "Koridor eşleşmesi, kör seçim güvenliği, rol gücü ve geçmiş değişim yayımlanmış istatistikleri kullanır. Rakip yanıtı varsa gözlemlenmiş eşleşmeyi, yoksa etiketli sınıf tahminini kullanır; takım sinerjisi tahmin olarak kalır. Ortak plan puanları kompozisyon kazanma oranı veya kazanma olasılığı değildir.",
     footerCopy: "RankedWR üzerinden Elmas+ rol verisi, RiftGG üzerinden gözlemlenmiş koridor eşleşmeleri ve statsWR üzerinden geçmiş karşılaştırma. Takım uyumu tahminleri resmi Riot şampiyon bilgilerini kullanır. Riot Games ile bağlantılı değildir.",
     viewSource: "Kaynağı görüntüle", chooseChampion: "Bir şampiyon seç", closePicker: "Şampiyon seçiciyi kapat",
     searchChampions: "Şampiyon ara…", filterByPosition: "Şampiyonları pozisyona göre filtrele", all: "Tümü",
@@ -82,6 +85,7 @@ const messages = {
     dashboardTitle: "Her boş koridor için en iyi seçimler", dashboardCopy: "Her koridorda en iyi üç uygun şampiyon gösterilir ve sonuçlar otomatik güncellenir.", openLaneCount: "{count} boş koridor", topThree: "İlk 3", bestPick: "En iyi seçim", noOpenLanes: "Takım kadron tamamlandı.",
     counterSummary: "Rakip yanıtı", synergySummary: "Takım sinerjisi", noCounterSignals: "Rakip seçilmedi", noSynergySignals: "Takım arkadaşı seçilmedi",
     tapToDraft: "Seçime ekle", draftRecommendation: "{name} şampiyonunu {role} için seç", addedRecommendation: "{name}, {role} için eklendi", undo: "Geri al", laneNavigation: "Öneri koridorları", coverageShort: "%{score} kapsam",
+    jointProjection: "{score}/100 ortak plan", optimizerSummary: "Ortak arama · {count} takım projeksiyonu", calibrationCollecting: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationCollectingMany: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationReady: "Sonraki {count} gözlemle kalibre edildi", observedProxy: "Gözlemlenmiş", estimatedProxy: "Tahmin",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -141,12 +145,15 @@ const state = {
   history: {},
   historyDate: null,
   signals: {},
+  calibration: { status: "collecting", snapshotCount: 1, observations: 0, rolePickRateFullWeight: 5, actualSampleFullWeight: 1000, componentHalfLifeDays: 45 },
   statDate: "20260619",
   source: "loading",
   ready: false,
   lastResult: null,
   activeMobileRole: null,
   lastAutoPick: null,
+  draftMode: localStorage.getItem("riftdraft-draft-mode") || "auto",
+  optimizerMeta: { projectedLineups: 0 },
 };
 
 const elements = {
@@ -167,6 +174,7 @@ const elements = {
   resultContent: document.querySelector("#result-content"),
   snapshotLabel: document.querySelector("#snapshot-label"),
   headerStatus: document.querySelector("#header-status"),
+  timingButtons: document.querySelectorAll("[data-draft-mode]"),
 };
 
 function escapeHtml(value) {
@@ -213,6 +221,11 @@ function applyTranslations() {
   });
   document.querySelectorAll(".language-button").forEach((button) => {
     const active = button.dataset.language === state.language;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  elements.timingButtons.forEach((button) => {
+    const active = button.dataset.draftMode === state.draftMode;
     button.classList.toggle("active", active);
     button.setAttribute("aria-pressed", String(active));
   });
@@ -319,7 +332,7 @@ function expandCompactMatchups(compact = {}) {
     championId,
     Object.fromEntries(Object.entries(roles).map(([role, rows]) => [
       role,
-      Object.fromEntries(rows.map(([enemyId, winRate, pickRate]) => [String(enemyId), { winRate, pickRate }])),
+      Object.fromEntries(rows.map(([enemyId, winRate, pickRate, sampleSize]) => [String(enemyId), { winRate, pickRate, sampleSize: Number(sampleSize) || null }])),
     ])),
   ]));
 }
@@ -348,21 +361,23 @@ async function loadData() {
       url.searchParams.set("v", manifest.revision);
       return url;
     };
-    const [latestResponse, championsResponse, matchupsResponse, historyResponse, signalsResponse] = await Promise.all([
+    const [latestResponse, championsResponse, matchupsResponse, historyResponse, signalsResponse, calibrationResponse] = await Promise.all([
       fetch(versionedUrl(manifest.files.ranked), { cache: "force-cache" }),
       fetch(versionedUrl(manifest.files.champions), { cache: "force-cache" }),
       fetch(versionedUrl(manifest.files.matchups), { cache: "force-cache" }),
       fetch(versionedUrl(manifest.files.history), { cache: "force-cache" }),
       fetch(versionedUrl(manifest.files.signals), { cache: "force-cache" }),
+      fetch(versionedUrl(manifest.files.calibration), { cache: "force-cache" }),
     ]);
     if (![latestResponse, championsResponse].every((response) => response.ok)) {
       throw new Error("One or more ranked data endpoints were unavailable.");
     }
-    const [latest, championPayload, matchupPayload, historyPayload, signalPayload] = await Promise.all([
+    const [latest, championPayload, matchupPayload, historyPayload, signalPayload, calibrationPayload] = await Promise.all([
       latestResponse.json(), championsResponse.json(),
       matchupsResponse.ok ? matchupsResponse.json() : Promise.resolve({ champions: {} }),
       historyResponse.ok ? historyResponse.json() : Promise.resolve({ champions: {} }),
       signalsResponse.ok ? signalsResponse.json() : Promise.resolve({ champions: {} }),
+      calibrationResponse.ok ? calibrationResponse.json() : Promise.resolve(state.calibration),
     ]);
 
     state.champions = (championPayload.champions || [])
@@ -374,13 +389,14 @@ async function loadData() {
     if (!tier) throw new Error("Diamond+ statistics were missing from the response.");
     state.stats = Object.fromEntries(Object.entries(tier).map(([role, rows]) => [
       role,
-      rows.map(([championId, winRate, pickRate, banRate]) => ({ championId, winRate, pickRate, banRate })),
+      rows.map(([championId, winRate, pickRate, banRate, sampleSize]) => ({ championId, winRate, pickRate, banRate, sampleSize: Number(sampleSize) || null })),
     ]));
     state.matchups = expandCompactMatchups(matchupPayload.champions || {});
     state.matchupDate = matchupPayload.dataDate || null;
     state.history = historyPayload.champions || {};
     state.historyDate = historyPayload.dataDate || null;
     state.signals = signalPayload.champions || {};
+    state.calibration = { ...state.calibration, ...calibrationPayload };
     state.statDate = latest.statDate;
     state.source = "live";
   } catch (error) {
@@ -393,6 +409,7 @@ async function loadData() {
     state.history = {};
     state.historyDate = null;
     state.signals = {};
+    state.calibration = { ...state.calibration, status: "collecting" };
     state.source = "fallback";
   }
 
@@ -633,13 +650,56 @@ function normalizePairDetails(entries, detailKey) {
   });
 }
 
-function reliabilityFactor(appearanceRate, fullWeightAt = 5) {
+function reliabilityFactor(appearanceRate, fullWeightAt = null, sampleSize = null) {
+  const actualSample = Number(sampleSize);
+  if (Number.isFinite(actualSample) && actualSample > 0) {
+    return Math.max(.2, Math.min(1, Math.sqrt(actualSample / (state.calibration.actualSampleFullWeight || 1000))));
+  }
   const rate = Math.max(0, Number(appearanceRate) || 0);
-  return Math.max(.2, Math.min(1, Math.sqrt(rate / fullWeightAt)));
+  const target = fullWeightAt || state.calibration.rolePickRateFullWeight || 5;
+  return Math.max(.2, Math.min(1, Math.sqrt(rate / target)));
 }
 
 function shrinkToward(value, baseline, factor) {
   return baseline + (value - baseline) * factor;
+}
+
+function componentFreshness(compactDate) {
+  const age = dataAgeDays(compactDate);
+  if (!Number.isFinite(age)) return .35;
+  const halfLife = state.calibration.componentHalfLifeDays || 45;
+  return Math.max(.2, 2 ** (-age / halfLife));
+}
+
+function resolvedDraftMode() {
+  if (state.draftMode !== "auto") return state.draftMode;
+  const revealed = state.teams.enemy.filter(Boolean).length;
+  if (revealed <= 1) return "early";
+  if (revealed >= 4) return "last";
+  return "middle";
+}
+
+function draftWeights() {
+  return {
+    early: { role: 38, blind: 25, matchup: 10, enemy: 7, ally: 12, trend: 8 },
+    middle: { role: 32, blind: 15, matchup: 22, enemy: 12, ally: 12, trend: 7 },
+    last: { role: 25, blind: 5, matchup: 36, enemy: 18, ally: 10, trend: 6 },
+  }[resolvedDraftMode()];
+}
+
+function percentile(values, fraction) {
+  if (!values.length) return null;
+  const sorted = [...values].sort((left, right) => left - right);
+  return sorted[Math.floor((sorted.length - 1) * fraction)];
+}
+
+function blindSafetyRaw(championId, role) {
+  const records = Object.values(state.matchups[String(championId)]?.[String(role)] || {});
+  return percentile(records.map((record) => shrinkToward(
+    record.winRate,
+    50,
+    reliabilityFactor(record.pickRate, 3, record.sampleSize),
+  )), .25);
 }
 
 function dataAgeDays(compactDate) {
@@ -699,11 +759,17 @@ function rankRole(role, additionalUnavailable = new Set()) {
     .map((entry) => {
       const candidate = championProfile(entry.championId);
       const historical = state.history[String(entry.championId)]?.[role] || null;
-      const enemyDetails = enemyInputs.map(({ championId, profile }) => ({
-        championId,
-        raw: enemyPairResponse(candidate, profile),
-        observed: String(championId) === String(enemyId) ? observedMatchup(entry.championId, role, enemyId) : null,
-      }));
+      const enemyDetails = enemyInputs.map(({ championId, profile }) => {
+        const observed = observedMatchup(entry.championId, role, championId);
+        return {
+          championId,
+          observed,
+          source: observed ? "observedProxy" : "estimatedProxy",
+          raw: observed
+            ? shrinkToward(observed.winRate, 50, reliabilityFactor(observed.pickRate, 3, observed.sampleSize))
+            : enemyPairResponse(candidate, profile),
+        };
+      });
       const allyDetails = allyInputs.map(({ championId, profile }) => ({
         championId,
         raw: allyPairFit(candidate, profile),
@@ -716,36 +782,47 @@ function rankRole(role, additionalUnavailable = new Set()) {
         historical,
         enemyDetails,
         allyDetails,
-        roleRaw: shrinkToward(entry.winRate, 50, reliabilityFactor(entry.pickRate)),
-        trendRaw: historical ? (entry.winRate - historical.winRate) * reliabilityFactor(entry.pickRate) : null,
-        enemyRaw: enemyDetails.length ? average(enemyDetails.map((detail) => detail.raw)) : null,
-        allyRaw: allyDetails.length ? average(allyDetails.map((detail) => detail.raw)) : null,
+        roleRaw: shrinkToward(entry.winRate, 50, reliabilityFactor(entry.pickRate, null, entry.sampleSize)),
+        blindRaw: blindSafetyRaw(entry.championId, role),
+        trendRaw: historical ? (entry.winRate - historical.winRate) * reliabilityFactor(entry.pickRate, null, entry.sampleSize) : null,
       };
     });
   const useMatchups = Boolean(enemyId && available.some((entry) => entry.matchup));
   available.forEach((entry) => {
     entry.matchupRaw = entry.matchup
-      ? shrinkToward(entry.matchup.winRate, 50, reliabilityFactor(entry.matchup.pickRate, 3))
+      ? shrinkToward(entry.matchup.winRate, 50, reliabilityFactor(entry.matchup.pickRate, 3, entry.matchup.sampleSize))
       : null;
   });
+  const useBlindSafety = available.some((entry) => Number.isFinite(entry.blindRaw));
   const useTrend = available.some((entry) => Number.isFinite(entry.trendRaw));
-  const useEnemyEstimate = enemyInputs.length > 0;
+  const useEnemyResponse = enemies.some((championId) => String(championId) !== String(enemyId));
   const useAllyEstimate = allyInputs.length > 0;
 
   normalizeScores(available, "roleRaw", "roleScore", true);
+  normalizeScores(available, "blindRaw", "blindScore", useBlindSafety);
   normalizeScores(available, "matchupRaw", "matchupScore", useMatchups);
   normalizeScores(available, "trendRaw", "trendScore", useTrend);
-  normalizeScores(available, "enemyRaw", "enemyScore", useEnemyEstimate);
-  normalizeScores(available, "allyRaw", "allyScore", useAllyEstimate);
   normalizePairDetails(available, "enemyDetails");
   normalizePairDetails(available, "allyDetails");
+  available.forEach((entry) => {
+    const responseDetails = entry.enemyDetails.filter((detail) => String(detail.championId) !== String(enemyId));
+    entry.enemyScore = responseDetails.length ? average(responseDetails.map((detail) => detail.score)) : 50;
+    entry.enemyObservedRatio = responseDetails.length ? responseDetails.filter((detail) => detail.observed).length / responseDetails.length : 0;
+    entry.allyScore = entry.allyDetails.length ? average(entry.allyDetails.map((detail) => detail.score)) : 50;
+  });
 
+  const profile = draftWeights();
+  const roleFreshness = componentFreshness(state.statDate);
+  const matchupFreshness = componentFreshness(state.matchupDate);
+  const trendFreshness = componentFreshness(state.historyDate);
+  const observedEnemyRatio = available.length ? average(available.map((entry) => entry.enemyObservedRatio)) : 0;
   const weights = [
-    ["roleScore", 30, true],
-    ["matchupScore", 30, useMatchups],
-    ["enemyScore", 15, useEnemyEstimate],
-    ["allyScore", 15, useAllyEstimate],
-    ["trendScore", 10, useTrend],
+    ["roleScore", profile.role * roleFreshness, true],
+    ["blindScore", profile.blind * matchupFreshness, useBlindSafety],
+    ["matchupScore", profile.matchup * matchupFreshness, useMatchups],
+    ["enemyScore", profile.enemy * matchupFreshness * (.35 + observedEnemyRatio * .65), useEnemyResponse],
+    ["allyScore", profile.ally * .45, useAllyEstimate],
+    ["trendScore", profile.trend * trendFreshness, useTrend],
   ].filter(([, , active]) => active);
   const totalWeight = weights.reduce((total, [, weight]) => total + weight, 0);
   const context = {
@@ -759,7 +836,7 @@ function rankRole(role, additionalUnavailable = new Set()) {
     const ranked = {
       ...entry,
       evidenceScore: Math.round(weights.reduce((total, [key, weight]) => total + entry[key] * weight, 0) / totalWeight),
-      evidence: { useMatchups, useTrend, useEnemyEstimate, useAllyEstimate },
+      evidence: { useMatchups, useBlindSafety, useTrend, useEnemyResponse, useAllyEstimate, draftMode: resolvedDraftMode() },
       coverage: { enemies: enemyInputs.length, allies: allyInputs.length },
     };
     ranked.confidence = confidenceFor(ranked, context);
@@ -780,7 +857,7 @@ function compactEnemySignals(entry) {
     const target = state.championMap.get(String(detail.championId));
     if (!target) return "";
     const value = detail.observed ? `${detail.observed.winRate.toFixed(1)}%` : `${detail.score}/100`;
-    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${value}</em></span>`;
+    return `<span class="signal-chip"><img src="${escapeHtml(target.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(target.name)}"><b>${escapeHtml(target.name)}</b><em>${value} · ${t(detail.source)}</em></span>`;
   }).join("");
 }
 
@@ -799,11 +876,11 @@ function renderLaneRecommendation(group) {
   const picks = group.entries.map((entry, index) => {
     const champion = state.championMap.get(String(entry.championId));
     if (!champion) return "";
-    return `<button type="button" class="ranked-pick ${index === 0 ? "best" : ""}" data-pick-role="${group.role}" data-pick-champion="${escapeHtml(entry.championId)}" aria-label="${escapeHtml(t("draftRecommendation", { name: champion.name, role: roleName(group.role) }))}">
+    return `<button type="button" class="ranked-pick ${index === 0 ? "best" : ""}" data-pick-role="${group.role}" data-pick-champion="${escapeHtml(entry.championId)}" data-projected-lineup="${escapeHtml((entry.projectedLineup || []).join(","))}" aria-label="${escapeHtml(t("draftRecommendation", { name: champion.name, role: roleName(group.role) }))}">
       <span class="pick-rank">${index + 1}</span>
       <img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}">
       <div class="pick-identity"><small>${index === 0 ? t("bestPick") : `${t("topThree")} · ${index + 1}`}</small><b>${escapeHtml(champion.name)}</b><span>${entry.winRate.toFixed(2)}% WR · ${t("tapToDraft")}</span></div>
-      <div class="pick-score"><strong>${entry.evidenceScore}</strong><small>/100</small><em>${t(entry.confidence.levelKey)}</em></div>
+      <div class="pick-score"><strong>${entry.projectedScore ?? entry.evidenceScore}</strong><small>/100</small><em>${t("jointProjection", { score: entry.projectedScore ?? entry.evidenceScore })}</em></div>
     </button>`;
   }).join("");
   const activeClass = state.activeMobileRole === group.role ? " mobile-active" : "";
@@ -824,6 +901,20 @@ function autoPickNotice() {
   }))}</span><button type="button" class="undo-pick">${t("undo")}</button></div>`;
 }
 
+function calibrationText() {
+  if (state.calibration.status === "calibrated") {
+    return t("calibrationReady", { count: state.calibration.observations });
+  }
+  const count = state.calibration.snapshotCount || 1;
+  return t(count === 1 ? "calibrationCollecting" : "calibrationCollectingMany", { count });
+}
+
+function draftModeText() {
+  const mode = resolvedDraftMode();
+  const label = t(`timing${mode[0].toUpperCase()}${mode.slice(1)}`);
+  return t("timingModeSummary", { mode: state.draftMode === "auto" ? t("timingModeAuto", { mode: label }) : label });
+}
+
 function renderAutomaticResults(groups) {
   state.lastResult = groups;
   if (!groups.some((group) => group.role === state.activeMobileRole)) {
@@ -836,7 +927,7 @@ function renderAutomaticResults(groups) {
     const tabs = `<div class="mobile-lane-tabs" role="tablist" aria-label="${escapeHtml(t("laneNavigation"))}">${groups.map((group) => `<button type="button" class="lane-tab" role="tab" data-lane-tab="${group.role}" aria-selected="${group.role === state.activeMobileRole}"><span>${ROLE_ICONS[group.role]}</span>${escapeHtml(roleName(group.role))}</button>`).join("")}</div>`;
     elements.resultContent.innerHTML = `${notice}<div class="dashboard-header">
       <div><span class="section-number">03</span><h2>${t("dashboardTitle")}</h2><p>${t("dashboardCopy")}</p></div>
-      <span>${t("openLaneCount", { count: groups.length, plural: state.language === "en" && groups.length !== 1 ? "s" : "" })}</span>
+      <div class="dashboard-meta"><span>${t("openLaneCount", { count: groups.length, plural: state.language === "en" && groups.length !== 1 ? "s" : "" })}</span><span>${draftModeText()}</span><span>${t("optimizerSummary", { count: state.optimizerMeta.projectedLineups })}</span><span>${calibrationText()}</span></div>
     </div>${tabs}<div class="lane-dashboard-grid">${groups.map(renderLaneRecommendation).join("")}</div>`;
   }
   bindImageFallbacks(elements.resultContent);
@@ -876,16 +967,93 @@ function undoAutoPick() {
   analyzeAllOpenRoles();
 }
 
+function lineupPairFitScore(championIds) {
+  const profiles = championIds.map(championProfile).filter((profile) => profile.available);
+  const scores = [];
+  for (let left = 0; left < profiles.length; left += 1) {
+    for (let right = left + 1; right < profiles.length; right += 1) {
+      scores.push((allyPairFit(profiles[left], profiles[right]) + allyPairFit(profiles[right], profiles[left])) * 50);
+    }
+  }
+  return scores.length ? Math.max(15, Math.min(85, average(scores))) : 50;
+}
+
+function lineupBalanceScore(championIds) {
+  const profiles = championIds.map(championProfile).filter((profile) => profile.available);
+  if (!profiles.length) return 50;
+  const totals = profiles.reduce((sum, profile) => ({
+    frontline: sum.frontline + profile.frontline,
+    control: sum.control + profile.control,
+    protection: sum.protection + profile.protection,
+    carry: sum.carry + profile.carry,
+    access: sum.access + profile.access,
+  }), { frontline: 0, control: 0, protection: 0, carry: 0, access: 0 });
+  const targets = { frontline: 1.2, control: 1.2, protection: .65, carry: 1.7, access: .8 };
+  return Math.round(average(Object.keys(targets).map((key) => Math.min(1, totals[key] / targets[key]))) * 100);
+}
+
+function projectedLineupScore(entries) {
+  const knownAllies = state.teams.ally.filter(Boolean);
+  const championIds = [...knownAllies, ...entries.map((entry) => String(entry.championId))];
+  const evidence = entries.length ? average(entries.map((entry) => entry.evidenceScore)) : 50;
+  return Math.round(
+    evidence * .82
+    + lineupPairFitScore(championIds) * .10
+    + lineupBalanceScore(championIds) * .08
+  );
+}
+
+function bestCompletionForSeed(seedRole, seedEntry, openRoles, pools, counter) {
+  let beam = [{ entries: [seedEntry], used: new Set([String(seedEntry.championId)]), score: projectedLineupScore([seedEntry]) }];
+  openRoles.filter((role) => role !== seedRole).forEach((role) => {
+    const expanded = [];
+    beam.forEach((plan) => {
+      (pools.get(role) || []).forEach((entry) => {
+        if (plan.used.has(String(entry.championId))) return;
+        const entries = [...plan.entries, entry];
+        expanded.push({ entries, used: new Set([...plan.used, String(entry.championId)]), score: projectedLineupScore(entries) });
+        counter.count += 1;
+      });
+    });
+    beam = expanded.sort((left, right) => right.score - left.score).slice(0, 70);
+  });
+  return beam.sort((left, right) => right.score - left.score)[0] || { entries: [seedEntry], score: seedEntry.evidenceScore };
+}
+
+function optimizeOpenRoles(openRoles) {
+  const pools = new Map(openRoles.map((role) => [
+    role,
+    rankRole(role).filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 8),
+  ]));
+  const counter = { count: 0 };
+  const groups = openRoles.map((role) => ({
+    role,
+    entries: (pools.get(role) || []).map((entry) => {
+      const plan = bestCompletionForSeed(role, entry, openRoles, pools, counter);
+      return { ...entry, projectedScore: plan.score, projectedLineup: plan.entries.map((planned) => String(planned.championId)) };
+    }).sort((left, right) => right.projectedScore - left.projectedScore || right.evidenceScore - left.evidenceScore).slice(0, 3),
+  })).filter((group) => group.entries.length);
+  state.optimizerMeta = { projectedLineups: counter.count };
+  return groups;
+}
+
 function analyzeAllOpenRoles() {
   if (!state.ready) return;
-  const groups = SLOT_ROLES
-    .filter((role, index) => !state.teams.ally[index])
-    .map((role) => ({
-      role,
-      entries: rankRole(role).filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 3),
-    }))
-    .filter((group) => group.entries.length);
+  const openRoles = SLOT_ROLES.filter((role, index) => !state.teams.ally[index]);
+  const groups = optimizeOpenRoles(openRoles);
   renderAutomaticResults(groups);
+}
+
+function setDraftMode(mode) {
+  if (!["auto", "early", "middle", "last"].includes(mode)) return;
+  state.draftMode = mode;
+  localStorage.setItem("riftdraft-draft-mode", mode);
+  elements.timingButtons.forEach((button) => {
+    const active = button.dataset.draftMode === mode;
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  analyzeAllOpenRoles();
 }
 
 function resetDraft() {
@@ -899,6 +1067,9 @@ function resetDraft() {
 
 document.querySelectorAll(".language-button").forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.language));
+});
+elements.timingButtons.forEach((button) => {
+  button.addEventListener("click", () => setDraftMode(button.dataset.draftMode));
 });
 
 elements.resetButton.addEventListener("click", resetDraft);

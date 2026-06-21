@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -18,6 +18,14 @@ const outputDirectory = resolve(root, "data");
 await mkdir(outputDirectory, { recursive: true });
 
 const downloaded = new Map();
+
+async function readExistingJson(file, fallback) {
+  try {
+    return JSON.parse(await readFile(resolve(outputDirectory, file), "utf8"));
+  } catch {
+    return fallback;
+  }
+}
 
 for (const file of files) {
   const response = await fetch(new URL(file, sourceBase), {
@@ -73,9 +81,11 @@ async function downloadMatchups(champion) {
     (record.counters || []).forEach((counter) => {
       const opponentId = championIdBySlug.get(counter.heroSlug);
       if (!opponentId) return;
+      const sampleSize = Number(counter.metrics?.gameCount || counter.metrics?.games || counter.metrics?.sampleSize) || null;
       opponents[opponentId] = {
         winRate: Number((Number(counter.metrics?.winRate || 0) * 100).toFixed(4)),
         pickRate: Number((Number(counter.metrics?.appearRate || 0) * 100).toFixed(4)),
+        ...(sampleSize ? { sampleSize } : {}),
       };
     });
     if (Object.keys(opponents).length) championMatchups[role] = opponents;
@@ -128,7 +138,9 @@ const compactMatchupPayload = {
     championId,
     Object.fromEntries(Object.entries(roles).map(([role, opponents]) => [
       role,
-      Object.entries(opponents).map(([opponentId, values]) => [opponentId, values.winRate, values.pickRate]),
+      Object.entries(opponents).map(([opponentId, values]) => values.sampleSize
+        ? [opponentId, values.winRate, values.pickRate, values.sampleSize]
+        : [opponentId, values.winRate, values.pickRate]),
     ])),
   ])),
 };
@@ -230,6 +242,54 @@ await writeFile(resolve(outputDirectory, "champion-signals.v1.json"), `${JSON.st
 console.log(`Updated data/champion-signals.v1.json (${Object.keys(signals).length} champions)`);
 
 const generatedAt = new Date().toISOString();
+const archivePayload = await readExistingJson("ranked-archive.v1.json", { version: 1, snapshots: [] });
+const archiveSnapshots = [...(archivePayload.snapshots || [])].filter((snapshot) => snapshot.statDate !== latestPayload.statDate);
+archiveSnapshots.push({ statDate: latestPayload.statDate || generatedAt.slice(0, 10).replaceAll("-", ""), roles: latestPayload.tiers?.["1"] || {} });
+archiveSnapshots.sort((left, right) => String(left.statDate).localeCompare(String(right.statDate)));
+const retainedSnapshots = archiveSnapshots.slice(-60);
+
+function archiveRows(snapshot) {
+  const rows = new Map();
+  Object.entries(snapshot.roles || {}).forEach(([role, entries]) => entries.forEach((entry) => {
+    rows.set(`${role}:${entry[0]}`, { winRate: Number(entry[1]), pickRate: Number(entry[2]), sampleSize: Number(entry[4]) || null });
+  }));
+  return rows;
+}
+
+const calibrationCandidates = [1, 2, 3, 5, 8, 12, 20, 40];
+const calibrationErrors = new Map(calibrationCandidates.map((candidate) => [candidate, []]));
+for (let index = 1; index < retainedSnapshots.length; index += 1) {
+  const previous = archiveRows(retainedSnapshots[index - 1]);
+  const next = archiveRows(retainedSnapshots[index]);
+  previous.forEach((value, key) => {
+    const outcome = next.get(key);
+    if (!outcome) return;
+    calibrationCandidates.forEach((fullWeightAt) => {
+      const reliability = value.sampleSize
+        ? Math.max(.2, Math.min(1, Math.sqrt(value.sampleSize / 1000)))
+        : Math.max(.2, Math.min(1, Math.sqrt(value.pickRate / fullWeightAt)));
+      const prediction = 50 + (value.winRate - 50) * reliability;
+      calibrationErrors.get(fullWeightAt).push(Math.abs(prediction - outcome.winRate));
+    });
+  });
+}
+const errorSummary = calibrationCandidates.map((fullWeightAt) => {
+  const errors = calibrationErrors.get(fullWeightAt);
+  return { fullWeightAt, observations: errors.length, mae: errors.length ? Number((errors.reduce((sum, error) => sum + error, 0) / errors.length).toFixed(4)) : null };
+});
+const bestCalibration = errorSummary.filter((entry) => Number.isFinite(entry.mae)).sort((left, right) => left.mae - right.mae)[0];
+const calibrationPayload = {
+  version: 1,
+  generatedAt,
+  status: retainedSnapshots.length >= 3 && (bestCalibration?.observations || 0) >= 200 ? "calibrated" : "collecting",
+  snapshotCount: retainedSnapshots.length,
+  observations: bestCalibration?.observations || 0,
+  rolePickRateFullWeight: bestCalibration?.fullWeightAt || 5,
+  actualSampleFullWeight: 1000,
+  componentHalfLifeDays: 45,
+  candidates: errorSummary,
+  scope: "Walk-forward calibration against later RankedWR Diamond+ snapshots; no composition-outcome claim",
+};
 const rankedDiamondPayload = {
   version: 1,
   generatedAt,
@@ -256,11 +316,14 @@ const manifestPayload = {
     matchups: "matchups-compact.v1.json",
     history: "history.v1.json",
     signals: "champion-signals.v1.json",
+    calibration: "calibration.v1.json",
   },
 };
 await Promise.all([
   writeFile(resolve(outputDirectory, "ranked-diamond.v1.json"), `${JSON.stringify(rankedDiamondPayload)}\n`, "utf8"),
   writeFile(resolve(outputDirectory, "champions-ui.v1.json"), `${JSON.stringify(championsUiPayload)}\n`, "utf8"),
+  writeFile(resolve(outputDirectory, "ranked-archive.v1.json"), `${JSON.stringify({ version: 1, generatedAt, snapshots: retainedSnapshots })}\n`, "utf8"),
+  writeFile(resolve(outputDirectory, "calibration.v1.json"), `${JSON.stringify(calibrationPayload)}\n`, "utf8"),
   writeFile(resolve(outputDirectory, "manifest.v1.json"), `${JSON.stringify(manifestPayload)}\n`, "utf8"),
 ]);
 console.log(`Updated compact browser snapshots (revision ${revision})`);

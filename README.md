@@ -4,7 +4,7 @@ A static, GitHub Pages-ready Wild Rift draft analyzer. Users fill fixed lane slo
 
 The interface supports English and Turkish. Each Solo, Jungle, Mid, Duo, and Support slot opens a lane-filtered champion picker with typo-tolerant fuzzy search.
 
-Recommendations update automatically whenever either draft changes. Every empty allied lane shows its top three available champions with source coverage, per-enemy response signals, and per-ally synergy reasons. Recommendations can be drafted with one tap and immediately undone. Mobile uses a compact lane-tab view and a bottom-sheet champion picker.
+Recommendations update automatically whenever either draft changes. Every empty allied lane shows its top three available champions with source coverage, per-enemy response signals, and per-ally synergy reasons. Recommendations can be drafted with one tap and immediately undone. Pick timing can be automatic, early, middle, or last-pick; this changes the balance between blind safety and counter strength. Mobile uses a compact lane-tab view and a bottom-sheet champion picker.
 
 ## Data
 
@@ -12,7 +12,13 @@ The site reads same-origin snapshots from `data/`. A scheduled GitHub Action ref
 
 Riot's public developer API does not currently expose Wild Rift match history. GitHub Pages is also a static host, so a private API key must never be embedded in this frontend.
 
-The evidence score ranks available role candidates with explicitly disclosed weights: current role strength 30, observed same-lane matchup 30 when available, all-enemy response estimate 15, ally-synergy estimate 15, and historical comparison 10. Low-appearance win rates are shrunk toward a neutral baseline, missing matchup records remain eligible with a neutral score, and bounded standardized scores prevent a single outlier from forcing a 0/100 result. Enemy response and ally synergy use official champion classes and ability-description signals; they are estimates, not observed composition win rates or a predicted win probability.
+The ranking engine first builds calibrated component scores for current role strength, observed same-lane matchup, observed blind-pick safety, all-enemy response, ally fit, and historical change. Low-appearance win rates are shrunk toward a neutral baseline, missing records remain eligible with neutral scores, stale components decay on a configurable half-life, and bounded standardized scores prevent a single outlier from forcing a 0/100 result. When a selected enemy has a published RiftGG pairing, that observed record replaces the class-based fallback for that enemy.
+
+Each candidate is then evaluated in a beam search over complete remaining lineups. The search prevents duplicate flex picks and combines 82% calibrated evidence, 10% pair-fit projection, and 8% composition coverage. The displayed joint-plan score is an optimizer score, not a predicted win probability.
+
+RankedWR and RiftGG currently publish rates but not raw game counts. The updater supports provider sample-count fields when present; otherwise it uses the calibrated appearance-rate fallback and reports reduced coverage. Ally-pair fit still uses official champion class and ability signals because none of the public sources provides observed ally-pair outcomes.
+
+`ranked-archive.v1.json` retains up to 60 dated RankedWR snapshots. The updater performs walk-forward calibration against later snapshots and chooses the appearance-rate shrinkage with the lowest later-snapshot error. Calibration remains visibly marked as `collecting` until at least three dates and 200 later observations exist; it never treats same-date data as a backtest.
 
 The browser first checks a small revision manifest, then loads compact Diamond+ snapshots through revisioned, cacheable URLs. Source snapshots remain in the repository for the scheduled updater, but the UI no longer downloads unused tiers or champion-page metadata.
 
@@ -42,5 +48,7 @@ In the repository settings, open **Pages**, choose **Deploy from a branch**, sel
 - `data/matchups-compact.v1.json`: compact observed same-lane win rate and appearance rate by candidate, role, and opponent, sourced from RiftGG.
 - `data/history.v1.json`: earlier role statistics sourced from statsWR for cross-snapshot comparison.
 - `data/champion-signals.v1.json`: official class, crowd-control, sustain, and mobility signals used only for labeled team-fit estimates.
+- `data/calibration.v1.json`: walk-forward calibration status and selected reliability settings.
+- `data/ranked-archive.v1.json`: retained dated Diamond+ snapshots used by the updater for later-outcome calibration; the browser does not download this file.
 
 The updater also retains `latest.v1.json`, `champions.v1.json`, `champion-pages.index.v1.json`, and `matchups.v1.json` as full source/debug snapshots. Lane keys are `1` Mid, `2` Solo, `3` Duo, `4` Support, and `5` Jungle. Ranked rows are `[championId, winRate, pickRate, banRate]`.
