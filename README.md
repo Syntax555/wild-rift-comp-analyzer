@@ -12,9 +12,11 @@ The site reads same-origin snapshots from `data/`. A scheduled GitHub Action ref
 
 Riot's public developer API does not currently expose Wild Rift match history. GitHub Pages is also a static host, so a private API key must never be embedded in this frontend.
 
-The ranking engine first builds calibrated component scores for current role strength, observed same-lane matchup, observed blind-pick safety, all-enemy response, ally fit, and historical change. Low-appearance win rates are shrunk toward a neutral baseline, missing records remain eligible with neutral scores, stale components decay on a configurable half-life, and bounded standardized scores prevent a single outlier from forcing a 0/100 result. When a selected enemy has a published RiftGG pairing, that observed record replaces the class-based fallback for that enemy.
+The ranking engine first builds a stable baseline from current role strength, observed blind-pick safety, and historical change. Selected allies and enemies then contribute a separate context uplift relative to that baseline. Its maximum influence rises from early to last pick and scales with observed matchup coverage and sample reliability; class-based enemy responses and ally-fit estimates remain deliberately weaker. Low-appearance win rates are shrunk toward a neutral baseline, missing records remain eligible with neutral scores, stale components decay on a configurable half-life, and bounded standardized scores prevent a single outlier from forcing a 0/100 result. When a selected enemy has a published RiftGG pairing, that observed record replaces the class-based fallback for that enemy.
 
 Each candidate is then evaluated in a beam search over complete remaining lineups. The search prevents duplicate flex picks and combines 82% calibrated evidence, 10% pair-fit projection, and 8% composition coverage. This search runs in a Web Worker and memoizes recent draft states, keeping picks responsive without reducing the search space. The displayed joint-plan score is an optimizer score, not a predicted win probability.
+
+The recommendation detail sheet labels a result `Stable best` when it remains ahead after draft context and `Draft-driven` when allies, enemies, or the joint lineup search materially move it. These labels explain ranking movement; they do not force different champions to appear.
 
 RankedWR and RiftGG currently publish rates but not raw game counts. The updater supports provider sample-count fields when present; otherwise it uses the calibrated appearance-rate fallback and reports reduced coverage. Ally-pair fit still uses official champion class and ability signals because none of the public sources provides observed ally-pair outcomes.
 
@@ -31,6 +33,12 @@ python -m http.server 4173
 ```
 
 Open `http://localhost:4173`.
+
+Run the pure scoring regression checks with:
+
+```powershell
+node scripts/check-context-ranking.mjs
+```
 
 ## Deploy to GitHub Pages
 

@@ -1,3 +1,5 @@
+import { adaptiveContextAdjustment, classifyRecommendation } from "./ranking-model.mjs?v=20260621a";
+
 const DATA_BASE = new URL("./data/", import.meta.url);
 const ASSET_BASE = "https://rankedwr.com/";
 const SLOT_ROLES = ["2", "5", "1", "3", "4"];
@@ -45,7 +47,7 @@ const messages = {
     tapToDraft: "Tap to draft", draftRecommendation: "Draft {name} in {role}", addedRecommendation: "{name} added to {role}", undo: "Undo", laneNavigation: "Recommendation lanes", coverageShort: "{score}% coverage",
     jointProjection: "{score}/100 joint plan", optimizerSummary: "Joint search · {count} projected lineups", calibrationCollecting: "Calibration collecting ({count} snapshot)", calibrationCollectingMany: "Calibration collecting ({count} snapshots)", calibrationReady: "Calibrated on {count} later observations", observedProxy: "Observed", estimatedProxy: "Estimated",
     whyPick: "Why?", whyName: "Why {name}?", pickDetailsKicker: "Recommendation details", componentBreakdown: "Score breakdown", projectedTeam: "Projected team", draftThisPick: "Draft {name}", blindSafety: "Blind-pick safety",
-    scoreExcellent: "Excellent", scoreStrong: "Strong", scoreGood: "Good", scoreSituational: "Situational", sourceFreshness: "Data freshness", sourcesTitle: "Source freshness", sourcesKicker: "Published data", sourceRanked: "RankedWR role data", sourceMatchups: "RiftGG matchups", sourceHistory: "statsWR history", sourceCalibration: "Walk-forward calibration", sourceDate: "{date} · {freshness}", sourceCollecting: "Collecting later snapshots",
+    scoreExcellent: "Excellent", scoreStrong: "Strong", scoreGood: "Good", scoreSituational: "Situational", stableBest: "Stable best", draftDriven: "Draft-driven", stableBestNote: "Leads on baseline strength and remains first after context.", draftDrivenNote: "Draft context or projected team fit changed this pick's ranking.", contextImpact: "Draft impact {value}", sourceFreshness: "Data freshness", sourcesTitle: "Source freshness", sourcesKicker: "Published data", sourceRanked: "RankedWR role data", sourceMatchups: "RiftGG matchups", sourceHistory: "statsWR history", sourceCalibration: "Walk-forward calibration", sourceDate: "{date} · {freshness}", sourceCollecting: "Collecting later snapshots",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
@@ -89,7 +91,7 @@ const messages = {
     tapToDraft: "Seçime ekle", draftRecommendation: "{name} şampiyonunu {role} için seç", addedRecommendation: "{name}, {role} için eklendi", undo: "Geri al", laneNavigation: "Öneri koridorları", coverageShort: "%{score} kapsam",
     jointProjection: "{score}/100 ortak plan", optimizerSummary: "Ortak arama · {count} takım projeksiyonu", calibrationCollecting: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationCollectingMany: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationReady: "Sonraki {count} gözlemle kalibre edildi", observedProxy: "Gözlemlenmiş", estimatedProxy: "Tahmin",
     whyPick: "Neden?", whyName: "Neden {name}?", pickDetailsKicker: "Öneri ayrıntıları", componentBreakdown: "Puan dağılımı", projectedTeam: "Öngörülen takım", draftThisPick: "{name} seç", blindSafety: "Kör seçim güvenliği",
-    scoreExcellent: "Mükemmel", scoreStrong: "Güçlü", scoreGood: "İyi", scoreSituational: "Duruma bağlı", sourceFreshness: "Veri güncelliği", sourcesTitle: "Kaynak güncelliği", sourcesKicker: "Yayımlanmış veri", sourceRanked: "RankedWR rol verisi", sourceMatchups: "RiftGG eşleşmeleri", sourceHistory: "statsWR geçmişi", sourceCalibration: "İleri tarihli kalibrasyon", sourceDate: "{date} · {freshness}", sourceCollecting: "Sonraki anlık veriler toplanıyor",
+    scoreExcellent: "Mükemmel", scoreStrong: "Güçlü", scoreGood: "İyi", scoreSituational: "Duruma bağlı", stableBest: "İstikrarlı en iyi", draftDriven: "Seçime göre öne çıktı", stableBestNote: "Temel gücüyle önde ve kompozisyon etkisinden sonra da ilk sırada.", draftDrivenNote: "Kompozisyon bağlamı veya öngörülen takım uyumu bu seçimin sırasını değiştirdi.", contextImpact: "Seçim etkisi {value}", sourceFreshness: "Veri güncelliği", sourcesTitle: "Kaynak güncelliği", sourcesKicker: "Yayımlanmış veri", sourceRanked: "RankedWR rol verisi", sourceMatchups: "RiftGG eşleşmeleri", sourceHistory: "statsWR geçmişi", sourceCalibration: "İleri tarihli kalibrasyon", sourceDate: "{date} · {freshness}", sourceCollecting: "Sonraki anlık veriler toplanıyor",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -826,12 +828,14 @@ function rankRole(role, additionalUnavailable = new Set()) {
       const historical = state.history[String(entry.championId)]?.[role] || null;
       const enemyDetails = enemyInputs.map(({ championId, profile }) => {
         const observed = observedMatchup(entry.championId, role, championId);
+        const reliability = observed ? reliabilityFactor(observed.pickRate, 3, observed.sampleSize) : 0;
         return {
           championId,
           observed,
+          reliability,
           source: observed ? "observedProxy" : "estimatedProxy",
           raw: observed
-            ? shrinkToward(observed.winRate, 50, reliabilityFactor(observed.pickRate, 3, observed.sampleSize))
+            ? shrinkToward(observed.winRate, 50, reliability)
             : enemyPairResponse(candidate, profile),
         };
       });
@@ -873,6 +877,7 @@ function rankRole(role, additionalUnavailable = new Set()) {
     const responseDetails = entry.enemyDetails.filter((detail) => String(detail.championId) !== String(enemyId));
     entry.enemyScore = responseDetails.length ? average(responseDetails.map((detail) => detail.score)) : 50;
     entry.enemyObservedRatio = responseDetails.length ? responseDetails.filter((detail) => detail.observed).length / responseDetails.length : 0;
+    entry.enemyObservedStrength = responseDetails.length ? average(responseDetails.map((detail) => detail.reliability || 0)) : 0;
     entry.allyScore = entry.allyDetails.length ? average(entry.allyDetails.map((detail) => detail.score)) : 50;
   });
 
@@ -880,16 +885,31 @@ function rankRole(role, additionalUnavailable = new Set()) {
   const roleFreshness = componentFreshness(state.statDate);
   const matchupFreshness = componentFreshness(state.matchupDate);
   const trendFreshness = componentFreshness(state.historyDate);
-  const observedEnemyRatio = available.length ? average(available.map((entry) => entry.enemyObservedRatio)) : 0;
-  const weights = [
+  const laneObservedStrength = useMatchups && available.length
+    ? average(available.map((entry) => entry.matchup
+      ? reliabilityFactor(entry.matchup.pickRate, 3, entry.matchup.sampleSize)
+      : 0))
+    : 0;
+  const enemyObservedStrength = available.length ? average(available.map((entry) => entry.enemyObservedStrength)) : 0;
+  const baseWeights = [
     ["roleScore", profile.role * roleFreshness, true],
     ["blindScore", profile.blind * matchupFreshness, useBlindSafety],
-    ["matchupScore", profile.matchup * matchupFreshness, useMatchups],
-    ["enemyScore", profile.enemy * matchupFreshness * (.35 + observedEnemyRatio * .65), useEnemyResponse],
-    ["allyScore", profile.ally * .45, useAllyEstimate],
     ["trendScore", profile.trend * trendFreshness, useTrend],
   ].filter(([, , active]) => active);
-  const totalWeight = weights.reduce((total, [, weight]) => total + weight, 0);
+  const contextInputs = [
+    ["matchupScore", profile.matchup * matchupFreshness, useMatchups, laneObservedStrength],
+    ["enemyScore", profile.enemy * matchupFreshness, useEnemyResponse, enemyObservedStrength],
+    ["allyScore", profile.ally, useAllyEstimate, .2],
+  ].filter(([, , active]) => active);
+  const contextWeights = contextInputs.map(([key, weight, active, evidence]) => [key, weight * (.35 + evidence * .65), active]);
+  const contextEvidenceWeight = contextInputs.reduce((total, [, weight]) => total + weight, 0);
+  const contextEvidence = contextEvidenceWeight
+    ? contextInputs.reduce((total, [, weight, , evidence]) => total + weight * evidence, 0) / contextEvidenceWeight
+    : 0;
+  const componentScore = (entry, weights) => {
+    const totalWeight = weights.reduce((total, [, weight]) => total + weight, 0);
+    return totalWeight ? weights.reduce((total, [key, weight]) => total + entry[key] * weight, 0) / totalWeight : 50;
+  };
   const context = {
     hasLaneEnemy: Boolean(enemyId),
     enemyCount: enemies.length,
@@ -897,16 +917,44 @@ function rankRole(role, additionalUnavailable = new Set()) {
     enemyProfileCount: enemyInputs.length,
     allyProfileCount: allyInputs.length,
   };
-  return available.map((entry) => {
+  const rankedEntries = available.map((entry) => {
+    const baselineScore = componentScore(entry, baseWeights);
+    const contextScore = componentScore(entry, contextWeights);
+    const adjustment = adaptiveContextAdjustment({
+      baselineScore,
+      contextScore,
+      contextEvidence,
+      draftMode: resolvedDraftMode(),
+      hasContext: contextWeights.length > 0,
+    });
     const ranked = {
       ...entry,
-      evidenceScore: Math.round(weights.reduce((total, [key, weight]) => total + entry[key] * weight, 0) / totalWeight),
+      baselineScore: Math.round(baselineScore),
+      contextScore: Math.round(contextScore),
+      contextUplift: adjustment.uplift,
+      contextInfluence: adjustment.influence,
+      contextEvidence: Math.round(contextEvidence * 100),
+      evidenceScore: adjustment.score,
       evidence: { useMatchups, useBlindSafety, useTrend, useEnemyResponse, useAllyEstimate, draftMode: resolvedDraftMode() },
       coverage: { enemies: enemyInputs.length, allies: allyInputs.length },
     };
     ranked.confidence = confidenceFor(ranked, context);
     return ranked;
-  }).sort((left, right) => right.evidenceScore - left.evidenceScore || right.winRate - left.winRate);
+  });
+  const baselineOrder = [...rankedEntries].sort((left, right) => right.baselineScore - left.baselineScore || right.winRate - left.winRate);
+  const baselineRanks = new Map(baselineOrder.map((entry, index) => [String(entry.championId), index + 1]));
+  const finalOrder = rankedEntries.sort((left, right) => right.evidenceScore - left.evidenceScore || right.winRate - left.winRate);
+  const finalRanks = new Map(finalOrder.map((entry, index) => [String(entry.championId), index + 1]));
+  finalOrder.forEach((entry) => {
+    entry.baselineRank = baselineRanks.get(String(entry.championId));
+    entry.finalRank = finalRanks.get(String(entry.championId));
+    entry.recommendationType = classifyRecommendation({
+      baselineRank: entry.baselineRank,
+      finalRank: entry.finalRank,
+      contextUplift: entry.contextUplift,
+    });
+  });
+  return finalOrder;
 }
 
 function freshnessText(ageDays) {
@@ -949,7 +997,7 @@ function renderLaneRecommendation(group) {
     const champion = state.championMap.get(String(entry.championId));
     if (!champion) return "";
     const score = entry.projectedScore ?? entry.evidenceScore;
-    return `<div class="ranked-pick-wrap ${index === 0 ? "best" : ""}">
+    return `<div class="ranked-pick-wrap ${index === 0 ? "best" : ""}" data-recommendation-type="${entry.recommendationType}" data-context-uplift="${entry.contextUplift}">
       <button type="button" class="ranked-pick ${index === 0 ? "best" : ""}" data-pick-role="${group.role}" data-pick-champion="${escapeHtml(entry.championId)}" aria-label="${escapeHtml(t("draftRecommendation", { name: champion.name, role: roleName(group.role) }))}">
         <span class="pick-rank">${index + 1}</span>
         <img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}">
@@ -1052,8 +1100,10 @@ function openRecommendationDetails(role, championId) {
     const member = state.championMap.get(id);
     return member ? `<span class="projected-champion"><img src="${escapeHtml(member.avatarUrl)}" alt="" data-fallback="${escapeHtml(member.name)}"><b>${escapeHtml(member.name)}</b></span>` : "";
   }).join("");
+  const impact = `${entry.contextUplift > 0 ? "+" : ""}${entry.contextUplift.toFixed(1)}`;
   openInsight(t("pickDetailsKicker"), t("whyName", { name: champion.name }), `
     <div class="insight-summary"><img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}"><div><span>${escapeHtml(roleName(role))}</span><b>${score}/100 · ${t(scoreLabelKey(score))}</b><small>${entry.winRate.toFixed(2)}% WR</small></div></div>
+    <div class="recommendation-type ${entry.recommendationType}"><b>${t(entry.recommendationType)}</b><span>${t(`${entry.recommendationType}Note`)} · ${t("contextImpact", { value: impact })}</span></div>
     <section class="insight-section"><h3>${t("componentBreakdown")}</h3><div class="insight-scores">${rows}</div></section>
     <section class="insight-section"><h3>${t("projectedTeam")}</h3><div class="projected-team">${projected}</div></section>
     <div class="insight-actions"><button type="button" data-insight-draft-role="${role}" data-insight-draft-champion="${escapeHtml(championId)}">${t("draftThisPick", { name: champion.name })}</button></div>`);
@@ -1172,6 +1222,9 @@ function optimizeOpenRolesSync(openRoles) {
       return { ...entry, projectedScore: plan.score, projectedLineup: plan.entries.map((planned) => String(planned.championId)) };
     }).sort((left, right) => right.projectedScore - left.projectedScore || right.evidenceScore - left.evidenceScore).slice(0, 3),
   })).filter((group) => group.entries.length);
+  groups.forEach((group) => group.entries.forEach((entry, index) => {
+    entry.recommendationType = classifyRecommendation({ baselineRank: entry.baselineRank, finalRank: index + 1, contextUplift: entry.contextUplift });
+  }));
   state.optimizerMeta = { projectedLineups: counter.count };
   return groups;
 }
@@ -1211,6 +1264,9 @@ async function optimizeOpenRoles(openRoles) {
         return entry ? { ...entry, projectedScore: projection.projectedScore, projectedLineup: projection.projectedLineup } : null;
       }).filter(Boolean),
     })).filter((group) => group.entries.length);
+    groups.forEach((group) => group.entries.forEach((entry, index) => {
+      entry.recommendationType = classifyRecommendation({ baselineRank: entry.baselineRank, finalRank: index + 1, contextUplift: entry.contextUplift });
+    }));
     state.optimizerMeta = { projectedLineups: result.projectedLineups, cached: result.cached };
     return groups;
   } catch {
