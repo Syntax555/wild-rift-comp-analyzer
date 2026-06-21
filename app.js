@@ -20,7 +20,7 @@ const messages = {
     methodWinCopy: "Daily snapshots are archived and tested only against later snapshots; until enough dates exist, calibration is explicitly marked as collecting.",
     methodDisclaimer: "Lane matchup, blind safety, role strength, and historical change use published statistics. Enemy response uses observed pairings when available and a labeled class-based fallback otherwise; ally synergy remains an estimate. Joint-plan scores are not composition win rates or win probabilities.",
     footerCopy: "Diamond+ role data via RankedWR, observed lane matchups via RiftGG, and historical comparison via statsWR. Team-fit estimates use official Riot champion information. Not affiliated with Riot Games.",
-    viewSource: "View source", chooseChampion: "Choose a champion", closePicker: "Close champion picker",
+    viewSource: "View source", chooseChampion: "Choose a champion", closePicker: "Close champion picker", closeDetails: "Close details", compactDraft: "Compact draft",
     searchChampions: "Search champions…", filterByPosition: "Filter champions by position", all: "All",
     draftedUnavailable: "Already drafted champions are unavailable", noSearchResults: "No champions match those filters.",
     addToAlly: "Add to your team", addToEnemy: "Add to enemy team", addChampion: "Add champion", pickerLane: "{team} · {role}",
@@ -44,6 +44,8 @@ const messages = {
     counterSummary: "Enemy response", synergySummary: "Ally synergy", noCounterSignals: "No enemies selected", noSynergySignals: "No allies selected",
     tapToDraft: "Tap to draft", draftRecommendation: "Draft {name} in {role}", addedRecommendation: "{name} added to {role}", undo: "Undo", laneNavigation: "Recommendation lanes", coverageShort: "{score}% coverage",
     jointProjection: "{score}/100 joint plan", optimizerSummary: "Joint search · {count} projected lineups", calibrationCollecting: "Calibration collecting ({count} snapshot)", calibrationCollectingMany: "Calibration collecting ({count} snapshots)", calibrationReady: "Calibrated on {count} later observations", observedProxy: "Observed", estimatedProxy: "Estimated",
+    whyPick: "Why?", whyName: "Why {name}?", pickDetailsKicker: "Recommendation details", componentBreakdown: "Score breakdown", projectedTeam: "Projected team", draftThisPick: "Draft {name}", blindSafety: "Blind-pick safety",
+    scoreExcellent: "Excellent", scoreStrong: "Strong", scoreGood: "Good", scoreSituational: "Situational", sourceFreshness: "Data freshness", sourcesTitle: "Source freshness", sourcesKicker: "Published data", sourceRanked: "RankedWR role data", sourceMatchups: "RiftGG matchups", sourceHistory: "statsWR history", sourceCalibration: "Walk-forward calibration", sourceDate: "{date} · {freshness}", sourceCollecting: "Collecting later snapshots",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
@@ -62,7 +64,7 @@ const messages = {
     methodWinCopy: "Günlük veriler arşivlenir ve yalnızca sonraki verilerle test edilir; yeterli tarih oluşana kadar kalibrasyon veri topluyor olarak gösterilir.",
     methodDisclaimer: "Koridor eşleşmesi, kör seçim güvenliği, rol gücü ve geçmiş değişim yayımlanmış istatistikleri kullanır. Rakip yanıtı varsa gözlemlenmiş eşleşmeyi, yoksa etiketli sınıf tahminini kullanır; takım sinerjisi tahmin olarak kalır. Ortak plan puanları kompozisyon kazanma oranı veya kazanma olasılığı değildir.",
     footerCopy: "RankedWR üzerinden Elmas+ rol verisi, RiftGG üzerinden gözlemlenmiş koridor eşleşmeleri ve statsWR üzerinden geçmiş karşılaştırma. Takım uyumu tahminleri resmi Riot şampiyon bilgilerini kullanır. Riot Games ile bağlantılı değildir.",
-    viewSource: "Kaynağı görüntüle", chooseChampion: "Bir şampiyon seç", closePicker: "Şampiyon seçiciyi kapat",
+    viewSource: "Kaynağı görüntüle", chooseChampion: "Bir şampiyon seç", closePicker: "Şampiyon seçiciyi kapat", closeDetails: "Ayrıntıları kapat", compactDraft: "Kompakt seçim",
     searchChampions: "Şampiyon ara…", filterByPosition: "Şampiyonları pozisyona göre filtrele", all: "Tümü",
     draftedUnavailable: "Daha önce seçilen şampiyonlar kullanılamaz", noSearchResults: "Bu filtrelerle eşleşen şampiyon yok.",
     addToAlly: "Takımına ekle", addToEnemy: "Rakip takıma ekle", addChampion: "Şampiyon ekle", pickerLane: "{team} · {role}",
@@ -86,6 +88,8 @@ const messages = {
     counterSummary: "Rakip yanıtı", synergySummary: "Takım sinerjisi", noCounterSignals: "Rakip seçilmedi", noSynergySignals: "Takım arkadaşı seçilmedi",
     tapToDraft: "Seçime ekle", draftRecommendation: "{name} şampiyonunu {role} için seç", addedRecommendation: "{name}, {role} için eklendi", undo: "Geri al", laneNavigation: "Öneri koridorları", coverageShort: "%{score} kapsam",
     jointProjection: "{score}/100 ortak plan", optimizerSummary: "Ortak arama · {count} takım projeksiyonu", calibrationCollecting: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationCollectingMany: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationReady: "Sonraki {count} gözlemle kalibre edildi", observedProxy: "Gözlemlenmiş", estimatedProxy: "Tahmin",
+    whyPick: "Neden?", whyName: "Neden {name}?", pickDetailsKicker: "Öneri ayrıntıları", componentBreakdown: "Puan dağılımı", projectedTeam: "Öngörülen takım", draftThisPick: "{name} seç", blindSafety: "Kör seçim güvenliği",
+    scoreExcellent: "Mükemmel", scoreStrong: "Güçlü", scoreGood: "İyi", scoreSituational: "Duruma bağlı", sourceFreshness: "Veri güncelliği", sourcesTitle: "Kaynak güncelliği", sourcesKicker: "Yayımlanmış veri", sourceRanked: "RankedWR rol verisi", sourceMatchups: "RiftGG eşleşmeleri", sourceHistory: "statsWR geçmişi", sourceCalibration: "İleri tarihli kalibrasyon", sourceDate: "{date} · {freshness}", sourceCollecting: "Sonraki anlık veriler toplanıyor",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -154,6 +158,7 @@ const state = {
   lastAutoPick: null,
   draftMode: localStorage.getItem("riftdraft-draft-mode") || "auto",
   optimizerMeta: { projectedLineups: 0 },
+  analysisVersion: 0,
 };
 
 const elements = {
@@ -175,7 +180,43 @@ const elements = {
   snapshotLabel: document.querySelector("#snapshot-label"),
   headerStatus: document.querySelector("#header-status"),
   timingButtons: document.querySelectorAll("[data-draft-mode]"),
+  draftDock: document.querySelector("#draft-dock"),
+  insightDialog: document.querySelector("#insight-dialog"),
+  insightKicker: document.querySelector("#insight-kicker"),
+  insightTitle: document.querySelector("#insight-title"),
+  insightContent: document.querySelector("#insight-content"),
+  closeInsight: document.querySelector("#close-insight"),
 };
+
+let optimizerWorker = null;
+let optimizerRequestId = 0;
+const optimizerRequests = new Map();
+
+try {
+  optimizerWorker = new Worker(new URL("./optimizer-worker.js?v=20260621a", import.meta.url), { type: "module" });
+  optimizerWorker.addEventListener("message", (event) => {
+    const request = optimizerRequests.get(event.data.id);
+    if (!request) return;
+    optimizerRequests.delete(event.data.id);
+    request.resolve(event.data.result);
+  });
+  optimizerWorker.addEventListener("error", () => {
+    optimizerRequests.forEach((request) => request.reject(new Error("Optimizer worker failed")));
+    optimizerRequests.clear();
+    optimizerWorker = null;
+  });
+} catch {
+  optimizerWorker = null;
+}
+
+function requestWorkerOptimization(key, payload) {
+  if (!optimizerWorker) return Promise.reject(new Error("Optimizer worker unavailable"));
+  optimizerRequestId += 1;
+  return new Promise((resolve, reject) => {
+    optimizerRequests.set(optimizerRequestId, { resolve, reject });
+    optimizerWorker.postMessage({ id: optimizerRequestId, key, payload });
+  });
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -241,6 +282,7 @@ function applyTranslations() {
 
 function setLanguage(language) {
   if (!messages[language] || language === state.language) return;
+  closeInsight();
   state.language = language;
   localStorage.setItem("riftdraft-language", language);
   applyTranslations();
@@ -476,7 +518,30 @@ function renderSlots(team) {
 function renderAllSlots() {
   renderSlots("ally");
   renderSlots("enemy");
+  renderDraftDock();
   updateRecommendationState();
+  requestAnimationFrame(updateDraftDockVisibility);
+}
+
+function renderDraftDock() {
+  const renderTeam = (team) => `<div class="dock-team"><b>${t(team === "ally" ? "yourTeam" : "enemyTeam")}</b><div>${state.teams[team].map((championId, index) => {
+    const role = SLOT_ROLES[index];
+    const champion = championId ? state.championMap.get(String(championId)) : null;
+    const label = champion
+      ? t("removeChampion", { name: champion.name, team: t(team === "ally" ? "allyTeam" : "enemyTeamLabel") })
+      : t("addSlot", { team: t(team === "ally" ? "allyTeam" : "enemyTeamLabel"), role: roleName(role) });
+    return `<button type="button" class="dock-slot ${champion ? "filled" : ""}" data-dock-team="${team}" data-dock-index="${index}" aria-label="${escapeHtml(label)}" title="${escapeHtml(champion?.name || roleName(role))}">${champion
+      ? `<img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}">`
+      : `<span>${ROLE_ICONS[role]}</span>`}</button>`;
+  }).join("")}</div></div>`;
+  elements.draftDock.innerHTML = `${renderTeam("ally")}<span class="dock-versus">VS</span>${renderTeam("enemy")}`;
+  bindImageFallbacks(elements.draftDock);
+}
+
+function updateDraftDockVisibility() {
+  const draftPanel = document.querySelector(".draft-panel");
+  if (!draftPanel) return;
+  elements.draftDock.classList.toggle("visible", draftPanel.getBoundingClientRect().bottom < 92);
 }
 
 function openPicker(team, index) {
@@ -870,18 +935,29 @@ function compactAllySignals(entry) {
   }).join("");
 }
 
+function scoreLabelKey(score) {
+  if (score >= 76) return "scoreExcellent";
+  if (score >= 66) return "scoreStrong";
+  if (score >= 56) return "scoreGood";
+  return "scoreSituational";
+}
+
 function renderLaneRecommendation(group) {
   const [best] = group.entries;
   if (!best) return "";
   const picks = group.entries.map((entry, index) => {
     const champion = state.championMap.get(String(entry.championId));
     if (!champion) return "";
-    return `<button type="button" class="ranked-pick ${index === 0 ? "best" : ""}" data-pick-role="${group.role}" data-pick-champion="${escapeHtml(entry.championId)}" data-projected-lineup="${escapeHtml((entry.projectedLineup || []).join(","))}" aria-label="${escapeHtml(t("draftRecommendation", { name: champion.name, role: roleName(group.role) }))}">
-      <span class="pick-rank">${index + 1}</span>
-      <img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}">
-      <div class="pick-identity"><small>${index === 0 ? t("bestPick") : `${t("topThree")} · ${index + 1}`}</small><b>${escapeHtml(champion.name)}</b><span>${entry.winRate.toFixed(2)}% WR · ${t("tapToDraft")}</span></div>
-      <div class="pick-score"><strong>${entry.projectedScore ?? entry.evidenceScore}</strong><small>/100</small><em>${t("jointProjection", { score: entry.projectedScore ?? entry.evidenceScore })}</em></div>
-    </button>`;
+    const score = entry.projectedScore ?? entry.evidenceScore;
+    return `<div class="ranked-pick-wrap ${index === 0 ? "best" : ""}">
+      <button type="button" class="ranked-pick ${index === 0 ? "best" : ""}" data-pick-role="${group.role}" data-pick-champion="${escapeHtml(entry.championId)}" aria-label="${escapeHtml(t("draftRecommendation", { name: champion.name, role: roleName(group.role) }))}">
+        <span class="pick-rank">${index + 1}</span>
+        <img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}">
+        <div class="pick-identity"><small>${index === 0 ? t("bestPick") : `${t("topThree")} · ${index + 1}`}</small><b>${escapeHtml(champion.name)}</b><span>${entry.winRate.toFixed(2)}% WR · ${t("tapToDraft")}</span></div>
+        <div class="pick-score"><strong>${score}</strong><small>/100</small><em>${t(scoreLabelKey(score))}</em></div>
+      </button>
+      <button type="button" class="pick-details" data-pick-details-role="${group.role}" data-pick-details-champion="${escapeHtml(entry.championId)}" aria-label="${escapeHtml(t("whyName", { name: champion.name }))}">${t("whyPick")}</button>
+    </div>`;
   }).join("");
   const activeClass = state.activeMobileRole === group.role ? " mobile-active" : "";
   return `<section class="lane-recommendation${activeClass}" data-lane-role="${group.role}">
@@ -927,12 +1003,75 @@ function renderAutomaticResults(groups) {
     const tabs = `<div class="mobile-lane-tabs" role="tablist" aria-label="${escapeHtml(t("laneNavigation"))}">${groups.map((group) => `<button type="button" class="lane-tab" role="tab" data-lane-tab="${group.role}" aria-selected="${group.role === state.activeMobileRole}"><span>${ROLE_ICONS[group.role]}</span>${escapeHtml(roleName(group.role))}</button>`).join("")}</div>`;
     elements.resultContent.innerHTML = `${notice}<div class="dashboard-header">
       <div><span class="section-number">03</span><h2>${t("dashboardTitle")}</h2><p>${t("dashboardCopy")}</p></div>
-      <div class="dashboard-meta"><span>${t("openLaneCount", { count: groups.length, plural: state.language === "en" && groups.length !== 1 ? "s" : "" })}</span><span>${draftModeText()}</span><span>${t("optimizerSummary", { count: state.optimizerMeta.projectedLineups })}</span><span>${calibrationText()}</span></div>
+      <div class="dashboard-meta"><span>${t("openLaneCount", { count: groups.length, plural: state.language === "en" && groups.length !== 1 ? "s" : "" })}</span><span>${draftModeText()}</span><button type="button" class="source-details" data-source-details>${t("sourceFreshness")}</button></div>
     </div>${tabs}<div class="lane-dashboard-grid">${groups.map(renderLaneRecommendation).join("")}</div>`;
   }
   bindImageFallbacks(elements.resultContent);
   elements.resultPlaceholder.hidden = true;
   elements.resultContent.hidden = false;
+}
+
+function recommendationEntry(role, championId) {
+  return state.lastResult
+    ?.find((group) => String(group.role) === String(role))
+    ?.entries.find((entry) => String(entry.championId) === String(championId));
+}
+
+function openInsight(kicker, title, content) {
+  elements.insightKicker.textContent = kicker;
+  elements.insightTitle.textContent = title;
+  elements.insightContent.innerHTML = content;
+  bindImageFallbacks(elements.insightContent);
+  if (!elements.insightDialog.open) elements.insightDialog.showModal();
+}
+
+function closeInsight() {
+  if (elements.insightDialog.open) elements.insightDialog.close();
+  elements.insightContent.replaceChildren();
+}
+
+function openRecommendationDetails(role, championId) {
+  const entry = recommendationEntry(role, championId);
+  const champion = state.championMap.get(String(championId));
+  if (!entry || !champion) return;
+  const components = [
+    ["roleStrength", entry.roleScore, true],
+    ["blindSafety", entry.blindScore, entry.evidence.useBlindSafety],
+    ["observedLane", entry.matchupScore, entry.evidence.useMatchups],
+    ["enemyResponse", entry.enemyScore, entry.evidence.useEnemyResponse],
+    ["allySynergy", entry.allyScore, entry.evidence.useAllyEstimate],
+    ["historicalTrend", entry.trendScore, entry.evidence.useTrend],
+  ].filter(([, score, active]) => active && Number.isFinite(score));
+  const projectedIds = [...new Set([
+    ...state.teams.ally.filter(Boolean),
+    ...(entry.projectedLineup || []),
+  ].map(String))];
+  const score = entry.projectedScore ?? entry.evidenceScore;
+  const rows = components.map(([key, value]) => `<div class="insight-score-row"><div><span>${t(key)}</span><strong>${Math.round(value)}</strong></div><i><b style="width:${Math.max(0, Math.min(100, value))}%"></b></i></div>`).join("");
+  const projected = projectedIds.map((id) => {
+    const member = state.championMap.get(id);
+    return member ? `<span class="projected-champion"><img src="${escapeHtml(member.avatarUrl)}" alt="" data-fallback="${escapeHtml(member.name)}"><b>${escapeHtml(member.name)}</b></span>` : "";
+  }).join("");
+  openInsight(t("pickDetailsKicker"), t("whyName", { name: champion.name }), `
+    <div class="insight-summary"><img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}"><div><span>${escapeHtml(roleName(role))}</span><b>${score}/100 · ${t(scoreLabelKey(score))}</b><small>${entry.winRate.toFixed(2)}% WR</small></div></div>
+    <section class="insight-section"><h3>${t("componentBreakdown")}</h3><div class="insight-scores">${rows}</div></section>
+    <section class="insight-section"><h3>${t("projectedTeam")}</h3><div class="projected-team">${projected}</div></section>
+    <div class="insight-actions"><button type="button" data-insight-draft-role="${role}" data-insight-draft-champion="${escapeHtml(championId)}">${t("draftThisPick", { name: champion.name })}</button></div>`);
+}
+
+function sourceStatusClass(compactDate) {
+  const age = dataAgeDays(compactDate);
+  if (!Number.isFinite(age) || age > 90) return "stale";
+  return age > 30 ? "aging" : "fresh";
+}
+
+function openSourceDetails() {
+  const sources = [
+    ["sourceRanked", state.statDate],
+    ["sourceMatchups", state.matchupDate],
+    ["sourceHistory", state.historyDate],
+  ].map(([key, date]) => `<div class="source-row"><i class="${sourceStatusClass(date)}"></i><div><b>${t(key)}</b><span>${t("sourceDate", { date: formatDate(date), freshness: freshnessText(dataAgeDays(date)) })}</span></div></div>`).join("");
+  openInsight(t("sourcesKicker"), t("sourcesTitle"), `<div class="source-list">${sources}<div class="source-row"><i class="${state.calibration.status === "calibrated" ? "fresh" : "aging"}"></i><div><b>${t("sourceCalibration")}</b><span>${calibrationText()}</span></div></div></div>`);
 }
 
 function activateMobileLane(role) {
@@ -1020,7 +1159,7 @@ function bestCompletionForSeed(seedRole, seedEntry, openRoles, pools, counter) {
   return beam.sort((left, right) => right.score - left.score)[0] || { entries: [seedEntry], score: seedEntry.evidenceScore };
 }
 
-function optimizeOpenRoles(openRoles) {
+function optimizeOpenRolesSync(openRoles) {
   const pools = new Map(openRoles.map((role) => [
     role,
     rankRole(role).filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 8),
@@ -1037,11 +1176,61 @@ function optimizeOpenRoles(openRoles) {
   return groups;
 }
 
-function analyzeAllOpenRoles() {
+async function optimizeOpenRoles(openRoles) {
+  if (!optimizerWorker) return optimizeOpenRolesSync(openRoles);
+  const pools = new Map(openRoles.map((role) => [
+    role,
+    rankRole(role).filter((entry) => state.championMap.has(String(entry.championId))).slice(0, 8),
+  ]));
+  const knownAllies = state.teams.ally.filter(Boolean).map((championId) => ({
+    championId: String(championId),
+    profile: championProfile(championId),
+  }));
+  const serializedPools = openRoles.map((role) => ({
+    role,
+    entries: (pools.get(role) || []).map((entry) => ({
+      championId: String(entry.championId),
+      evidenceScore: entry.evidenceScore,
+      profile: championProfile(entry.championId),
+    })),
+  }));
+  const key = JSON.stringify({
+    ally: state.teams.ally,
+    enemy: state.teams.enemy,
+    draftMode: state.draftMode,
+    statDate: state.statDate,
+    matchupDate: state.matchupDate,
+    pools: serializedPools.map((group) => [group.role, group.entries.map((entry) => [entry.championId, entry.evidenceScore])]),
+  });
+  try {
+    const result = await requestWorkerOptimization(key, { openRoles, pools: serializedPools, knownAllies });
+    const groups = result.groups.map((group) => ({
+      role: group.role,
+      entries: group.entries.map((projection) => {
+        const entry = (pools.get(group.role) || []).find((candidate) => String(candidate.championId) === projection.championId);
+        return entry ? { ...entry, projectedScore: projection.projectedScore, projectedLineup: projection.projectedLineup } : null;
+      }).filter(Boolean),
+    })).filter((group) => group.entries.length);
+    state.optimizerMeta = { projectedLineups: result.projectedLineups, cached: result.cached };
+    return groups;
+  } catch {
+    return optimizeOpenRolesSync(openRoles);
+  }
+}
+
+async function analyzeAllOpenRoles() {
   if (!state.ready) return;
+  const analysisVersion = ++state.analysisVersion;
   const openRoles = SLOT_ROLES.filter((role, index) => !state.teams.ally[index]);
-  const groups = optimizeOpenRoles(openRoles);
+  elements.resultContent.classList.add("optimizing");
+  elements.resultContent.setAttribute("aria-busy", "true");
+  const groups = await optimizeOpenRoles(openRoles);
+  if (analysisVersion !== state.analysisVersion) return;
   renderAutomaticResults(groups);
+  elements.resultContent.dataset.optimizerCached = String(Boolean(state.optimizerMeta.cached));
+  elements.resultContent.dataset.projectedLineups = String(state.optimizerMeta.projectedLineups || 0);
+  elements.resultContent.classList.remove("optimizing");
+  elements.resultContent.setAttribute("aria-busy", "false");
 }
 
 function setDraftMode(mode) {
@@ -1080,12 +1269,34 @@ elements.resultContent.addEventListener("click", (event) => {
   if (undoButton) return undoAutoPick();
   const laneTab = event.target.closest("[data-lane-tab]");
   if (laneTab) return activateMobileLane(laneTab.dataset.laneTab);
+  const detailButton = event.target.closest("[data-pick-details-champion]");
+  if (detailButton) return openRecommendationDetails(detailButton.dataset.pickDetailsRole, detailButton.dataset.pickDetailsChampion);
+  if (event.target.closest("[data-source-details]")) return openSourceDetails();
   const pickButton = event.target.closest("[data-pick-champion]");
   if (pickButton) draftRecommendation(pickButton.dataset.pickRole, pickButton.dataset.pickChampion);
+});
+elements.draftDock.addEventListener("click", (event) => {
+  const slot = event.target.closest("[data-dock-team]");
+  if (!slot) return;
+  const team = slot.dataset.dockTeam;
+  const index = Number(slot.dataset.dockIndex);
+  if (state.teams[team][index]) removeChampion(team, index);
+  else openPicker(team, index);
 });
 elements.picker.addEventListener("click", (event) => {
   if (event.target === elements.picker) closePicker();
 });
+elements.closeInsight.addEventListener("click", closeInsight);
+elements.insightDialog.addEventListener("click", (event) => {
+  if (event.target === elements.insightDialog) return closeInsight();
+  const draftButton = event.target.closest("[data-insight-draft-champion]");
+  if (!draftButton) return;
+  const { insightDraftRole: role, insightDraftChampion: championId } = draftButton.dataset;
+  closeInsight();
+  draftRecommendation(role, championId);
+});
+window.addEventListener("scroll", updateDraftDockVisibility, { passive: true });
+window.addEventListener("resize", updateDraftDockVisibility, { passive: true });
 
 applyTranslations();
 loadData();

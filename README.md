@@ -4,7 +4,7 @@ A static, GitHub Pages-ready Wild Rift draft analyzer. Users fill fixed lane slo
 
 The interface supports English and Turkish. Each Solo, Jungle, Mid, Duo, and Support slot opens a lane-filtered champion picker with typo-tolerant fuzzy search.
 
-Recommendations update automatically whenever either draft changes. Every empty allied lane shows its top three available champions with source coverage, per-enemy response signals, and per-ally synergy reasons. Recommendations can be drafted with one tap and immediately undone. Pick timing can be automatic, early, middle, or last-pick; this changes the balance between blind safety and counter strength. Mobile uses a compact lane-tab view and a bottom-sheet champion picker.
+Recommendations update automatically whenever either draft changes. Every empty allied lane shows its top three available champions with source coverage, per-enemy response signals, and per-ally synergy reasons. Recommendations can be drafted with one tap and immediately undone. A compact sticky draft bar keeps every allied and enemy slot reachable while reviewing results; optional bottom-sheet details explain score components, projected teammates, and source freshness without lengthening the main page. Pick timing can be automatic, early, middle, or last-pick; this changes the balance between blind safety and counter strength. Mobile uses a compact lane-tab view and bottom-sheet controls.
 
 ## Data
 
@@ -14,7 +14,7 @@ Riot's public developer API does not currently expose Wild Rift match history. G
 
 The ranking engine first builds calibrated component scores for current role strength, observed same-lane matchup, observed blind-pick safety, all-enemy response, ally fit, and historical change. Low-appearance win rates are shrunk toward a neutral baseline, missing records remain eligible with neutral scores, stale components decay on a configurable half-life, and bounded standardized scores prevent a single outlier from forcing a 0/100 result. When a selected enemy has a published RiftGG pairing, that observed record replaces the class-based fallback for that enemy.
 
-Each candidate is then evaluated in a beam search over complete remaining lineups. The search prevents duplicate flex picks and combines 82% calibrated evidence, 10% pair-fit projection, and 8% composition coverage. The displayed joint-plan score is an optimizer score, not a predicted win probability.
+Each candidate is then evaluated in a beam search over complete remaining lineups. The search prevents duplicate flex picks and combines 82% calibrated evidence, 10% pair-fit projection, and 8% composition coverage. This search runs in a Web Worker and memoizes recent draft states, keeping picks responsive without reducing the search space. The displayed joint-plan score is an optimizer score, not a predicted win probability.
 
 RankedWR and RiftGG currently publish rates but not raw game counts. The updater supports provider sample-count fields when present; otherwise it uses the calibrated appearance-rate fallback and reports reduced coverage. Ally-pair fit still uses official champion class and ability signals because none of the public sources provides observed ally-pair outcomes.
 
