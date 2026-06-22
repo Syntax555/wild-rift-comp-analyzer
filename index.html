@@ -10,22 +10,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20260621e">
+  <link rel="stylesheet" href="./styles.css?v=20260622a">
 </head>
 <body>
   <div class="ambient ambient-one" aria-hidden="true"></div>
   <div class="ambient ambient-two" aria-hidden="true"></div>
 
   <header class="site-header">
-    <a class="brand" href="#" aria-label="RiftDraft home">
+    <a class="brand" href="#builder" aria-label="RiftDraft home">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 36 36" role="img"><path d="M18 3 31 10.5v15L18 33 5 25.5v-15L18 3Zm0 5.4-8.4 4.8v9.6l8.4 4.8 8.4-4.8v-9.6L18 8.4Zm-2.2 4.1h4.4v7.1l4.1 2.4-2.2 3.8-6.3-3.7v-9.6Z"/></svg>
       </span>
       <span>RIFT<span>DRAFT</span></span>
     </a>
     <nav aria-label="Primary navigation" data-i18n-aria="primaryNav">
-      <a class="nav-link active" href="#analyzer" data-i18n="navAnalyzer">Analyzer</a>
-      <a class="nav-link" href="#method" data-i18n="navMethod">Method</a>
+      <a class="nav-link active" href="#builder" data-app-view="builder" data-i18n="navBuilder">Team builder</a>
+      <a class="nav-link" href="#champions" data-app-view="champions" data-i18n="navChampions">Champions</a>
     </nav>
     <div class="header-actions">
       <div class="language-switch" role="group" aria-label="Language" data-i18n-aria="language">
@@ -39,7 +39,8 @@
     </div>
   </header>
 
-  <main id="analyzer">
+  <main>
+    <div class="app-view" id="builder-view">
     <section class="hero-section">
       <div class="eyebrow"><span></span><b data-i18n="eyebrow">Wild Rift draft intelligence</b></div>
       <h1 id="hero-title" data-i18n-html="heroTitle">Build the draft.<br><em>Find the edge.</em></h1>
@@ -144,6 +145,43 @@
       </div>
       <p class="method-disclaimer" data-i18n="methodDisclaimer">Published statistics and labeled estimates remain separate. Joint-plan scores are not composition win rates or win probabilities.</p>
     </section>
+    </div>
+
+    <section class="app-view champion-browser" id="champions-view" hidden aria-labelledby="champion-browser-title">
+      <header class="champion-browser-header">
+        <div>
+          <div class="eyebrow"><span></span><b data-i18n="championExplorerEyebrow">Champion intelligence</b></div>
+          <h1 id="champion-browser-title" data-i18n-html="championExplorerTitle">Know every pick.<br><em>Before the draft.</em></h1>
+          <p data-i18n="championExplorerCopy">Choose a champion to see lane stats, observed matchups, and estimated ally fit in one place.</p>
+        </div>
+        <div class="champion-snapshot">
+          <span data-i18n="snapshot">Snapshot</span>
+          <strong id="champion-snapshot-label">Loading…</strong>
+          <small>CN · Diamond+</small>
+        </div>
+      </header>
+
+      <div class="champion-browser-workspace">
+        <aside class="champion-directory" aria-label="Champion directory" data-i18n-aria="championDirectory">
+          <label class="search-field champion-directory-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+            <input id="champion-directory-search" type="search" placeholder="Search champions…" aria-label="Search champions" data-i18n-placeholder="searchChampions" data-i18n-aria="searchChampions" autocomplete="off">
+          </label>
+          <div class="champion-role-filters" id="champion-role-filters" role="group" aria-label="Filter champions by position" data-i18n-aria="filterByPosition"></div>
+          <div class="champion-directory-meta"><span id="champion-directory-count">0 champions</span></div>
+          <div class="champion-directory-grid" id="champion-directory-grid"></div>
+          <div class="picker-empty" id="champion-directory-empty" hidden data-i18n="noSearchResults">No champions match those filters.</div>
+        </aside>
+
+        <article class="champion-profile" id="champion-profile" aria-live="polite">
+          <div class="champion-profile-placeholder">
+            <span class="section-number">Champion profile</span>
+            <h2 data-i18n="selectChampionProfile">Select a champion</h2>
+            <p data-i18n="selectChampionProfileCopy">Their best lanes, ranked statistics, matchups, and ally fit will appear here.</p>
+          </div>
+        </article>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -187,6 +225,6 @@
     </button>
   </template>
 
-  <script type="module" src="./app.js?v=20260621e"></script>
+  <script type="module" src="./app.js?v=20260622a"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ const ROLE_ICONS = { "1": "◇", "2": "◈", "3": "➹", "4": "✦", "5": "⌁" 
 
 const messages = {
   en: {
-    primaryNav: "Primary navigation", language: "Language", dataFilters: "Data filters", analyzerRegion: "Team composition analyzer", navAnalyzer: "Analyzer", navMethod: "Method",
+    primaryNav: "Primary navigation", language: "Language", dataFilters: "Data filters", analyzerRegion: "Team composition analyzer", navBuilder: "Team builder", navChampions: "Champions",
     statusConnecting: "Connecting to ranked data", statusLive: "Live ranked snapshot", statusCached: "Cached ranked snapshot",
     eyebrow: "Wild Rift draft intelligence", heroTitle: "Build the draft.<br><em>Find the edge.</em>",
     heroCopy: "Set either team and instantly see the top three available picks for every open allied lane.",
@@ -48,10 +48,12 @@ const messages = {
     jointProjection: "{score}/100 joint plan", optimizerSummary: "Joint search · {count} projected lineups", calibrationCollecting: "Calibration collecting ({count} snapshot)", calibrationCollectingMany: "Calibration collecting ({count} snapshots)", calibrationReady: "Calibrated on {count} later observations", observedProxy: "Observed", estimatedProxy: "Estimated",
     whyPick: "Why?", whyName: "Why {name}?", pickDetailsKicker: "Recommendation details", componentBreakdown: "Score breakdown", projectedTeam: "Projected team", draftThisPick: "Draft {name}", blindSafety: "Blind-pick safety",
     scoreExcellent: "Excellent", scoreStrong: "Strong", scoreGood: "Good", scoreSituational: "Situational", stableBest: "Stable best", draftDriven: "Draft-driven", stableBestNote: "Leads on baseline strength and remains first after context.", draftDrivenNote: "Draft context or projected team fit changed this pick's ranking.", contextImpact: "Draft impact {value}", sourceFreshness: "Data freshness", sourcesTitle: "Source freshness", sourcesKicker: "Published data", sourceRanked: "RankedWR role data", sourceMatchups: "RiftGG matchups", sourceHistory: "statsWR history", sourceCalibration: "Walk-forward calibration", sourceDate: "{date} · {freshness}", sourceCollecting: "Collecting later snapshots",
+    championExplorerEyebrow: "Champion intelligence", championExplorerTitle: "Know every pick.<br><em>Before the draft.</em>", championExplorerCopy: "Choose a champion to see lane stats, observed matchups, and estimated ally fit in one place.", championDirectory: "Champion directory",
+    selectChampionProfile: "Select a champion", selectChampionProfileCopy: "Their best lanes, ranked statistics, matchups, and ally fit will appear here.", championProfile: "Champion profile", rankedOverview: "Diamond+ overview", roleRank: "Role rank", roleRankValue: "#{rank} of {total}", historicalWinRate: "Previous win rate", rateChange: "Change", toughestMatchups: "Toughest matchups", bestMatchups: "Best matchups", observedMatchups: "Observed lane matchups", noMatchupData: "No observed matchup data is available for this lane.", gamesShare: "{rate}% matchup share", estimatedSynergies: "Estimated ally fit", synergyMethod: "Class & ability estimate — not an observed duo win rate", noSynergyData: "No profile signals are available.", viewChampion: "View {name}", championCountSimple: "{count} champions", winRateLabel: "Win rate", pickRateLabel: "Pick rate", banRateLabel: "Ban rate", currentRole: "Current lane", favorable: "Favorable", difficult: "Difficult", dataContext: "CN Diamond+ · {date}", championRoles: "Available lanes",
     role1: "Mid", role2: "Solo", role3: "Duo", role4: "Support", role5: "Jungle",
   },
   tr: {
-    primaryNav: "Ana gezinme", language: "Dil", dataFilters: "Veri filtreleri", analyzerRegion: "Takım kompozisyonu analiz aracı", navAnalyzer: "Analiz", navMethod: "Yöntem",
+    primaryNav: "Ana gezinme", language: "Dil", dataFilters: "Veri filtreleri", analyzerRegion: "Takım kompozisyonu analiz aracı", navBuilder: "Takım kurucu", navChampions: "Şampiyonlar",
     statusConnecting: "Dereceli verilere bağlanılıyor", statusLive: "Canlı dereceli veri", statusCached: "Önbellekteki dereceli veri",
     eyebrow: "Wild Rift seçim zekâsı", heroTitle: "Kompozisyonu kur.<br><em>Avantajı yakala.</em>",
     heroCopy: "İki takımı seç ve her boş takım koridoru için en iyi üç uygun seçimi anında gör.",
@@ -92,6 +94,8 @@ const messages = {
     jointProjection: "{score}/100 ortak plan", optimizerSummary: "Ortak arama · {count} takım projeksiyonu", calibrationCollecting: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationCollectingMany: "Kalibrasyon veri topluyor ({count} anlık veri)", calibrationReady: "Sonraki {count} gözlemle kalibre edildi", observedProxy: "Gözlemlenmiş", estimatedProxy: "Tahmin",
     whyPick: "Neden?", whyName: "Neden {name}?", pickDetailsKicker: "Öneri ayrıntıları", componentBreakdown: "Puan dağılımı", projectedTeam: "Öngörülen takım", draftThisPick: "{name} seç", blindSafety: "Kör seçim güvenliği",
     scoreExcellent: "Mükemmel", scoreStrong: "Güçlü", scoreGood: "İyi", scoreSituational: "Duruma bağlı", stableBest: "İstikrarlı en iyi", draftDriven: "Seçime göre öne çıktı", stableBestNote: "Temel gücüyle önde ve kompozisyon etkisinden sonra da ilk sırada.", draftDrivenNote: "Kompozisyon bağlamı veya öngörülen takım uyumu bu seçimin sırasını değiştirdi.", contextImpact: "Seçim etkisi {value}", sourceFreshness: "Veri güncelliği", sourcesTitle: "Kaynak güncelliği", sourcesKicker: "Yayımlanmış veri", sourceRanked: "RankedWR rol verisi", sourceMatchups: "RiftGG eşleşmeleri", sourceHistory: "statsWR geçmişi", sourceCalibration: "İleri tarihli kalibrasyon", sourceDate: "{date} · {freshness}", sourceCollecting: "Sonraki anlık veriler toplanıyor",
+    championExplorerEyebrow: "Şampiyon bilgisi", championExplorerTitle: "Her seçimi tanı.<br><em>Kompozisyondan önce.</em>", championExplorerCopy: "Koridor istatistiklerini, gözlemlenmiş eşleşmeleri ve tahmini takım uyumunu tek yerde görmek için bir şampiyon seç.", championDirectory: "Şampiyon dizini",
+    selectChampionProfile: "Bir şampiyon seç", selectChampionProfileCopy: "En iyi koridorları, dereceli istatistikleri, eşleşmeleri ve takım uyumu burada görünecek.", championProfile: "Şampiyon profili", rankedOverview: "Elmas+ genel bakış", roleRank: "Rol sırası", roleRankValue: "{total} içinde #{rank}", historicalWinRate: "Önceki kazanma oranı", rateChange: "Değişim", toughestMatchups: "En zor eşleşmeler", bestMatchups: "En iyi eşleşmeler", observedMatchups: "Gözlemlenmiş koridor eşleşmeleri", noMatchupData: "Bu koridor için gözlemlenmiş eşleşme verisi yok.", gamesShare: "%{rate} eşleşme payı", estimatedSynergies: "Tahmini takım uyumu", synergyMethod: "Sınıf ve yetenek tahmini — gözlemlenmiş ikili kazanma oranı değildir", noSynergyData: "Profil sinyali bulunmuyor.", viewChampion: "{name} profilini gör", championCountSimple: "{count} şampiyon", winRateLabel: "Kazanma oranı", pickRateLabel: "Seçilme oranı", banRateLabel: "Yasaklanma oranı", currentRole: "Seçili koridor", favorable: "Avantajlı", difficult: "Zor", dataContext: "Çin Elmas+ · {date}", championRoles: "Uygun koridorlar",
     role1: "Orta", role2: "Baron", role3: "Ejder", role4: "Destek", role5: "Orman",
   },
 };
@@ -161,6 +165,10 @@ const state = {
   draftMode: localStorage.getItem("riftdraft-draft-mode") || "auto",
   optimizerMeta: { projectedLineups: 0 },
   analysisVersion: 0,
+  activeView: location.hash.startsWith("#champions") ? "champions" : "builder",
+  championDirectoryRole: "all",
+  selectedChampionId: null,
+  championDetailRole: null,
 };
 
 const elements = {
@@ -188,6 +196,16 @@ const elements = {
   insightTitle: document.querySelector("#insight-title"),
   insightContent: document.querySelector("#insight-content"),
   closeInsight: document.querySelector("#close-insight"),
+  builderView: document.querySelector("#builder-view"),
+  championsView: document.querySelector("#champions-view"),
+  viewLinks: document.querySelectorAll("[data-app-view]"),
+  championSnapshotLabel: document.querySelector("#champion-snapshot-label"),
+  championDirectorySearch: document.querySelector("#champion-directory-search"),
+  championRoleFilters: document.querySelector("#champion-role-filters"),
+  championDirectoryCount: document.querySelector("#champion-directory-count"),
+  championDirectoryGrid: document.querySelector("#champion-directory-grid"),
+  championDirectoryEmpty: document.querySelector("#champion-directory-empty"),
+  championProfile: document.querySelector("#champion-profile"),
 };
 
 let optimizerWorker = null;
@@ -280,6 +298,10 @@ function applyTranslations() {
   renderAllSlots();
   if (state.ready) analyzeAllOpenRoles();
   if (elements.picker.open) renderChampionGrid();
+  renderChampionRoleFilters();
+  renderChampionDirectory();
+  renderChampionProfile();
+  updateAppView();
 }
 
 function setLanguage(language) {
@@ -288,6 +310,32 @@ function setLanguage(language) {
   state.language = language;
   localStorage.setItem("riftdraft-language", language);
   applyTranslations();
+}
+
+function updateAppView() {
+  const showChampions = state.activeView === "champions";
+  elements.builderView.hidden = showChampions;
+  elements.championsView.hidden = !showChampions;
+  elements.viewLinks.forEach((link) => {
+    const active = link.dataset.appView === state.activeView;
+    link.classList.toggle("active", active);
+    if (active) link.setAttribute("aria-current", "page");
+    else link.removeAttribute("aria-current");
+  });
+  if (showChampions) elements.draftDock.classList.remove("visible");
+  else requestAnimationFrame(updateDraftDockVisibility);
+  if (showChampions && state.ready) {
+    renderChampionDirectory();
+    renderChampionProfile();
+  }
+}
+
+function setAppView(view, updateHash = true) {
+  if (!["builder", "champions"].includes(view)) return;
+  state.activeView = view;
+  if (updateHash && location.hash !== `#${view}`) history.replaceState(null, "", `#${view}`);
+  updateAppView();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function normalizeSearch(value) {
@@ -459,14 +507,21 @@ async function loadData() {
 
   state.championMap = new Map(state.champions.map((champion) => [champion.id, champion]));
   state.ready = true;
+  if (!state.selectedChampionId) {
+    state.selectedChampionId = state.championMap.has("10038") ? "10038" : state.champions[0]?.id || null;
+  }
   updateDataStatus();
   updateRecommendationState();
+  renderChampionRoleFilters();
+  renderChampionDirectory();
+  selectChampionProfile(state.selectedChampionId);
   analyzeAllOpenRoles();
   if (elements.picker.open) renderChampionGrid();
 }
 
 function updateDataStatus() {
   elements.snapshotLabel.textContent = formatDate(state.statDate);
+  if (elements.championSnapshotLabel) elements.championSnapshotLabel.textContent = formatDate(state.statDate);
   elements.headerStatus.classList.remove("live", "fallback");
   if (state.source === "live" || state.source === "fallback") elements.headerStatus.classList.add(state.source);
   elements.headerStatus.querySelector("span:last-child").textContent = state.source === "loading"
@@ -543,7 +598,7 @@ function renderDraftDock() {
 function updateDraftDockVisibility() {
   const draftPanel = document.querySelector(".draft-panel");
   if (!draftPanel) return;
-  elements.draftDock.classList.toggle("visible", draftPanel.getBoundingClientRect().bottom < 92);
+  elements.draftDock.classList.toggle("visible", state.activeView === "builder" && draftPanel.getBoundingClientRect().bottom < 92);
 }
 
 function openPicker(team, index) {
@@ -616,6 +671,147 @@ function removeChampion(team, index) {
   state.lastAutoPick = null;
   renderAllSlots();
   analyzeAllOpenRoles();
+}
+
+function championRoleEntries(championId) {
+  return SLOT_ROLES.map((role) => {
+    const rows = state.stats[role] || [];
+    const index = rows.findIndex((entry) => String(entry.championId) === String(championId));
+    return index < 0 ? null : { role, stat: rows[index], rank: index + 1, total: rows.length };
+  }).filter(Boolean);
+}
+
+function renderChampionRoleFilters() {
+  if (!elements.championRoleFilters) return;
+  const roles = ["all", ...SLOT_ROLES];
+  elements.championRoleFilters.innerHTML = roles.map((role) => {
+    const active = state.championDirectoryRole === role;
+    const label = role === "all" ? t("all") : roleName(role);
+    const icon = role === "all" ? "◎" : ROLE_ICONS[role];
+    return `<button type="button" class="champion-role-filter ${active ? "active" : ""}" data-champion-filter-role="${role}" aria-pressed="${active}"><span>${icon}</span>${escapeHtml(label)}</button>`;
+  }).join("");
+}
+
+function renderChampionDirectory() {
+  if (!elements.championDirectoryGrid) return;
+  const query = elements.championDirectorySearch.value.trim();
+  const eligibleIds = state.championDirectoryRole === "all"
+    ? null
+    : new Set((state.stats[state.championDirectoryRole] || []).map((entry) => String(entry.championId)));
+  const champions = state.champions
+    .filter((champion) => championRoleEntries(champion.id).length > 0)
+    .filter((champion) => !eligibleIds || eligibleIds.has(champion.id))
+    .map((champion) => ({ champion, score: fuzzyScore(query, champion) }))
+    .filter(({ score }) => score >= 0)
+    .sort((left, right) => query ? right.score - left.score || left.champion.name.localeCompare(right.champion.name) : left.champion.name.localeCompare(right.champion.name));
+
+  elements.championDirectoryGrid.innerHTML = champions.map(({ champion }) => {
+    const roles = championRoleEntries(champion.id);
+    const featured = state.championDirectoryRole === "all"
+      ? [...roles].sort((left, right) => right.stat.pickRate - left.stat.pickRate)[0]
+      : roles.find((entry) => entry.role === state.championDirectoryRole);
+    const selected = state.selectedChampionId === champion.id;
+    return `<button type="button" class="champion-directory-card ${selected ? "selected" : ""}" data-profile-champion="${champion.id}" aria-label="${escapeHtml(t("viewChampion", { name: champion.name }))}" aria-pressed="${selected}">
+      <img src="${escapeHtml(champion.avatarUrl)}" alt="" loading="lazy" decoding="async" data-fallback="${escapeHtml(champion.name)}">
+      <span><b>${escapeHtml(champion.name)}</b><small>${featured ? `${escapeHtml(roleName(featured.role))} · ${featured.stat.winRate.toFixed(1)}%` : "—"}</small></span>
+    </button>`;
+  }).join("");
+  bindImageFallbacks(elements.championDirectoryGrid);
+  elements.championDirectoryCount.textContent = t("championCountSimple", { count: champions.length });
+  elements.championDirectoryEmpty.hidden = champions.length > 0;
+}
+
+function selectChampionProfile(championId, revealOnMobile = false) {
+  const champion = state.championMap.get(String(championId));
+  if (!champion) return;
+  state.selectedChampionId = champion.id;
+  const roles = championRoleEntries(champion.id);
+  const preferred = [...roles].sort((left, right) => right.stat.pickRate - left.stat.pickRate)[0];
+  const filteredRole = roles.find((entry) => entry.role === state.championDirectoryRole);
+  state.championDetailRole = filteredRole?.role || preferred?.role || roles[0]?.role || null;
+  renderChampionDirectory();
+  renderChampionProfile();
+  if (revealOnMobile && matchMedia("(max-width: 740px)").matches) {
+    requestAnimationFrame(() => elements.championProfile.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+}
+
+function championSynergies(championId) {
+  const selected = championProfile(championId);
+  if (!selected.available) return [];
+  const entries = state.champions.filter((champion) => champion.id !== String(championId)).map((champion) => {
+    const ally = championProfile(champion.id);
+    if (!ally.available) return null;
+    const raw = (allyPairFit(selected, ally) + allyPairFit(ally, selected)) / 2;
+    const reasonKeys = [...new Set([...allyPairReasons(selected, ally), ...allyPairReasons(ally, selected)])].slice(0, 2);
+    return { champion, raw, reasonKeys };
+  }).filter(Boolean);
+  const scores = boundedScores(entries.map((entry) => entry.raw));
+  entries.forEach((entry, index) => { entry.score = scores[index]; });
+  return entries.sort((left, right) => right.score - left.score || right.raw - left.raw).slice(0, 5);
+}
+
+function renderMatchupRows(rows, tone) {
+  return rows.map(({ enemyId, record }) => {
+    const enemy = state.championMap.get(String(enemyId));
+    if (!enemy) return "";
+    return `<div class="profile-list-row ${tone}">
+      <img src="${escapeHtml(enemy.avatarUrl)}" alt="" data-fallback="${escapeHtml(enemy.name)}">
+      <span><b>${escapeHtml(enemy.name)}</b><small>${escapeHtml(t("gamesShare", { rate: record.pickRate.toFixed(1) }))}</small></span>
+      <strong>${record.winRate.toFixed(1)}%</strong>
+    </div>`;
+  }).join("");
+}
+
+function renderChampionProfile() {
+  if (!elements.championProfile || !state.ready || !state.selectedChampionId) return;
+  const champion = state.championMap.get(String(state.selectedChampionId));
+  const roles = championRoleEntries(champion.id);
+  if (!champion || !roles.length) return;
+  const active = roles.find((entry) => entry.role === state.championDetailRole) || roles[0];
+  state.championDetailRole = active.role;
+  const historical = state.history[champion.id]?.[active.role] || null;
+  const change = historical ? active.stat.winRate - historical.winRate : null;
+  const records = Object.entries(state.matchups[champion.id]?.[active.role] || {}).map(([enemyId, record]) => ({
+    enemyId,
+    record,
+    adjusted: shrinkToward(record.winRate, 50, reliabilityFactor(record.pickRate, 3, record.sampleSize)),
+  }));
+  const difficult = [...records].sort((left, right) => left.adjusted - right.adjusted).slice(0, 5);
+  const favorable = [...records].sort((left, right) => right.adjusted - left.adjusted).slice(0, 5);
+  const synergies = championSynergies(champion.id);
+
+  elements.championProfile.innerHTML = `<header class="profile-hero">
+    <img src="${escapeHtml(champion.avatarUrl)}" alt="" data-fallback="${escapeHtml(champion.name)}">
+    <div><span class="section-number">${escapeHtml(t("championProfile"))}</span><h2>${escapeHtml(champion.name)}</h2><p>${escapeHtml(t("dataContext", { date: formatDate(state.statDate) }))}</p></div>
+  </header>
+  <section class="profile-role-section">
+    <div class="profile-section-label"><span>${escapeHtml(t("championRoles"))}</span></div>
+    <div class="profile-role-tabs" role="tablist">${roles.map(({ role }) => `<button type="button" role="tab" class="profile-role-tab ${role === active.role ? "active" : ""}" data-profile-role="${role}" aria-selected="${role === active.role}"><span>${ROLE_ICONS[role]}</span>${escapeHtml(roleName(role))}</button>`).join("")}</div>
+  </section>
+  <section class="profile-section">
+    <div class="profile-section-label"><h3>${escapeHtml(t("rankedOverview"))}</h3><span>${escapeHtml(roleName(active.role))}</span></div>
+    <div class="profile-stat-grid">
+      <div class="profile-stat primary"><span>${escapeHtml(t("winRateLabel"))}</span><strong>${active.stat.winRate.toFixed(2)}%</strong></div>
+      <div class="profile-stat"><span>${escapeHtml(t("pickRateLabel"))}</span><strong>${active.stat.pickRate.toFixed(2)}%</strong></div>
+      <div class="profile-stat"><span>${escapeHtml(t("banRateLabel"))}</span><strong>${active.stat.banRate.toFixed(2)}%</strong></div>
+      <div class="profile-stat"><span>${escapeHtml(t("roleRank"))}</span><strong>${escapeHtml(t("roleRankValue", { rank: active.rank, total: active.total }))}</strong></div>
+      <div class="profile-stat"><span>${escapeHtml(t("historicalWinRate"))}</span><strong>${historical ? `${historical.winRate.toFixed(2)}%` : "—"}</strong></div>
+      <div class="profile-stat"><span>${escapeHtml(t("rateChange"))}</span><strong class="${Number(change) >= 0 ? "positive" : "negative"}">${Number.isFinite(change) ? `${change >= 0 ? "+" : ""}${change.toFixed(2)} pp` : "—"}</strong></div>
+    </div>
+  </section>
+  <section class="profile-section">
+    <div class="profile-section-label"><h3>${escapeHtml(t("observedMatchups"))}</h3><span class="observed-badge">${escapeHtml(t("observedLabel"))}</span></div>
+    ${records.length ? `<div class="matchup-columns">
+      <div><h4>${escapeHtml(t("toughestMatchups"))}<small>${escapeHtml(t("difficult"))}</small></h4><div class="profile-list">${renderMatchupRows(difficult, "difficult")}</div></div>
+      <div><h4>${escapeHtml(t("bestMatchups"))}<small>${escapeHtml(t("favorable"))}</small></h4><div class="profile-list">${renderMatchupRows(favorable, "favorable")}</div></div>
+    </div>` : `<p class="profile-empty">${escapeHtml(t("noMatchupData"))}</p>`}
+  </section>
+  <section class="profile-section">
+    <div class="profile-section-label"><div><h3>${escapeHtml(t("estimatedSynergies"))}</h3><p>${escapeHtml(t("synergyMethod"))}</p></div><span class="estimated-badge">${escapeHtml(t("estimatedLabel"))}</span></div>
+    ${synergies.length ? `<div class="synergy-grid">${synergies.map(({ champion: ally, score, reasonKeys }) => `<div class="synergy-card"><img src="${escapeHtml(ally.avatarUrl)}" alt="" data-fallback="${escapeHtml(ally.name)}"><span><b>${escapeHtml(ally.name)}</b><small>${reasonKeys.map((key) => escapeHtml(t(key))).join(" · ")}</small></span><strong>${score}</strong></div>`).join("")}</div>` : `<p class="profile-empty">${escapeHtml(t("noSynergyData"))}</p>`}
+  </section>`;
+  bindImageFallbacks(elements.championProfile);
 }
 
 function updateRecommendationState() {
@@ -1313,6 +1509,12 @@ function resetDraft() {
 document.querySelectorAll(".language-button").forEach((button) => {
   button.addEventListener("click", () => setLanguage(button.dataset.language));
 });
+elements.viewLinks.forEach((link) => {
+  link.addEventListener("click", (event) => {
+    event.preventDefault();
+    setAppView(link.dataset.appView);
+  });
+});
 elements.timingButtons.forEach((button) => {
   button.addEventListener("click", () => setDraftMode(button.dataset.draftMode));
 });
@@ -1320,6 +1522,24 @@ elements.timingButtons.forEach((button) => {
 elements.resetButton.addEventListener("click", resetDraft);
 elements.closePicker.addEventListener("click", closePicker);
 elements.championSearch.addEventListener("input", renderChampionGrid);
+elements.championDirectorySearch.addEventListener("input", renderChampionDirectory);
+elements.championRoleFilters.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-champion-filter-role]");
+  if (!button) return;
+  state.championDirectoryRole = button.dataset.championFilterRole;
+  renderChampionRoleFilters();
+  renderChampionDirectory();
+});
+elements.championDirectoryGrid.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-profile-champion]");
+  if (button) selectChampionProfile(button.dataset.profileChampion, true);
+});
+elements.championProfile.addEventListener("click", (event) => {
+  const roleButton = event.target.closest("[data-profile-role]");
+  if (!roleButton) return;
+  state.championDetailRole = roleButton.dataset.profileRole;
+  renderChampionProfile();
+});
 elements.resultContent.addEventListener("click", (event) => {
   const undoButton = event.target.closest(".undo-pick");
   if (undoButton) return undoAutoPick();
@@ -1353,6 +1573,7 @@ elements.insightDialog.addEventListener("click", (event) => {
 });
 window.addEventListener("scroll", updateDraftDockVisibility, { passive: true });
 window.addEventListener("resize", updateDraftDockVisibility, { passive: true });
+window.addEventListener("hashchange", () => setAppView(location.hash.startsWith("#champions") ? "champions" : "builder", false));
 
 applyTranslations();
 loadData();
